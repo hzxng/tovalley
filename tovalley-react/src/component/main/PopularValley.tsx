@@ -1,77 +1,66 @@
-import React, { FC, useEffect, useState } from "react";
-import styles from "../../css/main/PopularValley.module.css";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import React, { FC, useEffect, useState } from 'react'
+import styles from '../../css/main/PopularValley.module.css'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 interface Props {
   place: {
-    waterPlaceId: number;
-    waterPlaceName: string;
-    waterPlaceImageUrl: string;
-    location: string;
-    rating: number;
-    reviewCnt: number;
-  }[];
-  setPopularValley: React.Dispatch<
-    React.SetStateAction<
-      {
-        waterPlaceId: number;
-        waterPlaceName: string;
-        waterPlaceImageUrl: string;
-        location: string;
-        rating: number;
-        reviewCnt: number;
-      }[]
-    >
-  >;
+    waterPlaceId: number
+    waterPlaceName: string
+    waterPlaceImageUrl: string
+    location: string
+    rating: number
+    reviewCnt: number
+  }[]
 }
 
-const localhost = process.env.REACT_APP_HOST;
+const localhost = process.env.REACT_APP_HOST
 
-const PopularValley: FC<Props> = ({ place, setPopularValley }) => {
-  const [clicked, setClicked] = useState("평점");
-  const navigation = useNavigate();
-  const [num, setNum] = useState(0);
+const PopularValley: FC<Props> = ({ place }) => {
+  const [, setPopularValley] = useState(place)
+  const [clicked, setClicked] = useState('평점')
+  const navigation = useNavigate()
+  const [num, setNum] = useState(0)
   const [carouselTransition, setCarouselTransition] = useState(
-    "transform 500ms ease-in-out"
-  );
+    'transform 500ms ease-in-out'
+  )
   const [currList, setCurrList] = useState<
     {
-      waterPlaceId: number;
-      waterPlaceName: string;
-      waterPlaceImageUrl: string;
-      location: string;
-      rating: number;
-      reviewCnt: number;
+      waterPlaceId: number
+      waterPlaceName: string
+      waterPlaceImageUrl: string
+      location: string
+      rating: number
+      reviewCnt: number
     }[]
-  >([place[place.length - 1], ...place, place[0]]);
+  >([place[place.length - 1], ...place, place[0]])
 
   useEffect(() => {
     if (place.length !== 0) {
-      setCurrList([...place, place[0], place[1], place[2], place[3]]);
+      setCurrList([...place, place[0], place[1], place[2], place[3]])
     }
-  }, [place]);
+  }, [place])
 
   useEffect(() => {
     const timer = setInterval(() => {
       //setNum((num) => num + 1);
-      setCarouselTransition("transform 500ms ease-in-out");
-    }, 2500);
+      setCarouselTransition('transform 500ms ease-in-out')
+    }, 2500)
 
     return () => {
-      clearInterval(timer);
-    };
-  }, []);
+      clearInterval(timer)
+    }
+  }, [])
 
   useEffect(() => {
-    if (num === place.length) handleOriginSlide(0);
-  }, [num]);
+    if (num === place.length) handleOriginSlide(0)
+  }, [num])
 
   function handleOriginSlide(index: number) {
     setTimeout(() => {
-      setNum(index);
-      setCarouselTransition("");
-    }, 500);
+      setNum(index)
+      setCarouselTransition('')
+    }, 500)
   }
 
   const getPopluarValley = (cond: string) => {
@@ -79,16 +68,16 @@ const PopularValley: FC<Props> = ({ place, setPopularValley }) => {
       params: {
         cond: cond,
       },
-    };
+    }
 
     axios
       .get(`${localhost}/api/main-page/popular-water-places`, config)
       .then((res) => {
-        console.log(res);
-        setPopularValley(res.data.data);
+        console.log(res)
+        setPopularValley(res.data.data)
       })
-      .catch((err) => console.log(err));
-  };
+      .catch((err) => console.log(err))
+  }
 
   return (
     <div className={styles.popularValley}>
@@ -96,22 +85,22 @@ const PopularValley: FC<Props> = ({ place, setPopularValley }) => {
       <div className={styles.category}>
         <span
           onClick={() => {
-            setClicked("평점");
-            getPopluarValley("RATING");
+            setClicked('평점')
+            getPopluarValley('RATING')
           }}
           className={
-            clicked === "평점" ? styles.clickedCategory : styles.categoryBtn
+            clicked === '평점' ? styles.clickedCategory : styles.categoryBtn
           }
         >
           평점
         </span>
         <span
           onClick={() => {
-            setClicked("리뷰");
-            getPopluarValley("REVIEW");
+            setClicked('리뷰')
+            getPopluarValley('REVIEW')
           }}
           className={
-            clicked === "리뷰" ? styles.clickedCategory : styles.categoryBtn
+            clicked === '리뷰' ? styles.clickedCategory : styles.categoryBtn
           }
         >
           리뷰
@@ -124,7 +113,7 @@ const PopularValley: FC<Props> = ({ place, setPopularValley }) => {
               key={index}
               className={styles.popularItem}
               onClick={() => {
-                navigation(`/valley/${item.waterPlaceId}`);
+                navigation(`/valley/${item.waterPlaceId}`)
               }}
               style={{
                 transition: `${carouselTransition}`,
@@ -136,8 +125,8 @@ const PopularValley: FC<Props> = ({ place, setPopularValley }) => {
                 <img
                   src={
                     item.waterPlaceImageUrl === null ||
-                    item.waterPlaceImageUrl === ""
-                      ? process.env.PUBLIC_URL + "/img/default-image.png"
+                    item.waterPlaceImageUrl === ''
+                      ? process.env.PUBLIC_URL + '/img/default-image.png'
                       : item.waterPlaceImageUrl
                   }
                   alt="계곡 이미지"
@@ -155,7 +144,7 @@ const PopularValley: FC<Props> = ({ place, setPopularValley }) => {
                 </div>
               </div>
             </div>
-          );
+          )
         })}
         {place.map((item, index) => {
           return (
@@ -163,7 +152,7 @@ const PopularValley: FC<Props> = ({ place, setPopularValley }) => {
               key={index}
               className={styles.mobilePopularValley}
               onClick={() => {
-                navigation(`/valley/${item.waterPlaceId}`);
+                navigation(`/valley/${item.waterPlaceId}`)
               }}
             >
               <div>
@@ -178,11 +167,11 @@ const PopularValley: FC<Props> = ({ place, setPopularValley }) => {
                 <span>{`리뷰 ${item.reviewCnt}개`}</span>
               </div>
             </div>
-          );
+          )
         })}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default PopularValley;
+export default PopularValley
