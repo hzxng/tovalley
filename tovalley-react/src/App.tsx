@@ -1,43 +1,43 @@
-import { Route, Routes } from "react-router-dom";
-import "./App.css";
-import MainPage from "./page/MainPage";
-import ValleyListPage from "./page/ValleyListPage";
-import ValleyPage from "./page/ValleyPage";
-import LoginPage from "./page/LoginPage";
-import SignupPage from "./page/SignupPage";
-import MyPage from "./page/MyPage";
-import SafetyGuidePage from "./page/SafetyGuidePage";
-import SocialLoginException from "./page/SocialLoginException";
-import LostItemListPage from "./page/LostItemListPage";
-import LostItemPostPage from "./page/LostItemPostPage";
-import LostItemWritePage from "./page/LostItemWritePage";
-import LostItemUpdatePage from "./page/LostItemUpdatePage";
-import Alarm from "./component/common/Alarm";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "./store/store";
-import AlarmList from "./component/common/AlarmList";
-import { setNotificationView } from "./store/notification/notificationViewSlice";
-import Chat from "./component/header/Chat";
+import { Route, Routes } from 'react-router-dom'
+import './App.css'
+import ValleyListPage from './pages/ValleyListPage'
+import ValleyPage from './pages/ValleyPage'
+import LoginPage from './pages/LoginPage'
+import SignupPage from './pages/SignupPage'
+import MyPage from './pages/MyPage'
+import SafetyGuidePage from './pages/SafetyGuidePage'
+import SocialLoginException from './pages/SocialLoginException'
+import LostItemListPage from './pages/LostItemListPage'
+import LostItemPostPage from './pages/LostItemPostPage'
+import LostItemWritePage from './pages/LostItemWritePage'
+import LostItemUpdatePage from './pages/LostItemUpdatePage'
+import Alarm from './component/common/Alarm'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from './store/store'
+import AlarmList from './component/common/AlarmList'
+import { setNotificationView } from './store/notification/notificationViewSlice'
+import Chat from './component/header/Chat'
+import Home from '@pages/Home'
 
 function App() {
   const notification = useSelector(
     (state: RootState) => state.notification.value
-  );
-  const chatView = useSelector((state: RootState) => state.view.value);
-  const dispatch = useDispatch();
+  )
+  const chatView = useSelector((state: RootState) => state.view.value)
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    if (chatView) dispatch(setNotificationView(false));
-  }, [chatView]);
+    if (chatView) dispatch(setNotificationView(false))
+  }, [chatView])
 
   return (
     <div>
-      {notification && notification.notificationType === "CHAT" && <Alarm />}
+      {notification && notification.notificationType === 'CHAT' && <Alarm />}
       <AlarmList />
       <Chat />
       <Routes>
-        <Route path="/" element={<MainPage />} />
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/valleylist" element={<ValleyListPage />} />
@@ -57,7 +57,7 @@ function App() {
         />
       </Routes>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

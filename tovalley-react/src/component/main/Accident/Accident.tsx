@@ -1,129 +1,116 @@
-import styles from "../../../css/main/Accident.module.css";
-import { MdNavigateNext, MdNavigateBefore } from "react-icons/md";
-import AccidentChart from "./AccidentChart";
-import React, { FC, useRef, useState } from "react";
-import axios from "axios";
+import styles from '../../../css/main/Accident.module.css'
+import { MdNavigateNext, MdNavigateBefore } from 'react-icons/md'
+import AccidentChart from './AccidentChart'
+import React, { FC, useRef, useState } from 'react'
+import axios from 'axios'
 
-const localhost = process.env.REACT_APP_HOST;
+const localhost = process.env.REACT_APP_HOST
 
 interface Props {
   accident: {
     accidentCountPerMonth: {
-      month: number;
-      deathCnt: number;
-      disappearanceCnt: number;
-      injuryCnt: number;
-    }[];
-    province: string;
-    totalDeathCnt: number;
-    totalDisappearanceCnt: number;
-    totalInjuryCnt: number;
-  };
-  setRegionAccident: React.Dispatch<
-    React.SetStateAction<{
-      accidentCountPerMonth: {
-        month: number;
-        deathCnt: number;
-        disappearanceCnt: number;
-        injuryCnt: number;
-      }[];
-      province: string;
-      totalDeathCnt: number;
-      totalDisappearanceCnt: number;
-      totalInjuryCnt: number;
-    }>
-  >;
+      month: number
+      deathCnt: number
+      disappearanceCnt: number
+      injuryCnt: number
+    }[]
+    province: string
+    totalDeathCnt: number
+    totalDisappearanceCnt: number
+    totalInjuryCnt: number
+  }
 }
 
-const Accident: FC<Props> = ({ accident, setRegionAccident }) => {
+const Accident: FC<Props> = ({ accident }) => {
+  const [, setRegionAccident] = useState(accident)
   const region: { ko: string; en: string }[] = [
     {
-      ko: "전국",
-      en: "NATIONWIDE",
+      ko: '전국',
+      en: 'NATIONWIDE',
     },
     {
-      ko: "서울",
-      en: "SEOUL",
+      ko: '서울',
+      en: 'SEOUL',
     },
     {
-      ko: "경기",
-      en: "GYEONGGI",
+      ko: '경기',
+      en: 'GYEONGGI',
     },
     {
-      ko: "세종",
-      en: "SEJONG",
+      ko: '세종',
+      en: 'SEJONG',
     },
     {
-      ko: "강원",
-      en: "GANGWON",
+      ko: '강원',
+      en: 'GANGWON',
     },
     {
-      ko: "충청",
-      en: "CHUNGCHEONG",
+      ko: '충청',
+      en: 'CHUNGCHEONG',
     },
     {
-      ko: "전라",
-      en: "JEOLLA",
+      ko: '전라',
+      en: 'JEOLLA',
     },
     {
-      ko: "광주",
-      en: "GWANGJU",
+      ko: '광주',
+      en: 'GWANGJU',
     },
     {
-      ko: "경상",
-      en: "GYEONGSANG",
+      ko: '경상',
+      en: 'GYEONGSANG',
     },
     {
-      ko: "부산",
-      en: "BUSAN",
+      ko: '부산',
+      en: 'BUSAN',
     },
     {
-      ko: "울산",
-      en: "ULSAN",
+      ko: '울산',
+      en: 'ULSAN',
     },
     {
-      ko: "제주",
-      en: "JEJU",
+      ko: '제주',
+      en: 'JEJU',
     },
-  ];
-  const [clicked, setClicked] = useState(accident.province);
-  const [next, setNext] = useState(false);
+  ]
+  const [clicked, setClicked] = useState(accident.province)
+  const [next, setNext] = useState(false)
 
-  const scroll = useRef<HTMLDivElement>(null);
-  const scrollPrev = useRef<HTMLDivElement>(null);
+  const scroll = useRef<HTMLDivElement>(null)
+  const scrollPrev = useRef<HTMLDivElement>(null)
   const onMove = () => {
-    scroll.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-  };
+    scroll.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+  }
   const onMovePrev = () => {
-    scrollPrev.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-  };
+    scrollPrev.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+  }
 
   const handleNext = () => {
-    setNext(true);
-    onMove();
-  };
+    setNext(true)
+    onMove()
+  }
 
   const handlePrev = () => {
-    setNext(false);
-    onMovePrev();
-  };
+    setNext(false)
+    onMovePrev()
+  }
 
   const getRegionAccident = (region: { ko: string; en: string }) => {
     const config = {
       params: {
         province: region.en,
       },
-    };
+    }
     axios
       .get(`${localhost}/api/main-page/accidents`, config)
       .then((res) => {
-        console.log(res);
-        setRegionAccident(res.data.data);
+        console.log(res)
+        setRegionAccident(res.data.data)
       })
       .catch((err) => {
-        console.log(err);
-      });
-  };
+        console.log(err)
+      })
+  }
 
   return (
     <div className={styles.accident}>
@@ -140,10 +127,10 @@ const Accident: FC<Props> = ({ accident, setRegionAccident }) => {
                 )}
                 <span
                   onClick={() => {
-                    setClicked(`${item.ko}`);
-                    getRegionAccident(item);
+                    setClicked(`${item.ko}`)
+                    getRegionAccident(item)
                   }}
-                  style={clicked === item.ko ? { color: "#66A5FC" } : {}}
+                  style={clicked === item.ko ? { color: '#66A5FC' } : {}}
                 >
                   {item.ko}
                 </span>
@@ -153,7 +140,7 @@ const Accident: FC<Props> = ({ accident, setRegionAccident }) => {
                   </span>
                 )}
               </div>
-            );
+            )
           })}
           {next ? (
             <span className={styles.regionPrevBtn} onClick={handlePrev}>
@@ -182,7 +169,7 @@ const Accident: FC<Props> = ({ accident, setRegionAccident }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Accident;
+export default Accident
