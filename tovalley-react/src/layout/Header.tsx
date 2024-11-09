@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import styles from '@styles/header/Header.module.css'
+import styles from '@styles/header/Header.module.scss'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Cookies } from 'react-cookie'
 import { RxHamburgerMenu } from 'react-icons/rx'

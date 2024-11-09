@@ -1,4 +1,4 @@
-import styles from '../css/main/MainPage.module.css'
+import styles from '@styles/home/home.module.scss'
 import Weather from '../component/main/Weather'
 import Accident from '../component/main/Accident/Accident'
 import PopularValley from '../component/main/PopularValley'

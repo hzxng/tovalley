@@ -1,4 +1,4 @@
-import styles from '@styles/footer/Footer.module.css'
+import styles from '@styles/footer/Footer.module.scss'
 
 const localhost = process.env.REACT_APP_HOST
 
