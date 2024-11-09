@@ -11,7 +11,7 @@ import { MainData } from '../typings/main'
 
 const localhost = process.env.REACT_APP_HOST
 
-const MainPage = () => {
+const Home = () => {
   const [loading, setLoading] = useState(false)
   const [main, setMain] = useState<MainData | null>(null)
 
@@ -54,4 +54,4 @@ const MainPage = () => {
     )
 }
 
-export default MainPage
+export default Home
