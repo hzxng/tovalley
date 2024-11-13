@@ -1,6 +1,6 @@
-import { RecentPostType, RecentReviewType } from './db'
+import { RecentPostType, RecentReviewType } from '../typings/db'
 
-interface DailyNationalWeather {
+export interface DailyNationalWeather {
   clouds: number
   dayFeelsLike: number
   humidity: number
@@ -13,7 +13,7 @@ interface DailyNationalWeather {
   rainPrecipitation: number
 }
 
-interface NationalWeather {
+export interface NationalWeather {
   weatherDate: string
   dailyNationalWeather: DailyNationalWeather[]
 }
@@ -35,7 +35,7 @@ interface WeatherPreAlerts {
   }[]
 }
 
-interface WeatherAlert {
+export interface WeatherAlert {
   weatherAlerts: WeatherAlerts[]
   weatherPreAlerts: WeatherPreAlerts[]
 }

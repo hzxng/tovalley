@@ -19,6 +19,7 @@ import AlarmList from './component/common/AlarmList'
 import { setNotificationView } from './store/notification/notificationViewSlice'
 import Chat from './component/header/Chat'
 import Home from '@pages/Home'
+import Layout from 'layout/Layout'
 
 function App() {
   const notification = useSelector(
@@ -36,26 +37,31 @@ function App() {
       {notification && notification.notificationType === 'CHAT' && <Alarm />}
       <AlarmList />
       <Chat />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/valleylist" element={<ValleyListPage />} />
-        <Route path="/valley/:id" element={<ValleyPage />} />
-        <Route path="/mypage" element={<MyPage />} />
-        <Route path="/safety-guide" element={<SafetyGuidePage />} />
-        <Route path="/lost-item" element={<LostItemListPage />} />
-        <Route path="/lost-item/:category/:id" element={<LostItemPostPage />} />
-        <Route
-          path="/lost-item/:category/:id/update"
-          element={<LostItemUpdatePage />}
-        />
-        <Route path="/lost-item/write" element={<LostItemWritePage />} />
-        <Route
-          path="/social-login-exception"
-          element={<SocialLoginException />}
-        />
-      </Routes>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/valleylist" element={<ValleyListPage />} />
+          <Route path="/valley/:id" element={<ValleyPage />} />
+          <Route path="/mypage" element={<MyPage />} />
+          <Route path="/safety-guide" element={<SafetyGuidePage />} />
+          <Route path="/lost-item" element={<LostItemListPage />} />
+          <Route
+            path="/lost-item/:category/:id"
+            element={<LostItemPostPage />}
+          />
+          <Route
+            path="/lost-item/:category/:id/update"
+            element={<LostItemUpdatePage />}
+          />
+          <Route path="/lost-item/write" element={<LostItemWritePage />} />
+          <Route
+            path="/social-login-exception"
+            element={<SocialLoginException />}
+          />
+        </Routes>
+      </Layout>
     </div>
   )
 }

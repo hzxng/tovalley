@@ -1,24 +1,30 @@
-import React, { FC } from "react";
-import styles from "../../css/main/WeatherDetail.module.css";
-import { FaMapMarkerAlt } from "react-icons/fa";
+import styles from '@styles/home/WeatherDatail.module.scss'
+import { FaMapMarkerAlt } from 'react-icons/fa'
+import { DailyNationalWeather } from 'types/main'
 
-interface Props {
-  dailyNationalWeather: {
-    clouds: number;
-    dayFeelsLike: number;
-    humidity: number;
-    windSpeed: number;
-    region: string;
-    weatherIcon: string;
-    weatherDesc: string;
-    minTemp: number;
-    maxTemp: number;
-    rainPrecipitation: number;
-  };
-}
+const WeatherDetail = ({
+  dailyNationalWeather,
+}: {
+  dailyNationalWeather: DailyNationalWeather
+}) => {
+  const detailMenu = [
+    {
+      type: '강수량',
+      content: dailyNationalWeather.rainPrecipitation.toFixed(),
+      unit: 'mm',
+    },
+    {
+      type: '습도',
+      content: dailyNationalWeather.humidity,
+      unit: '%',
+    },
+    {
+      type: '풍속',
+      content: dailyNationalWeather.windSpeed.toFixed(),
+      unit: 'm/s',
+    },
+  ]
 
-const WeatherDetail: FC<Props> = ({ dailyNationalWeather }) => {
-  const detailMenu = ["강수량", "습도", "풍속"];
   return (
     <div className={styles.weatherDetail}>
       <div className={styles.region}>
@@ -41,8 +47,8 @@ const WeatherDetail: FC<Props> = ({ dailyNationalWeather }) => {
               <span
                 style={
                   dailyNationalWeather.weatherDesc.length > 6
-                    ? { fontSize: "0.8rem" }
-                    : { fontSize: "1rem" }
+                    ? { fontSize: '0.8rem' }
+                    : { fontSize: '1rem' }
                 }
               >
                 {dailyNationalWeather.weatherDesc}
@@ -61,39 +67,29 @@ const WeatherDetail: FC<Props> = ({ dailyNationalWeather }) => {
         <div className={styles.temperature}>
           <div>
             <span>최저</span>
-            <span style={{ color: "#3378FC" }}>
-              {dailyNationalWeather.minTemp.toFixed()}°
-            </span>
+            <span>{dailyNationalWeather.minTemp.toFixed()}°</span>
           </div>
           <div>
             <span>최고</span>
-            <span style={{ color: "#FD4848" }}>
-              {dailyNationalWeather.maxTemp.toFixed()}°
-            </span>
+            <span>{dailyNationalWeather.maxTemp.toFixed()}°</span>
           </div>
         </div>
         <div className={styles.weatherAddList}>
           {detailMenu.map((item, index) => {
             return (
               <div className={styles.weatherAdd} key={`${index}-${item}`}>
-                <span>{item}</span>
+                <span>{item.type}</span>
                 <div>
-                  <span>
-                    {index === 0
-                      ? dailyNationalWeather.rainPrecipitation.toFixed()
-                      : index === 1
-                      ? dailyNationalWeather.humidity
-                      : dailyNationalWeather.windSpeed.toFixed()}
-                  </span>
-                  <span>{index === 0 ? "mm" : index === 1 ? "%" : "m/s"}</span>
+                  <span>{item.content}</span>
+                  <span>{item.unit}</span>
                 </div>
               </div>
-            );
+            )
           })}
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default WeatherDetail;
+export default WeatherDetail

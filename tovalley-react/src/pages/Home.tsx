@@ -1,13 +1,11 @@
-import styles from '../css/main/MainPage.module.css'
-import Header from '../component/header/Header'
-import Weather from '../component/main/Weather'
+import styles from '@styles/home/Home.module.scss'
 import Accident from '../component/main/Accident/Accident'
 import PopularValley from '../component/main/PopularValley'
-import Footer from '../component/footer/Footer'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import RecentPost from '../component/main/RecentPost'
-import { MainData } from '../typings/main'
+import { MainData } from '../types/main'
+import Weather from '@features/home/components/Weather'
 
 const localhost = process.env.REACT_APP_HOST
 
@@ -32,7 +30,6 @@ const Home = () => {
   } else
     return (
       <div className={styles.mainPage}>
-        <Header />
         <div className={styles.body}>
           <div className={styles.top}>
             <Weather
@@ -49,7 +46,6 @@ const Home = () => {
             <RecentPost recentReviewPost={main.recentReviews} />
           </div>
         </div>
-        <Footer />
       </div>
     )
 }
