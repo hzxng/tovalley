@@ -1,61 +1,42 @@
-import React, { FC, useEffect, useState } from "react";
-import styles from "../../css/main/Report.module.css";
-import { HiSun } from "react-icons/hi";
-import { BsFillCloudRainHeavyFill } from "react-icons/bs";
-import { GiDustCloud } from "react-icons/gi";
-import { FaWind, FaRegSnowflake } from "react-icons/fa";
-import { RiTyphoonFill, RiThunderstormsFill } from "react-icons/ri";
-import { TiWaves } from "react-icons/ti";
-import { PiThermometerColdFill } from "react-icons/pi";
-import { MdDry } from "react-icons/md";
-import styled from "styled-components";
-import useDidMountEffect from "../../useDidMountEffect";
-
-interface Props {
-  alert: {
-    weatherAlerts: {
-      weatherAlertType: string;
-      title: string;
-      announcementTime: string;
-      effectiveTime: string;
-      content: string;
-    }[];
-    weatherPreAlerts: {
-      announcementTime: string;
-      title: string;
-      weatherAlertType: string;
-      contents: {
-        content: string;
-      }[];
-    }[];
-  };
-}
+import { useEffect, useState } from 'react'
+import styles from '@styles/home/Report.module.scss'
+import { HiSun } from 'react-icons/hi'
+import { BsFillCloudRainHeavyFill } from 'react-icons/bs'
+import { GiDustCloud } from 'react-icons/gi'
+import { FaWind, FaRegSnowflake } from 'react-icons/fa'
+import { RiTyphoonFill, RiThunderstormsFill } from 'react-icons/ri'
+import { TiWaves } from 'react-icons/ti'
+import { PiThermometerColdFill } from 'react-icons/pi'
+import { MdDry } from 'react-icons/md'
+import styled from 'styled-components'
+import useDidMountEffect from 'useDidMountEffect'
+import { WeatherAlert } from 'types/main'
 
 interface ReportProps {
-  category: string;
+  category: string
 }
 
 const ReportTitle = styled.div<ReportProps>`
   background-color: ${({ category }) =>
-    category.includes("폭염")
+    category.includes('폭염')
       ? `#fd7878`
-      : category.includes("호우")
+      : category.includes('호우')
       ? `#00AED4`
-      : category.includes("황사")
+      : category.includes('황사')
       ? `#D77E3F`
-      : category.includes("강풍")
+      : category.includes('강풍')
       ? `#01AA44`
-      : category.includes("태풍")
+      : category.includes('태풍')
       ? `#2764BF`
-      : category.includes("대설")
+      : category.includes('대설')
       ? `#939393`
-      : category.includes("풍랑")
+      : category.includes('풍랑')
       ? `#ACAF12`
-      : category.includes("한파")
+      : category.includes('한파')
       ? `#6952AA`
-      : category.includes("건조")
+      : category.includes('건조')
       ? `#A952B7`
-      : category.includes("폭풍해일")
+      : category.includes('폭풍해일')
       ? `#2478A7`
       : ``};
   color: white;
@@ -70,29 +51,29 @@ const ReportTitle = styled.div<ReportProps>`
   span:first-child {
     margin-right: 0.3em;
   }
-`;
+`
 
 const ReportContent = styled.div<ReportProps>`
   background-color: ${({ category }) =>
-    category.includes("폭염")
+    category.includes('폭염')
       ? `#FFAAAA`
-      : category.includes("호우")
+      : category.includes('호우')
       ? `#7CCCDD`
-      : category.includes("황사")
+      : category.includes('황사')
       ? `#EBAB7D`
-      : category.includes("강풍")
+      : category.includes('강풍')
       ? `#74BC91`
-      : category.includes("태풍")
+      : category.includes('태풍')
       ? `#6192DB`
-      : category.includes("대설")
+      : category.includes('대설')
       ? `#BFBFBF`
-      : category.includes("풍랑")
+      : category.includes('풍랑')
       ? `#CDCF51`
-      : category.includes("한파")
+      : category.includes('한파')
       ? `#947ED4`
-      : category.includes("건조")
+      : category.includes('건조')
       ? `#BD83C7`
-      : category.includes("폭풍해일")
+      : category.includes('폭풍해일')
       ? `#5299C0`
       : ``};
   color: white;
@@ -105,64 +86,63 @@ const ReportContent = styled.div<ReportProps>`
   min-height: 10em;
   overflow-y: scroll;
   box-sizing: border-box;
-`;
+`
 
-const Report: FC<Props> = ({ alert }) => {
-  const [report, setReport] = useState(true);
-  const [alertNum, setAlertNum] = useState(0);
-  const [preAlertNum, setPreAlertNum] = useState(0);
+const Report = ({ alert }: { alert: WeatherAlert }) => {
+  const [report, setReport] = useState(true)
+  const [alertNum, setAlertNum] = useState(0)
+  const [preAlertNum, setPreAlertNum] = useState(0)
   const [carouselTransition, setCarouselTransition] = useState(
-    "transform 600ms ease-in-out"
-  );
-  const [currAlertList, setCurrAlertList] = useState([...alert.weatherAlerts]);
+    'transform 600ms ease-in-out'
+  )
+  const [currAlertList, setCurrAlertList] = useState([...alert.weatherAlerts])
   const [currPreAlertList, setCurrPreAlertList] = useState([
     ...alert.weatherPreAlerts,
-  ]);
+  ])
 
   useEffect(() => {
     if (alert.weatherAlerts.length > 1) {
-      setCurrAlertList([...alert.weatherAlerts, alert.weatherAlerts[0]]);
+      setCurrAlertList([...alert.weatherAlerts, alert.weatherAlerts[0]])
     }
 
     if (alert.weatherPreAlerts.length > 1) {
       setCurrPreAlertList([
         ...alert.weatherPreAlerts,
         alert.weatherPreAlerts[0],
-      ]);
+      ])
     }
-  }, [alert]);
+  }, [alert])
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setAlertNum((alertNum) => alertNum + 1);
-      setPreAlertNum((preAlertNum) => preAlertNum + 1);
-      setCarouselTransition("transform 600ms ease-in-out");
-    }, 5000);
+      setAlertNum((alertNum) => alertNum + 1)
+      setPreAlertNum((preAlertNum) => preAlertNum + 1)
+      setCarouselTransition('transform 600ms ease-in-out')
+    }, 5000)
 
     return () => {
-      clearInterval(timer);
-    };
-  }, []);
+      clearInterval(timer)
+    }
+  }, [])
 
   useDidMountEffect(() => {
-    if (alertNum === alert.weatherAlerts.length) handleAlertOriginSlide(0);
+    if (alertNum === alert.weatherAlerts.length) handleAlertOriginSlide(0)
     if (preAlertNum === alert.weatherPreAlerts.length)
-      handlePreAlertOriginSlide(0);
-    // console.log(alertNum, preAlertNum);
-  }, [alertNum, preAlertNum]);
+      handlePreAlertOriginSlide(0)
+  }, [alertNum, preAlertNum])
 
   function handleAlertOriginSlide(index: number) {
     setTimeout(() => {
-      setAlertNum(index);
-      setCarouselTransition("");
-    }, 500);
+      setAlertNum(index)
+      setCarouselTransition('')
+    }, 500)
   }
 
   function handlePreAlertOriginSlide(index: number) {
     setTimeout(() => {
-      setPreAlertNum(index);
-      setCarouselTransition("");
-    }, 500);
+      setPreAlertNum(index)
+      setCarouselTransition('')
+    }, 500)
   }
 
   return (
@@ -171,14 +151,14 @@ const Report: FC<Props> = ({ alert }) => {
         <div
           className={styles.toggleBtn}
           onClick={() => {
-            setReport((prev) => !prev);
+            setReport((prev) => !prev)
           }}
         >
           <div
             className={report ? styles.toggleSwitchOn : styles.toggleSwitchOff}
           />
         </div>
-        <span>{report ? "특보" : "예비 특보"}</span>
+        <span>{report ? '특보' : '예비 특보'}</span>
       </div>
       {report ? (
         <div className={styles.reportList}>
@@ -205,28 +185,28 @@ const Report: FC<Props> = ({ alert }) => {
                   <div className={styles.reportItemContainer}>
                     <ReportTitle category={item.title}>
                       <span>
-                        {item.title.includes("폭염") ? (
+                        {item.title.includes('폭염') ? (
                           <HiSun size="20px" />
-                        ) : item.title.includes("호우") ? (
+                        ) : item.title.includes('호우') ? (
                           <BsFillCloudRainHeavyFill size="20px" />
-                        ) : item.title.includes("황사") ? (
+                        ) : item.title.includes('황사') ? (
                           <GiDustCloud size="20px" />
-                        ) : item.title.includes("강풍") ? (
+                        ) : item.title.includes('강풍') ? (
                           <FaWind size="18px" />
-                        ) : item.title.includes("태풍") ? (
+                        ) : item.title.includes('태풍') ? (
                           <RiTyphoonFill size="20px" />
-                        ) : item.title.includes("대설") ? (
+                        ) : item.title.includes('대설') ? (
                           <FaRegSnowflake size="20px" />
-                        ) : item.title.includes("풍랑") ? (
+                        ) : item.title.includes('풍랑') ? (
                           <TiWaves size="23px" />
-                        ) : item.title.includes("한파") ? (
+                        ) : item.title.includes('한파') ? (
                           <PiThermometerColdFill size="20px" />
-                        ) : item.title.includes("건조") ? (
+                        ) : item.title.includes('건조') ? (
                           <MdDry size="20px" />
-                        ) : item.title.includes("폭풍해일") ? (
+                        ) : item.title.includes('폭풍해일') ? (
                           <RiThunderstormsFill size="20px" />
                         ) : (
-                          ""
+                          ''
                         )}
                       </span>
                       <span>{item.title}</span>
@@ -246,7 +226,7 @@ const Report: FC<Props> = ({ alert }) => {
                     </ReportContent>
                   </div>
                 </div>
-              );
+              )
             })
           )}
         </div>
@@ -275,28 +255,28 @@ const Report: FC<Props> = ({ alert }) => {
                   <div className={styles.reportItemContainer}>
                     <ReportTitle category={item.title}>
                       <span>
-                        {item.title.includes("폭염") ? (
+                        {item.title.includes('폭염') ? (
                           <HiSun size="20px" />
-                        ) : item.title.includes("호우") ? (
+                        ) : item.title.includes('호우') ? (
                           <BsFillCloudRainHeavyFill size="20px" />
-                        ) : item.title.includes("황사") ? (
+                        ) : item.title.includes('황사') ? (
                           <GiDustCloud size="20px" />
-                        ) : item.title.includes("강풍") ? (
+                        ) : item.title.includes('강풍') ? (
                           <FaWind size="18px" />
-                        ) : item.title.includes("태풍") ? (
+                        ) : item.title.includes('태풍') ? (
                           <RiTyphoonFill size="20px" />
-                        ) : item.title.includes("대설") ? (
+                        ) : item.title.includes('대설') ? (
                           <FaRegSnowflake size="20px" />
-                        ) : item.title.includes("풍랑") ? (
+                        ) : item.title.includes('풍랑') ? (
                           <TiWaves size="23px" />
-                        ) : item.title.includes("한파") ? (
+                        ) : item.title.includes('한파') ? (
                           <PiThermometerColdFill size="20px" />
-                        ) : item.title.includes("건조") ? (
+                        ) : item.title.includes('건조') ? (
                           <MdDry size="20px" />
-                        ) : item.title.includes("폭풍해일") ? (
+                        ) : item.title.includes('폭풍해일') ? (
                           <RiThunderstormsFill size="20px" />
                         ) : (
-                          ""
+                          ''
                         )}
                       </span>
                       <span>{item.title}</span>
@@ -311,18 +291,18 @@ const Report: FC<Props> = ({ alert }) => {
                           <div className={styles.region}>
                             <span>{content.content}</span>
                           </div>
-                        );
+                        )
                       })}
                     </ReportContent>
                   </div>
                 </div>
-              );
+              )
             })
           )}
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default Report;
+export default Report
