@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import styles from '../../css/main/PopularValley.module.css'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
@@ -7,7 +7,7 @@ interface Props {
   place: {
     waterPlaceId: number
     waterPlaceName: string
-    waterPlaceImageUrl: string
+    waterPlaceImageUrl: string | null
     location: string
     rating: number
     reviewCnt: number
@@ -28,7 +28,7 @@ const PopularValley: FC<Props> = ({ place }) => {
     {
       waterPlaceId: number
       waterPlaceName: string
-      waterPlaceImageUrl: string
+      waterPlaceImageUrl: string | null
       location: string
       rating: number
       reviewCnt: number
