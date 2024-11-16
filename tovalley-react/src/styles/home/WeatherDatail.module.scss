@@ -58,13 +58,13 @@
       margin-right: 1em;
 
       > span:last-child {
-        color: $temperature-blue;
+        color: $blue;
       }
     }
 
     &:last-child {
       > span:last-child {
-        color: $temperature-red;
+        color: $red;
       }
     }
 

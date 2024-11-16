@@ -2,8 +2,7 @@ import { WeatherAlerts, WeatherPreAlerts } from 'types/main'
 import ReportType from './ReportType'
 import styled from 'styled-components'
 import styles from '@styles/home/ReportContainer.module.scss'
-import { useEffect, useState } from 'react'
-import useDidMountEffect from 'useDidMountEffect'
+import useCarousel from '@hooks/useCarousel'
 
 interface ReportProps {
   color: string
@@ -20,37 +19,16 @@ const ReportContainer = ({
   weatherAlert: WeatherAlerts[] | WeatherPreAlerts[]
   currAlertList: WeatherAlerts[] | WeatherPreAlerts[]
 }) => {
-  const [alertNum, setAlertNum] = useState(0)
-  const [carouselTransition, setCarouselTransition] = useState(
-    'transform 600ms ease-in-out'
-  )
+  const { num, carouselTransition } = useCarousel({
+    transition: 'transform 600ms ease-in-out',
+    count: 5000,
+    length: weatherAlert.length,
+  })
 
   function isWeatherAlerts(
     alert: WeatherAlerts | WeatherPreAlerts
   ): alert is WeatherAlerts {
     return (alert as WeatherAlerts).effectiveTime !== undefined
-  }
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setAlertNum((alertNum) => alertNum + 1)
-      setCarouselTransition('transform 600ms ease-in-out')
-    }, 5000)
-
-    return () => {
-      clearInterval(timer)
-    }
-  }, [])
-
-  useDidMountEffect(() => {
-    if (alertNum === weatherAlert.length) handleAlertOriginSlide(0)
-  }, [alertNum])
-
-  function handleAlertOriginSlide(index: number) {
-    setTimeout(() => {
-      setAlertNum(index)
-      setCarouselTransition('')
-    }, 500)
   }
 
   if (weatherAlert.length === 0) {
@@ -76,7 +54,7 @@ const ReportContainer = ({
               currAlertList.length > 1
                 ? {
                     transition: `${carouselTransition}`,
-                    transform: `translateX(-${alertNum}00%)`,
+                    transform: `translateX(-${num}00%)`,
                   }
                 : {}
             }

@@ -55,7 +55,7 @@ export interface AccidentCountDto {
   totalInjuryCnt: number
 }
 
-interface NationalPopularWaterPlaces {
+export interface NationalPopularWaterPlaces {
   waterPlaceId: number
   waterPlaceName: string
   waterPlaceImageUrl: string | null
