@@ -18,7 +18,7 @@ export interface NationalWeather {
   dailyNationalWeather: DailyNationalWeather[]
 }
 
-interface WeatherAlerts {
+export interface WeatherAlerts {
   weatherAlertType: string
   title: string
   announcementTime: string
@@ -26,7 +26,7 @@ interface WeatherAlerts {
   content: string
 }
 
-interface WeatherPreAlerts {
+export interface WeatherPreAlerts {
   announcementTime: string
   title: string
   weatherAlertType: string
@@ -58,7 +58,7 @@ interface AccidentCountDto {
 interface NationalPopularWaterPlaces {
   waterPlaceId: number
   waterPlaceName: string
-  waterPlaceImageUrl: string
+  waterPlaceImageUrl: string | null
   location: string
   rating: number
   reviewCnt: number

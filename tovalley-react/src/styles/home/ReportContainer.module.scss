@@ -1,0 +1,112 @@
+.defaultAlert {
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgb(232, 232, 232);
+  min-width: 100%;
+
+  > div {
+    &:first-child {
+      background-color: #e8e8e8;
+      border-radius: 10px 10px 0 0;
+      color: #3a3a3a;
+      font-weight: bold;
+      font-size: 0.9rem;
+      padding: 1em 1.5em;
+    }
+
+    &:last-child {
+      background-color: #f1f1f1;
+      border-radius: 0 0 10px 10px;
+      font-weight: bold;
+      font-size: 0.9rem;
+      padding: 1em;
+      height: 10em;
+    }
+  }
+}
+
+.reportList {
+  display: flex;
+  overflow: hidden;
+  margin-top: 0.3em;
+  padding: 0.3em;
+  align-items: center;
+}
+
+.reportItemContainer > div::-webkit-scrollbar {
+  display: none;
+}
+
+.reportItem {
+  min-width: 100%;
+  padding-right: 0.5em;
+}
+
+.reportTitle {
+  color: white;
+  font-weight: bold;
+  border-radius: 12px 12px 0 0;
+  padding: 0.8em 1.2em;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+
+  span:first-child {
+    margin-right: 0.3em;
+  }
+}
+
+.reportContent {
+  color: white;
+  border-radius: 0 0 12px 12px;
+  padding: 1em;
+  font-size: 0.9rem;
+  text-align: justify;
+  line-height: 1.4em;
+  height: 20vh;
+  min-height: 10em;
+  overflow-y: scroll;
+  box-sizing: border-box;
+}
+
+.presentation > span:first-child {
+  font-weight: bold;
+  margin-right: 0.5em;
+}
+
+.region {
+  margin-top: 0.5em;
+}
+
+@media screen and (max-width: 700px) {
+  .reportItemContainer > div:last-child {
+    min-height: 13em;
+  }
+
+  .defaultAlert > div:last-child {
+    min-height: 13em;
+  }
+
+  .reportList {
+    padding: 0.3em 0.3em 0 0;
+    align-items: center;
+    max-width: 330px;
+    min-width: 100%;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .reportItemContainer > div:last-child {
+    min-height: 10em;
+  }
+
+  .defaultAlert > div:last-child {
+    min-height: 10em;
+  }
+
+  .reportList {
+    padding: 0.3em 0.3em 0 0.3em;
+    align-items: center;
+    max-width: 100%;
+  }
+}
