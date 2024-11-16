@@ -1,11 +1,11 @@
 import styles from '@styles/home/Home.module.scss'
-import Accident from '../component/main/Accident/Accident'
 import PopularValley from '../component/main/PopularValley'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import RecentPost from '../component/main/RecentPost'
 import { MainData } from '../types/main'
 import Weather from '@features/home/components/Weather'
+import Accident from '@features/home/components/Accident'
 
 const localhost = process.env.REACT_APP_HOST
 

@@ -40,14 +40,14 @@ export interface WeatherAlert {
   weatherPreAlerts: WeatherPreAlerts[]
 }
 
-interface AccidentCountPerMonth {
+export interface AccidentCountPerMonth {
   month: number
   deathCnt: number
   disappearanceCnt: number
   injuryCnt: number
 }
 
-interface AccidentCountDto {
+export interface AccidentCountDto {
   accidentCountPerMonth: AccidentCountPerMonth[]
   province: string
   totalDeathCnt: number
