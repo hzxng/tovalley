@@ -1,5 +1,3 @@
-import { RecentPostType, RecentReviewType } from '../typings/db'
-
 export interface DailyNationalWeather {
   clouds: number
   dayFeelsLike: number
@@ -40,14 +38,14 @@ export interface WeatherAlert {
   weatherPreAlerts: WeatherPreAlerts[]
 }
 
-interface AccidentCountPerMonth {
+export interface AccidentCountPerMonth {
   month: number
   deathCnt: number
   disappearanceCnt: number
   injuryCnt: number
 }
 
-interface AccidentCountDto {
+export interface AccidentCountDto {
   accidentCountPerMonth: AccidentCountPerMonth[]
   province: string
   totalDeathCnt: number
@@ -55,7 +53,7 @@ interface AccidentCountDto {
   totalInjuryCnt: number
 }
 
-interface NationalPopularWaterPlaces {
+export interface NationalPopularWaterPlaces {
   waterPlaceId: number
   waterPlaceName: string
   waterPlaceImageUrl: string | null
@@ -64,11 +62,27 @@ interface NationalPopularWaterPlaces {
   reviewCnt: number
 }
 
+export interface RecentLostPostType {
+  lostFoundBoardId: number
+  lostFoundBoardCategory: string
+  lostFoundBoardTitle: string
+  lostFoundBoardContent: string
+  lostFoundBoardCreatedAt: string
+}
+
+export interface RecentReviewType {
+  reviewId: number
+  reviewRating: number
+  reviewContent: string
+  reviewCreatedAt: string
+  waterPlaceId: number
+}
+
 export interface MainData {
   nationalWeather: NationalWeather[]
   weatherAlert: WeatherAlert
   accidentCountDto: AccidentCountDto
   nationalPopularWaterPlaces: NationalPopularWaterPlaces[]
   recentReviews: RecentReviewType[]
-  recentLostFoundBoards: RecentPostType[]
+  recentLostFoundBoards: RecentLostPostType[]
 }

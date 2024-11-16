@@ -1,0 +1,44 @@
+@import '@styles/variables.scss';
+
+.graph {
+  margin-top: 1.5em;
+}
+
+.graphTitle {
+  background: linear-gradient(to right, $primary, #95ae94);
+  border-radius: 10px 10px 0 0;
+  display: flex;
+
+  > span {
+    color: white;
+    font-weight: bold;
+    display: block;
+    padding: 0.8em;
+    flex-grow: 1;
+    text-align: center;
+    font-size: 1.2rem;
+
+    &:not(:last-of-type) {
+      border-right: 1px solid #efefef;
+    }
+  }
+}
+
+.graphContent {
+  border-radius: 0 0 10px 10px;
+  box-shadow: 0 2px 2px rgb(201, 201, 201);
+  display: flex;
+
+  > span {
+    font-weight: bold;
+    display: block;
+    padding: 0.8em 0;
+    width: calc(100% / 3);
+    text-align: center;
+    font-size: 1.8em;
+
+    &:not(:last-of-type) {
+      border-right: 1px solid #efefef;
+    }
+  }
+}
