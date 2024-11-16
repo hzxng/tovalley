@@ -1,11 +1,11 @@
 import styles from '@styles/home/Home.module.scss'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import RecentPost from '../component/main/RecentPost'
-import { MainData } from '../types/main'
 import Weather from '@features/home/components/Weather'
 import Accident from '@features/home/components/Accident'
 import PopularValley from '@features/home/components/PopularValley'
+import RecentPost from '@features/home/components/RecentPost'
+import { MainData } from 'types/main'
 
 const localhost = process.env.REACT_APP_HOST
 

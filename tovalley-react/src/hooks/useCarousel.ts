@@ -21,7 +21,7 @@ const useCarousel = ({
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setNum((num) => num + 1)
+      //   setNum((num) => num + 1)
       setCarouselTransition(transition)
     }, count)
 
