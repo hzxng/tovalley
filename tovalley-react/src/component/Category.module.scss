@@ -1,0 +1,24 @@
+@import '@styles/mixins.scss';
+@import '@styles/variables.scss';
+
+.categoryBtn {
+  @include category-btn(
+    $padding: 0.3em 0.5em,
+    $radius: 7px,
+    $margin-right: 0.3em
+  );
+}
+
+.sortBtn {
+  @include category-btn(
+    $padding: 0.4em 0.9em,
+    $radius: 10px,
+    $margin-right: 0.5em,
+    $width: 28px
+  );
+}
+
+.clickedCategory {
+  background-color: $primary;
+  color: white;
+}

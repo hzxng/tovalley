@@ -1,0 +1,25 @@
+@import '@styles/variables.scss';
+
+.paging {
+  display: flex;
+  justify-content: center;
+  margin-top: 2em;
+
+  > button {
+    border: none;
+    color: #d4cbbb;
+    padding: 0 1em;
+    font-size: 1.1rem;
+    background-color: white;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    &[aria-current] {
+      font-weight: bold;
+      color: $primary;
+      cursor: pointer;
+    }
+  }
+}

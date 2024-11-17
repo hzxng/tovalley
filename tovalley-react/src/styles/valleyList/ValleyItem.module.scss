@@ -1,126 +1,4 @@
-.valleyListPage {
-  min-width: 360px;
-  margin-top: 180px;
-}
-
-.body {
-  padding: 0 7%;
-  margin: 4em 0 6em 0;
-  display: flex;
-  height: 47em;
-  justify-content: center;
-}
-
-.category {
-  border: 1px solid #cccccc;
-  width: 16%;
-  min-width: 130px;
-  padding: 0.5em 0 1em 0;
-  overflow-y: scroll;
-}
-
-.category::-webkit-scrollbar {
-  display: none;
-}
-
-.categoryList {
-  margin-top: 0.5em;
-  padding: 0.8em;
-  text-align: center;
-}
-
-.categoryList > span {
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.regionList {
-  text-align: center;
-  background-color: #f5f5f5;
-  padding-bottom: 0.3em;
-}
-
-.regionList span {
-  display: block;
-  padding: 0.5em 0;
-  cursor: pointer;
-  color: #616161;
-}
-
-.regionList span:hover {
-  background-color: #e9e9e9;
-}
-
-.regionList span:not(:first-of-type) {
-  margin: 0.3em 0;
-}
-
-.valleyContainer {
-  width: 100%;
-  margin-left: 1em;
-  max-width: 90em;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-left: 1.5em;
-}
-
-.sort {
-  display: flex;
-  align-items: center;
-  margin-right: 3em;
-}
-
-.sort span {
-  border: 1px solid #dddddd;
-  padding: 0.4em 0.9em;
-  border-radius: 10px;
-  cursor: pointer;
-  margin-right: 0.5em;
-  display: block;
-  width: 28px;
-}
-
-.clickedSort {
-  background-color: #66a5fc;
-  color: white;
-}
-
-.search {
-  position: relative;
-}
-
-.search input {
-  border: 1px solid #cccccc;
-  border-radius: 7px;
-  padding: 0.7em 1.2em;
-  box-shadow: 0 2px 2px rgb(219, 219, 219);
-  font-size: 0.9rem;
-  min-width: 300px;
-}
-
-.search input:focus {
-  outline: none;
-}
-
-.search span {
-  position: absolute;
-  right: 0.9em;
-  top: 0.5em;
-  cursor: pointer;
-}
-
-.valleyList {
-  margin-top: 1.5em;
-  display: flex;
-  flex-wrap: wrap;
-}
+@import '@styles/variables.scss';
 
 .valleyItem {
   display: flex;
@@ -132,23 +10,25 @@
   cursor: pointer;
   position: relative;
   height: 140px;
-}
 
-.valleyItem > div:first-child {
-  width: 290px;
-  height: 140px;
-  box-sizing: border-box;
-}
+  > div {
+    &:first-child {
+      width: 290px;
+      height: 140px;
+      box-sizing: border-box;
+    }
 
-.valleyItem > div > img {
-  border-radius: 10px 0 0 10px;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+    > img {
+      border-radius: 10px 0 0 10px;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
 }
 
 .valleyInfo {
-  border: 1px solid #cccccc;
+  border: 1px solid $light-gray;
   border-left: none;
   border-radius: 0 10px 10px 0;
   padding: 1em 0.5em 1em 1em;
@@ -180,8 +60,8 @@
 }
 
 .valleyCategory {
-  color: #66a5fc;
-  border: 1px solid #66a5fc;
+  color: $primary;
+  border: 1px solid $primary;
   font-size: 0.9rem;
   padding: 0.1em 0.5em;
   border-radius: 20px;
@@ -198,44 +78,24 @@
   bottom: 10px;
 }
 
-.valleyRating > span:first-child {
-  color: #66a5fc;
-  font-weight: bold;
-}
+.valleyRating {
+  > span {
+    &:first-child {
+      color: $primary;
+      font-weight: bold;
+    }
 
-.valleyRating > span:last-child {
-  color: #b8b8b8;
-  font-weight: bold;
-  margin-right: 1em;
+    &:last-child {
+      color: #b8b8b8;
+      font-weight: bold;
+      margin-right: 1em;
+    }
+  }
 }
 
 .valleyReview {
-  color: #66a5fc;
+  color: $primary;
   font-weight: bold;
-}
-
-.paging {
-  display: flex;
-  justify-content: center;
-  margin-top: 1em;
-}
-
-.paging > button {
-  border: none;
-  color: #d4cbbb;
-  padding: 0 1em;
-  font-size: 1.1rem;
-  background-color: white;
-}
-
-.paging button:hover {
-  cursor: pointer;
-}
-
-.paging button[aria-current] {
-  font-weight: bold;
-  color: #66a5fc;
-  cursor: pointer;
 }
 
 @media screen and (max-width: 1900px) {
@@ -269,14 +129,6 @@
 }
 
 @media screen and (max-width: 1400px) {
-  .body {
-    height: auto;
-  }
-
-  .category {
-    height: fit-content;
-  }
-
   .valleyItem {
     max-width: calc(100% / 2 - 1.2em);
   }
@@ -334,16 +186,6 @@
   }
 }
 
-@media screen and (max-width: 850px) {
-  .valleyContainer {
-    width: 80%;
-  }
-
-  .search input {
-    min-width: 200px;
-  }
-}
-
 @media screen and (max-width: 750px) {
   .valleyName {
     max-width: 13em;
@@ -361,29 +203,6 @@
 
   .valleyRegion {
     max-width: 13em;
-  }
-}
-
-@media screen and (max-width: 650px) {
-  .valleyContainer {
-    margin-left: 0em;
-  }
-
-  .top {
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    margin-left: 1.2em;
-  }
-
-  .search {
-    margin-top: 1em;
-    width: 100%;
-  }
-
-  .search input {
-    width: 100%;
-    box-sizing: border-box;
   }
 }
 
@@ -408,10 +227,6 @@
 }
 
 @media screen and (max-width: 500px) {
-  .body {
-    margin-top: 2em;
-  }
-
   .valleyItem {
     flex-direction: column;
     height: auto;
@@ -455,10 +270,6 @@
 }
 
 @media screen and (max-width: 480px) {
-  .valleyContainer {
-    width: 70%;
-  }
-
   .valleyName {
     max-width: 11em;
   }
@@ -469,10 +280,6 @@
 }
 
 @media screen and (max-width: 450px) {
-  .valleyContainer {
-    width: 65%;
-  }
-
   .valleyName {
     max-width: 9em;
   }
@@ -489,9 +296,5 @@
 
   .valleyRegion {
     max-width: 9em;
-  }
-
-  .search input {
-    min-width: 0px;
   }
 }

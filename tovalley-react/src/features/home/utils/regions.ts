@@ -1,6 +1,7 @@
-type regionType = { ko: string; en: string }[]
+export type Region = { ko: string; en: string }
+type RegionType = Region[]
 
-export const regions: regionType = [
+export const regions: RegionType = [
   { ko: '백령', en: 'baengnyeong' },
   { ko: '서울', en: 'seoul' },
   { ko: '춘천', en: 'chuncheon' },
@@ -20,7 +21,7 @@ export const regions: regionType = [
   { ko: '여수', en: 'yeosu' },
 ]
 
-export const province: regionType = [
+export const province: RegionType = [
   { ko: '전국', en: 'NATIONWIDE' },
   { ko: '서울', en: 'SEOUL' },
   { ko: '경기', en: 'GYEONGGI' },

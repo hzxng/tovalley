@@ -3,8 +3,8 @@ import styles from '@styles/home/PopularValley.module.scss'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { NationalPopularWaterPlaces } from 'types/main'
-import cn from 'classnames'
 import useCarousel from '@hooks/useCarousel'
+import Category from '@component/Category'
 
 const localhost = process.env.REACT_APP_HOST
 
@@ -54,22 +54,6 @@ const PopularValley = ({ place }: { place: NationalPopularWaterPlaces[] }) => {
       .catch((err) => console.log(err))
   }
 
-  const Category = ({ category }: { category: { ko: string; en: string } }) => {
-    return (
-      <span
-        onClick={() => {
-          setClicked(category.ko)
-          getPopluarValley(category.en)
-        }}
-        className={cn(styles.categoryBtn, {
-          [styles.clickedCategory]: clicked === category.ko,
-        })}
-      >
-        {category.ko}
-      </span>
-    )
-  }
-
   const MobilePopularValley = () => {
     return (
       <>
@@ -104,8 +88,18 @@ const PopularValley = ({ place }: { place: NationalPopularWaterPlaces[] }) => {
     <div className={styles.popularValley}>
       <h4>전국 인기 물놀이 장소</h4>
       <div className={styles.category}>
-        <Category category={{ ko: '평점', en: 'RATING' }} />
-        <Category category={{ ko: '리뷰', en: 'REVIEW' }} />
+        <Category
+          category={{ ko: '평점', en: 'RATING' }}
+          clicked={clicked}
+          setClicked={setClicked}
+          getData={getPopluarValley}
+        />
+        <Category
+          category={{ ko: '리뷰', en: 'REVIEW' }}
+          clicked={clicked}
+          setClicked={setClicked}
+          getData={getPopluarValley}
+        />
       </div>
       <div className={styles.popularList}>
         {currList.map((item, index) => {
