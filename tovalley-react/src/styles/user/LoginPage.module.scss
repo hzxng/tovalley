@@ -1,0 +1,103 @@
+@import '@styles/variables.scss';
+
+.loginPage {
+  min-width: 360px;
+  width: 100%;
+}
+
+/* 헤더와 푸터 사이 바디 */
+.body {
+  margin-top: 12em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 로그인 컨테이너 */
+.loginContainer {
+  text-align: center;
+  border: 1px solid #cccccc;
+  border-radius: 10px;
+  padding: 1.8em 2.5em;
+  width: 500px;
+  box-sizing: border-box;
+}
+
+/* 로그인 입력창 */
+.loginInput {
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.5em;
+}
+
+.passwordAlert {
+  font-size: 0.8rem;
+  text-align: left;
+  display: block;
+  margin: 0.5em 0 0 0.5em;
+  color: #ea0e00;
+}
+
+/* 로그인 버튼 */
+.loginInput button {
+  background-color: #66a5fc;
+  border: none;
+  color: white;
+  padding: 0.8em;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 7px;
+  cursor: pointer;
+  margin-top: 1.5em;
+}
+
+/* 소셜 로그인 */
+.socialLogin {
+  margin-top: 2.5em;
+}
+
+/* 아이디 비밀번호 찾기 */
+.loginFind {
+  margin-top: 1.5em;
+  margin-bottom: 6em;
+  text-align: center;
+  min-width: 450px;
+}
+
+.loginFind span {
+  color: #787878;
+  cursor: pointer;
+  border-bottom: 1px solid #787878;
+  margin: 0 1em;
+}
+
+@media screen and (max-width: 900px) {
+  .loginContainer {
+    width: 480px;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .loginContainer {
+    width: 380px;
+    padding: 1.8em 1.5em;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .loginContainer {
+    width: 300px;
+    padding: 1.8em 1.2em;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .loginContainer {
+    width: 300px;
+    padding: 1.8em 1.2em;
+  }
+
+  .loginFind span {
+    font-size: 0.9rem;
+  }
+}
