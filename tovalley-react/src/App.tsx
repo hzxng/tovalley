@@ -1,6 +1,5 @@
 import { Route, Routes } from 'react-router-dom'
 import './App.css'
-import ValleyListPage from './pages/ValleyListPage'
 import ValleyPage from './pages/ValleyPage'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
@@ -20,6 +19,7 @@ import { setNotificationView } from './store/notification/notificationViewSlice'
 import Chat from './component/header/Chat'
 import Home from '@pages/Home'
 import Layout from 'layout/Layout'
+import ValleyListPage from '@pages/ValleyListPage'
 
 function App() {
   const notification = useSelector(

@@ -1,16 +1,22 @@
-import React, { useState } from 'react'
-import styles from '../../css/common/PagingBtn.module.css'
+import React, { useEffect, useState } from 'react'
+import styles from './PagingBtn.module.scss'
 
 const PagingBtn = ({
   page,
   setPage,
   totalPages,
+  count,
 }: {
   page: number
   setPage: React.Dispatch<React.SetStateAction<number>>
   totalPages: number
+  count?: number
 }) => {
   const [currPage, setCurrPage] = useState(page)
+
+  useEffect(() => {
+    setCurrPage(page - 1)
+  }, [page])
 
   let firstNum = currPage - (currPage % 5) + 1
   let lastNum = currPage - (currPage % 5) + 5
@@ -32,13 +38,12 @@ const PagingBtn = ({
       >
         {firstNum}
       </button>
-      {Array(4)
+      {Array(count ?? 4)
         .fill(0)
         .map((_, i) => {
-          if (firstNum + 1 + i > totalPages) {
-            return null
-          } else {
-            if (i <= 2) {
+          if (firstNum + 1 + i > totalPages) return null
+          else {
+            if (i < 3) {
               return (
                 <button
                   key={i + 1}
@@ -50,7 +55,7 @@ const PagingBtn = ({
                   {firstNum + 1 + i}
                 </button>
               )
-            } else if (i >= 3) {
+            } else {
               return (
                 <button
                   key={i + 1}
