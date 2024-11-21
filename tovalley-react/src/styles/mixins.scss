@@ -13,3 +13,31 @@
   margin-right: $margin-right;
   width: $width;
 }
+
+@mixin button($margin) {
+  background-color: $primary;
+  border: none;
+  color: white;
+  padding: 0.8em;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 7px;
+  cursor: pointer;
+  margin: $margin;
+}
+
+@mixin input($margin) {
+  border: 1px solid #b8b8b8;
+  border-radius: 7px;
+  padding: 0.8em 1.5em;
+  font-size: 1rem;
+  margin: $margin;
+
+  &:focus {
+    outline: none;
+  }
+
+  &::placeholder {
+    color: #b8b8b8;
+  }
+}
