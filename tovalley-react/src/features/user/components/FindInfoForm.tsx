@@ -11,11 +11,11 @@ const FindInfoForm = ({
   children: React.ReactNode
 }) => {
   return (
-    <>
+    <div className={styles.container}>
       <h1>{title}</h1>
       <span>{explanation}</span>
       <div className={styles.findInfoInput}>{children}</div>
-    </>
+    </div>
   )
 }
 
