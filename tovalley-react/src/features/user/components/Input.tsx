@@ -1,5 +1,3 @@
-import styles from '@styles/user/Input.module.scss'
-
 const Input = ({
   type,
   placeholder,
@@ -7,7 +5,7 @@ const Input = ({
   onChange,
   onKeyDown,
 }: {
-  type: string
+  type?: string
   placeholder: string
   value: string
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
@@ -15,8 +13,7 @@ const Input = ({
 }) => {
   return (
     <input
-      className={styles.input}
-      type={type}
+      type={type ?? ''}
       required
       placeholder={placeholder}
       value={value}

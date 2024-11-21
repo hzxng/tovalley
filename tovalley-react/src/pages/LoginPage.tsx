@@ -1,32 +1,32 @@
 import { useEffect, useState } from 'react'
 import styles from '@styles/user/LoginPage.module.scss'
 import { useNavigate } from 'react-router-dom'
-import axiosInstance from './../axios_interceptor'
 import { Cookies } from 'react-cookie'
 import SocialLogin from '@component/SocialLogin'
-import FindInfo from '@features/user/FindInfo'
+import FindInfoModal from '@features/user/components/FindInfoModal'
 import Logo from '@component/Logo'
-import Input from '@features/user/Input'
+import Input from '@features/user/components/Input'
+import axiosInstance from '@utils/axios_interceptor'
 
 const cookies = new Cookies()
 
 const LoginPage = () => {
-  const [login, setLogin] = useState({
+  const [login, setLogin] = useState<{
+    email: string
+    password: string
+    passwordConfirm: boolean
+  }>({
     email: '',
     password: '',
     passwordConfirm: false,
   })
 
-  const [findView, setFindView] = useState({
-    findId: false,
-    findPassword: false,
-  })
+  const [findInfo, setFindInfo] = useState<string>('')
 
   const navigation = useNavigate()
 
   useEffect(() => {
     const social_login_error = cookies.get('social_login_error')
-    console.log('social_login_error : ', social_login_error)
 
     if (social_login_error === 'email_already_registered') {
       alert('이미 자체 회원가입으로 등록된 회원입니다.')
@@ -43,15 +43,15 @@ const LoginPage = () => {
     axiosInstance
       .post('/api/login', data)
       .then((res) => {
-        console.log(res)
-        res.status === 200 && navigation('/')
+        if (res) res.status === 200 && window.location.replace('/')
       })
       .catch((err) => {
         console.log(err)
-        err.response.status === 400
-          ? setLogin({ ...login, passwordConfirm: true })
-          : console.log(err)
       })
+  }
+
+  const closeModal = () => {
+    setFindInfo('')
   }
 
   const handleChange = (
@@ -69,6 +69,14 @@ const LoginPage = () => {
     if (e.key === 'Enter') {
       handleLogin()
     }
+  }
+
+  const handleFindInfo = (type: string) => {
+    setFindInfo(type)
+  }
+
+  const moveToSignUp = () => {
+    navigation('/signup')
   }
 
   return (
@@ -102,39 +110,12 @@ const LoginPage = () => {
           </div>
         </div>
         <div className={styles.loginFind}>
-          <span
-            onClick={() => {
-              setFindView({ ...findView, findId: true })
-            }}
-          >
-            아이디 찾기
-          </span>
-          <span
-            onClick={() => {
-              setFindView({ ...findView, findPassword: true })
-            }}
-          >
-            비밀번호 찾기
-          </span>
-          <span
-            onClick={() => {
-              navigation('/signup')
-            }}
-          >
-            회원가입
-          </span>
+          <span onClick={() => handleFindInfo('아이디')}>아이디 찾기</span>
+          <span onClick={() => handleFindInfo('비밀번호')}>비밀번호 찾기</span>
+          <span onClick={moveToSignUp}>회원가입</span>
         </div>
-        {findView.findId && (
-          <FindInfo
-            setFindView={setFindView}
-            info={{ title: '아이디(이메일)', findKind: '아이디' }}
-          />
-        )}
-        {findView.findPassword && (
-          <FindInfo
-            setFindView={setFindView}
-            info={{ title: '비밀번호', findKind: '비밀번호' }}
-          />
+        {findInfo && (
+          <FindInfoModal findInfo={findInfo} closeModal={closeModal} />
         )}
       </div>
     </div>
