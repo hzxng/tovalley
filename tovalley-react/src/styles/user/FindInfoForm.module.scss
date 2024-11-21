@@ -1,13 +1,15 @@
 @import '@styles/mixins.scss';
 @import '@styles/variables.scss';
 
-h1 {
-  font-size: 1.5rem;
-  margin: 0.5em;
-}
+.container {
+  h1 {
+    font-size: 1.5rem;
+    margin: 0.5em;
+  }
 
-span {
-  color: #787878;
+  span {
+    color: #787878;
+  }
 }
 
 .findInfoInput {
@@ -33,11 +35,13 @@ span {
 }
 
 @media screen and (max-width: 500px) {
-  h1 {
-    font-size: 1.3rem;
-  }
+  .container {
+    h1 {
+      font-size: 1.3rem;
+    }
 
-  span {
-    font-size: 0.9rem;
+    span {
+      font-size: 0.9rem;
+    }
   }
 }
