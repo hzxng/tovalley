@@ -1,372 +1,279 @@
-import React, { useEffect, useState } from "react";
-import Header from "../component/header/Header";
-import Footer from "../component/footer/Footer";
-import styles from "../css/user/SignupPage.module.css";
-import axios from "axios";
-import ConfirmModal from "../component/common/ConfirmModal";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react'
+import styles from '@styles/user/SignupPage.module.scss'
+import axios from 'axios'
+import SocialLogin from '@component/SocialLogin'
+import SignupInput from '@features/user/components/SignupInput'
+import cn from 'classnames'
+import SubmitCode from '@features/user/components/SubmitCode'
+import { FaRegCircleCheck } from 'react-icons/fa6'
+import ConfirmModal from '@component/ConfirmModal'
 
-const localhost = process.env.REACT_APP_HOST;
-const social_localhost = process.env.REACT_APP_SOCIAL_HOST;
+const localhost = process.env.REACT_APP_HOST
 
 const SignupPage = () => {
-  const navigation = useNavigate();
   const [inputInfo, setInputInfo] = useState({
-    name: "",
-    email: "",
-    nickName: "",
-    code: "",
-  });
-  const [password, setPassword] = useState({
-    password: "",
-    confirmPassword: "",
-  });
-  const [available, setAvailable] = useState({
-    check: false,
-    available: 0,
-    alert: "한글, 영어, 숫자 포함 20자 이내",
-  });
+    name: '',
+    email: '',
+    nickName: '',
+    code: '',
+    password: '',
+    confirmPassword: '',
+  })
 
-  const [authSubmit, setAuthSubmit] = useState({
-    emailDuplication: 0,
-    authConfirm: false,
-    emailAvailable: false,
-    resendView: false,
-  });
+  const [available, setAvailable] = useState<{
+    check: boolean
+    available: boolean | null
+    alert: string
+  }>({
+    check: false,
+    available: null,
+    alert: '한글, 영어, 숫자 포함 20자 이내',
+  })
+
+  const [emailDuplication, setEmailDuplication] = useState({
+    status: false,
+    message: '',
+  })
+
+  const [buttonText, setButtonText] = useState('중복확인')
+
+  const [isCodeSubmit, setIsCodeSubmit] = useState(false)
 
   const [confirmModal, setConfirmModal] = useState({
     view: false,
-    content: "",
-  });
-
-  const MINUTES_IN_MS = 3 * 60 * 1000;
-  const INTERVAL = 1000;
-  const [timeLeft, setTimeLeft] = useState<number>(MINUTES_IN_MS);
-
-  const minutes = String(Math.floor((timeLeft / (1000 * 60)) % 60)).padStart(
-    2,
-    "0"
-  );
-  const second = String(Math.floor((timeLeft / 1000) % 60)).padStart(2, "0");
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prevTime) => prevTime - INTERVAL);
-    }, INTERVAL);
-
-    if (timeLeft <= 0) {
-      clearInterval(timer);
-      setTimeLeft(0);
-      setAuthSubmit({ ...authSubmit, resendView: true });
-    }
-
-    return () => {
-      clearInterval(timer);
-    };
-  }, [timeLeft]);
-
-  const KAKAO_AUTH_URL = `${social_localhost}/oauth2/authorization/kakao`;
-  const GOOGLE_AUTH_URL = `${social_localhost}/oauth2/authorization/google`;
-  const NAVER_AUTH_URL = `${social_localhost}/oauth2/authorization/naver`;
-
-  const kakaoLogin = () => {
-    window.location.href = KAKAO_AUTH_URL;
-  };
-
-  const googleLogin = () => {
-    window.location.href = GOOGLE_AUTH_URL;
-  };
-
-  const naverLogin = () => {
-    window.location.href = NAVER_AUTH_URL;
-  };
+    content: '',
+  })
 
   const checkNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const regExp = /^[가-힣a-zA-Z0-9]{1,10}$/;
+    const regExp = /^[가-힣a-zA-Z0-9]{1,10}$/
     if (regExp.test(e.target.value) === true) {
-      setAvailable({ ...available, check: true });
+      setAvailable({ ...available, check: true })
     } else {
-      setAvailable({ ...available, check: false });
+      setAvailable({ ...available, check: false })
     }
-  };
+  }
 
   const checkDuplication = () => {
     const data = {
       nickname: inputInfo.nickName,
-    };
+    }
 
     axios
       .post(`${localhost}/api/members/check-nickname`, data)
       .then((res) => {
-        console.log(res);
+        console.log(res)
         if (res.status === 200) {
           setAvailable({
             ...available,
-            available: 1,
+            available: true,
             alert: res.data.msg,
-          });
+          })
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err)
         if (err.response.status === 400) {
           setAvailable({
             ...available,
-            available: 2,
+            available: false,
             alert: err.response.data.msg,
-          });
+          })
         }
-      });
-  };
+      })
+  }
 
   const checkEmailDuplication = () => {
-    const config = {
-      params: {
-        email: inputInfo.email,
-      },
-    };
+    setEmailDuplication({ status: true, message: '사용 가능한 이메일입니다.' })
+    setButtonText('인증')
+    // setEmailDuplication('이미 가입된 이메일입니다.')
 
-    axios
-      .get(`${localhost}/api/members/find-id`, config)
-      .then((res) => {
-        console.log(res);
-        res.status === 200 &&
-          setAuthSubmit({ ...authSubmit, emailDuplication: 2 });
-      })
-      .catch((err) => {
-        console.log(err);
-        err.response.status === 400 &&
-          setAuthSubmit({ ...authSubmit, emailDuplication: 1 });
-      });
-  };
+    // const config = {
+    //   params: {
+    //     email: inputInfo.email,
+    //   },
+    // }
 
-  const authEmail = () => {
-    const data = {
-      email: inputInfo.email,
-    };
-
-    setAuthSubmit({ ...authSubmit, authConfirm: true });
-
-    axios
-      .post(`${localhost}/api/email-code`, data)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-        if (err.response.status === 400) {
-          setConfirmModal({ view: true, content: "메일 수신함을 확인하세요." });
-        }
-      });
-  };
+    // axios
+    //   .get(`${localhost}/api/members/find-id`, config)
+    //   .then((res) => {
+    //     console.log(res)
+    //     res.status === 200 &&
+    //       setAuthSubmit({ ...authSubmit, emailDuplication: 2 })
+    //   })
+    //   .catch((err) => {
+    //     console.log(err)
+    //     err.response.status === 400 &&
+    //       setAuthSubmit({ ...authSubmit, emailDuplication: 1 })
+    //   })
+  }
 
   const authCode = () => {
-    const config = {
-      params: {
-        email: inputInfo.email,
-        verifyCode: inputInfo.code,
-      },
-    };
+    setConfirmModal({
+      view: true,
+      content: '이메일 인증이 완료되었습니다.',
+    })
+    setIsCodeSubmit(false)
+    setButtonText('인증완료')
+    // const config = {
+    //   params: {
+    //     email: inputInfo.email,
+    //     verifyCode: inputInfo.code,
+    //   },
+    // }
 
-    axios
-      .get(`${localhost}/api/email-code`, config)
-      .then((res) => {
-        console.log(res);
-        if (res.status === 200) {
-          setAuthSubmit({
-            ...authSubmit,
-            authConfirm: false,
-            emailAvailable: true,
-          });
-          setConfirmModal({
-            view: true,
-            content: "이메일 인증이 완료되었습니다.",
-          });
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        setConfirmModal({ view: true, content: err.response.data.msg });
-      });
-  };
+    // axios
+    //   .get(`${localhost}/api/email-code`, config)
+    //   .then((res) => {
+    //     console.log(res)
+    //     if (res.status === 200) {
+    //       setAuthSubmit({
+    //         ...authSubmit,
+    //         authConfirm: false,
+    //         emailAvailable: true,
+    //       })
+    //       setConfirmModal({
+    //         view: true,
+    //         content: '이메일 인증이 완료되었습니다.',
+    //       })
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.log(err)
+    //     setConfirmModal({ view: true, content: err.response.data.msg })
+    //   })
+  }
 
   const handleSignUp = () => {
     const data = {
       name: inputInfo.name,
       email: inputInfo.email,
       nickname: inputInfo.nickName,
-      password: password.password,
-    };
+      password: inputInfo.password,
+    }
 
     if (
-      inputInfo.name === "" ||
-      inputInfo.email === "" ||
-      inputInfo.nickName === "" ||
-      password.password === "" ||
-      password.confirmPassword === ""
+      !inputInfo.name ||
+      !inputInfo.email ||
+      !inputInfo.nickName ||
+      !inputInfo.password ||
+      !inputInfo.confirmPassword
     ) {
-      setConfirmModal({ view: true, content: "모두 입력하세요." });
+      setConfirmModal({ view: true, content: '모두 입력하세요.' })
     } else if (
-      password.password === password.confirmPassword &&
-      available.available === 1 &&
-      authSubmit.emailAvailable
+      inputInfo.password === inputInfo.confirmPassword &&
+      available.available &&
+      emailDuplication.status
     ) {
       axios
         .post(`${localhost}/api/members`, data)
         .then((res) => {
-          console.log(res);
+          console.log(res)
           if (res.status === 201) {
             setConfirmModal({
               view: true,
-              content: "회원가입이 완료되었습니다.",
-            });
-            window.location.replace("/login");
+              content: '회원가입이 완료되었습니다.',
+            })
+            window.location.replace('/login')
           }
         })
         .catch((err) => {
-          console.log(err);
+          console.log(err)
           setConfirmModal({
             view: true,
             content: err.response.data.msg,
-          });
-        });
-    } else if (authSubmit.emailDuplication !== 1) {
+          })
+        })
+    } else if (!emailDuplication.message) {
       setConfirmModal({
         view: true,
-        content: "이메일 중복 확인이 필요합니다.",
-      });
-    } else if (!authSubmit.emailAvailable) {
+        content: '이메일 중복 확인이 필요합니다.',
+      })
+    } else if (buttonText !== '인증완료') {
       setConfirmModal({
         view: true,
-        content: "이메일 인증이 필요합니다.",
-      });
-    } else if (available.available !== 1) {
+        content: '이메일 인증이 필요합니다.',
+      })
+    } else if (!available.available) {
       setConfirmModal({
         view: true,
-        content: "닉네임 중복 확인이 필요합니다.",
-      });
-    } else if (password.password !== password.confirmPassword) {
-      setConfirmModal({ view: true, content: "비밀번호 확인이 필요합니다." });
+        content: '닉네임 중복 확인이 필요합니다.',
+      })
+    } else if (inputInfo.password !== inputInfo.confirmPassword) {
+      setConfirmModal({ view: true, content: '비밀번호 확인이 필요합니다.' })
     }
-  };
+  }
+
+  const handleAuthEmail = () => {
+    if (inputInfo.email && buttonText === '중복확인') checkEmailDuplication()
+    if (buttonText === '인증') setIsCodeSubmit(true)
+  }
 
   return (
     <>
-      <Header />
-      {/* 회원가입 컨테이너 */}
       <div className={styles.body}>
         <div className={styles.signupContainer}>
           <span>회원가입</span>
           <div className={styles.signupInput}>
-            <div>
-              <span>이름</span>
-              <input
-                required
-                value={inputInfo.name}
-                onChange={(e) => {
-                  setInputInfo({ ...inputInfo, name: e.target.value });
-                }}
-              />
-            </div>
-            <div>
-              <span>이메일</span>
-              <input
-                type="email"
-                required
-                value={inputInfo.email}
-                onChange={(e) => {
-                  setInputInfo({ ...inputInfo, email: e.target.value });
-                }}
-              />
-              <span
-                className={
-                  authSubmit.authConfirm || inputInfo.email === ""
-                    ? styles.disableBtn
-                    : styles.confirmBtn
-                }
-                onClick={() => {
-                  if (authSubmit.emailAvailable) return;
-                  else {
-                    if (authSubmit.emailDuplication !== 1)
-                      checkEmailDuplication();
-                    else {
-                      if (!authSubmit.authConfirm) {
-                        setTimeLeft(MINUTES_IN_MS);
-                        authEmail();
-                      }
-                    }
-                  }
-                }}
-              >
-                {authSubmit.emailDuplication !== 1
-                  ? "중복확인"
-                  : authSubmit.emailAvailable
-                  ? "인증완료"
-                  : "인증"}
-              </span>
-              {authSubmit.emailDuplication !== 0 && (
+            <SignupInput
+              name="이름"
+              value={inputInfo.name}
+              onChange={(e) => {
+                setInputInfo({ ...inputInfo, name: e.target.value })
+              }}
+            />
+            <SignupInput
+              name="이메일"
+              type="email"
+              value={inputInfo.email}
+              onChange={(e) => {
+                setInputInfo({ ...inputInfo, email: e.target.value })
+              }}
+            >
+              {buttonText === '인증완료' ? (
+                <span className={styles.check}>
+                  <FaRegCircleCheck />
+                </span>
+              ) : (
                 <span
-                  className={styles.emailAlert}
-                  style={
-                    authSubmit.emailDuplication === 1
-                      ? { color: "#38A612" }
-                      : { color: "#EA0E00" }
-                  }
+                  className={cn(styles.confirmBtn, {
+                    [styles.disableBtn]: !inputInfo.email,
+                  })}
+                  onClick={handleAuthEmail}
                 >
-                  {authSubmit.emailDuplication === 1
-                    ? "사용 가능한 이메일입니다."
-                    : "이미 가입된 이메일입니다."}
+                  {buttonText}
                 </span>
               )}
-            </div>
-            {authSubmit.authConfirm && (
-              <div id={styles.authConfirmInfo}>
-                <span>이메일로 인증코드를 전송하였습니다.</span>
-                <span>
-                  {minutes} : {second}
+              {emailDuplication.message && (
+                <span
+                  className={cn(styles.emailAlert, styles.alert, {
+                    [styles.available]: emailDuplication,
+                  })}
+                >
+                  {emailDuplication.message}
                 </span>
-                <input
-                  placeholder="인증코드"
-                  value={inputInfo.code}
-                  onChange={(e) => {
-                    setInputInfo({ ...inputInfo, code: e.target.value });
-                  }}
-                />
-                {!authSubmit.resendView ? (
-                  <span className={styles.authBtn} onClick={authCode}>
-                    확인
-                  </span>
-                ) : (
-                  <span
-                    className={styles.authBtn}
-                    onClick={() => {
-                      setTimeLeft(MINUTES_IN_MS);
-                      authEmail();
-                      setAuthSubmit({ ...authSubmit, resendView: false });
-                    }}
-                  >
-                    재전송
-                  </span>
-                )}
+              )}
+            </SignupInput>
+            {isCodeSubmit && (
+              <div className={styles.confirmCode}>
+                <SubmitCode authCode={authCode} email={inputInfo.email} />
               </div>
             )}
-            <div>
-              <span>닉네임</span>
-              <input
-                required
-                value={inputInfo.nickName}
-                onChange={(e) => {
-                  setInputInfo({ ...inputInfo, nickName: e.target.value });
-                }}
-                onBlur={checkNickname}
-                maxLength={20}
-              />
+            <SignupInput
+              name="닉네임"
+              value={inputInfo.nickName}
+              onChange={(e) => {
+                setInputInfo({ ...inputInfo, nickName: e.target.value })
+              }}
+              onBlur={checkNickname}
+              maxLength={20}
+            >
               <span
-                className={
-                  available.check ? styles.confirmBtn : styles.disableBtn
-                }
+                className={cn({
+                  [styles.confirmBtn]: available.check,
+                  [styles.disableBtn]: !available.check,
+                })}
                 onClick={() => {
-                  available.check && checkDuplication();
+                  available.check && checkDuplication()
                 }}
               >
                 중복확인
@@ -374,83 +281,47 @@ const SignupPage = () => {
               <span className={styles.charCnt}>
                 {inputInfo.nickName.length}/20
               </span>
-            </div>
+            </SignupInput>
             <span
-              className={
-                available.available === 0
-                  ? styles.alertDefault
-                  : available.available === 1
-                  ? styles.availAlert
-                  : styles.alert
-              }
+              className={cn(styles.defaultAlert, styles.default, {
+                [styles.available]: available.available,
+                [styles.alert]: available.available === false,
+              })}
             >
               {available.alert}
             </span>
-            <div>
-              <span>비밀번호</span>
-              <input
-                required
-                type="password"
-                value={password.password}
-                onChange={(e) => {
-                  setPassword({ ...password, password: e.target.value });
-                }}
-              />
-            </div>
-            <div>
-              <span>비밀번호 확인</span>
-              <input
-                required
-                type="password"
-                value={password.confirmPassword}
-                onChange={(e) => {
-                  setPassword({ ...password, confirmPassword: e.target.value });
-                }}
-              />
+            <SignupInput
+              name="비밀번호"
+              type="password"
+              value={inputInfo.password}
+              onChange={(e) => {
+                setInputInfo({ ...inputInfo, password: e.target.value })
+              }}
+            />
+            <SignupInput
+              name="비밀번호 확인"
+              type="password"
+              value={inputInfo.confirmPassword}
+              onChange={(e) => {
+                setInputInfo({ ...inputInfo, confirmPassword: e.target.value })
+              }}
+            >
               <span
-                className={
-                  password.password === password.confirmPassword
-                    ? styles.alertNone
-                    : styles.alert
-                }
+                className={cn(styles.defaultAlert, styles.none, {
+                  [styles.alert]:
+                    inputInfo.password !== inputInfo.confirmPassword,
+                })}
               >
                 비밀번호가 일치하지 않습니다.
               </span>
-            </div>
+            </SignupInput>
           </div>
           <div className={styles.signupBtn}>
-            <button onClick={() => handleSignUp()}>가입하기</button>
+            <button onClick={handleSignUp}>가입하기</button>
           </div>
         </div>
         <div className={styles.socialSignup}>
-          <div className={styles.socialSignupTitle}>
-            <hr />
-            <span>간편 회원가입</span>
-            <hr />
-          </div>
-          <div className={styles.socialSignupLogo}>
-            <img
-              src={process.env.PUBLIC_URL + "/img/login/kakao-logo.png"}
-              alt="kakao logo"
-              width="40px"
-              onClick={kakaoLogin}
-              // onClick={() => navigation("/social-login-exception")}
-            />
-            <img
-              src={process.env.PUBLIC_URL + "/img/login/naver-logo.png"}
-              alt="naver logo"
-              width="40px"
-              onClick={naverLogin}
-              // onClick={() => navigation("/social-login-exception")}
-            />
-            <img
-              src={process.env.PUBLIC_URL + "/img/login/google-logo.png"}
-              alt="google logo"
-              width="40px"
-              onClick={googleLogin}
-              // onClick={() => navigation("/social-login-exception")}
-            />
-          </div>
+          <SocialLogin type="회원가입" size={40} />
         </div>
       </div>
       {confirmModal.view && (
@@ -459,9 +330,8 @@ const SignupPage = () => {
           handleModal={setConfirmModal}
         />
       )}
-      <Footer />
     </>
-  );
-};
+  )
+}
 
-export default SignupPage;
+export default SignupPage

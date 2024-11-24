@@ -5,7 +5,7 @@ import { Cookies } from 'react-cookie'
 import SocialLogin from '@component/SocialLogin'
 import FindInfoModal from '@features/user/components/FindInfoModal'
 import Logo from '@component/Logo'
-import Input from '@features/user/components/Input'
+import Input from '@component/Input'
 import axiosInstance from '@utils/axios_interceptor'
 
 const cookies = new Cookies()

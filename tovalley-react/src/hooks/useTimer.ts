@@ -5,6 +5,7 @@ export const MINUTES_IN_MS = 3 * 60 * 1000
 const useTimer = () => {
   const INTERVAL = 1000
   const [timeLeft, setTimeLeft] = useState<number>(0)
+  const [timeOver, setTimeOver] = useState(false)
 
   const minutes = String(Math.floor((timeLeft / (1000 * 60)) % 60)).padStart(
     2,
@@ -17,9 +18,10 @@ const useTimer = () => {
       setTimeLeft((prevTime) => prevTime - INTERVAL)
     }, INTERVAL)
 
-    if (timeLeft <= 0) {
+    if (timeLeft < 0) {
       clearInterval(timer)
       setTimeLeft(0)
+      setTimeOver(true)
     }
 
     return () => {
@@ -27,7 +29,7 @@ const useTimer = () => {
     }
   }, [timeLeft])
 
-  return { setTimeLeft, minutes, second }
+  return { timeOver, setTimeLeft, minutes, second }
 }
 
 export default useTimer
