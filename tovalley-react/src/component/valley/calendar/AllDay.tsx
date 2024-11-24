@@ -1,13 +1,14 @@
-import React from "react";
-import styled, { css } from "styled-components";
+import React from 'react'
+import styled, { css } from 'styled-components'
+import { TripPeopleCnt } from 'types/valley'
 
 interface ContainerProps {
-  sameMonth: boolean;
-  sameDay: boolean;
-  clickDay: boolean;
-  peopleCnt: number;
-  addScheduleBtn: boolean;
-  afterToday: boolean;
+  sameMonth: boolean
+  sameDay: boolean
+  clickDay: boolean
+  peopleCnt: number
+  addScheduleBtn: boolean
+  afterToday: boolean
 }
 
 const Container = styled.div<ContainerProps>`
@@ -180,57 +181,57 @@ const Container = styled.div<ContainerProps>`
       font-size: 0.8rem;
     }
   }
-`;
+`
 
 type tripPeopleCnt = {
   tripPlanToWaterPlace: {
-    [key: string]: number;
-  };
-};
-
-interface Props {
-  day: Date;
-  nowDate: Date;
-  setNowDate: React.Dispatch<React.SetStateAction<Date>>;
-  clickedDate: Date | undefined;
-  setClickedDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
-  tripPlanToWaterPlace: tripPeopleCnt;
-  addScheduleBtn: boolean;
+    [key: string]: number
+  }
 }
 
-let formatedDate;
+interface Props {
+  day: Date
+  nowDate: Date
+  setNowDate: React.Dispatch<React.SetStateAction<Date>>
+  clickedDate: Date | undefined
+  setClickedDate: React.Dispatch<React.SetStateAction<Date | undefined>>
+  tripPlanToWaterPlace: TripPeopleCnt
+  addScheduleBtn: boolean
+}
+
+let formatedDate
 
 const dateFormat = (
   nowDate: Date,
   day: Date,
   tripPlanToWaterPlace: {
-    [key: string]: number;
+    [key: string]: number
   }
 ) => {
   if (nowDate.getMonth() + 1 < 10 && day.getDate() < 10) {
     formatedDate =
       tripPlanToWaterPlace[
         `${nowDate.getFullYear()}-0${nowDate.getMonth() + 1}-0${day.getDate()}`
-      ];
+      ]
   } else if (nowDate.getMonth() + 1 < 10 && day.getDate() >= 10) {
     formatedDate =
       tripPlanToWaterPlace[
         `${nowDate.getFullYear()}-0${nowDate.getMonth() + 1}-${day.getDate()}`
-      ];
+      ]
   } else if (nowDate.getMonth() + 1 >= 10 && day.getDate() < 10) {
     formatedDate =
       tripPlanToWaterPlace[
         `${nowDate.getFullYear()}-${nowDate.getMonth() + 1}-0${day.getDate()}`
-      ];
+      ]
   } else {
     formatedDate =
       tripPlanToWaterPlace[
         `${nowDate.getFullYear()}-${nowDate.getMonth() + 1}-${day.getDate()}`
-      ];
+      ]
   }
 
-  return formatedDate;
-};
+  return formatedDate
+}
 
 const allDay = ({
   day,
@@ -241,32 +242,32 @@ const allDay = ({
   tripPlanToWaterPlace,
   addScheduleBtn,
 }: Props) => {
-  const nowTime = new Date();
+  const nowTime = new Date()
 
-  const sameMonth = nowDate.getMonth() === day.getMonth();
+  const sameMonth = nowDate.getMonth() === day.getMonth()
   const sameDay =
     nowTime.getFullYear() === day.getFullYear() &&
     nowTime.getMonth() === day.getMonth() &&
-    nowTime.getDate() === day.getDate();
+    nowTime.getDate() === day.getDate()
 
   const afterToday =
     nowTime.getFullYear() < day.getFullYear() ||
     nowTime.getMonth() < day.getMonth() ||
     (nowTime.getMonth() <= day.getMonth() &&
       nowTime.getFullYear() <= day.getFullYear() &&
-      nowTime.getDate() <= day.getDate());
+      nowTime.getDate() <= day.getDate())
 
   const clickDay: boolean = clickedDate
     ? clickedDate.getFullYear() === day.getFullYear() &&
       clickedDate.getMonth() === day.getMonth() &&
       clickedDate.getDate() === day.getDate()
-    : false;
+    : false
 
   const clickDate = () => {
     if (addScheduleBtn) {
-      setClickedDate(day);
+      setClickedDate(day)
     }
-  };
+  }
 
   return (
     <Container
@@ -274,21 +275,14 @@ const allDay = ({
       sameMonth={sameMonth}
       sameDay={sameDay}
       clickDay={clickDay}
-      peopleCnt={dateFormat(
-        nowDate,
-        day,
-        tripPlanToWaterPlace.tripPlanToWaterPlace
-      )}
+      peopleCnt={dateFormat(nowDate, day, tripPlanToWaterPlace)}
       addScheduleBtn={addScheduleBtn}
       afterToday={afterToday}
     >
       <p>{day.getDate()}</p>
-      {(sameMonth &&
-        dateFormat(nowDate, day, tripPlanToWaterPlace.tripPlanToWaterPlace) ===
-          0) ||
+      {(sameMonth && dateFormat(nowDate, day, tripPlanToWaterPlace) === 0) ||
       (sameMonth &&
-        dateFormat(nowDate, day, tripPlanToWaterPlace.tripPlanToWaterPlace) ===
-          undefined) ? (
+        dateFormat(nowDate, day, tripPlanToWaterPlace) === undefined) ? (
         <></>
       ) : sameMonth ? (
         <div className="peopleCnt" />
@@ -296,7 +290,7 @@ const allDay = ({
         <></>
       )}
     </Container>
-  );
-};
+  )
+}
 
-export default allDay;
+export default allDay

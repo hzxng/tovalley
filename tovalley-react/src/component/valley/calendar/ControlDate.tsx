@@ -1,34 +1,35 @@
-import React, { useEffect, useState } from "react";
-import styles from "../../../css/valley/calendar/ControlDate.module.css";
+import React, { useEffect, useState } from 'react'
+import styles from '../../../css/valley/calendar/ControlDate.module.css'
 import {
   MdArrowDropDown,
   MdArrowDropUp,
   MdNavigateBefore,
   MdNavigateNext,
-} from "react-icons/md";
-import axiosInstance from "../../../axios_interceptor";
-import { useParams } from "react-router-dom";
-import { AiFillPlusCircle, AiFillMinusCircle } from "react-icons/ai";
-import { BsFillFileEarmarkPostFill } from "react-icons/bs";
-import { BiCheck } from "react-icons/bi";
+} from 'react-icons/md'
+import axiosInstance from '../../../axios_interceptor'
+import { useParams } from 'react-router-dom'
+import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai'
+import { BsFillFileEarmarkPostFill } from 'react-icons/bs'
+import { BiCheck } from 'react-icons/bi'
+import { TripPeopleCnt } from 'types/valley'
 
 type tripPeopleCnt = {
   tripPlanToWaterPlace: {
-    [key: string]: number;
-  };
-};
+    [key: string]: number
+  }
+}
 
 interface Props {
-  nowDate: Date;
-  setNowDate: React.Dispatch<React.SetStateAction<Date>>;
-  addScheduleBtn: boolean;
-  setAddScheduleBtn: React.Dispatch<React.SetStateAction<boolean>>;
-  clickedDate: Date | undefined;
-  waterPlaceName: string;
-  detailAddress: string;
-  setClickedDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
-  tripPlanToWaterPlace: tripPeopleCnt;
-  setPeopleCnt: React.Dispatch<React.SetStateAction<tripPeopleCnt>>;
+  nowDate: Date
+  setNowDate: React.Dispatch<React.SetStateAction<Date>>
+  addScheduleBtn: boolean
+  setAddScheduleBtn: React.Dispatch<React.SetStateAction<boolean>>
+  clickedDate: Date | undefined
+  waterPlaceName: string
+  detailAddress: string
+  setClickedDate: React.Dispatch<React.SetStateAction<Date | undefined>>
+  tripPlanToWaterPlace: TripPeopleCnt
+  setPeopleCnt: React.Dispatch<React.SetStateAction<TripPeopleCnt>>
 }
 
 const ControlDate = ({
@@ -43,61 +44,61 @@ const ControlDate = ({
   tripPlanToWaterPlace,
   setPeopleCnt,
 }: Props) => {
-  const { id } = useParams();
+  const { id } = useParams()
 
   const changeYear = (change: number) => {
-    const date = new Date(nowDate.getTime());
-    date.setFullYear(date.getFullYear() + change);
-    setNowDate(date);
-  };
+    const date = new Date(nowDate.getTime())
+    date.setFullYear(date.getFullYear() + change)
+    setNowDate(date)
+  }
 
   const changeMonth = (change: number) => {
-    const date = new Date(nowDate.getTime());
-    date.setMonth(date.getMonth() + change);
-    setNowDate(date);
-  };
+    const date = new Date(nowDate.getTime())
+    date.setMonth(date.getMonth() + change)
+    setNowDate(date)
+  }
 
   const getMonthTripSchedule = (change: number) => {
-    const date = new Date(nowDate.getTime());
-    date.setMonth(date.getMonth() + change);
+    const date = new Date(nowDate.getTime())
+    date.setMonth(date.getMonth() + change)
 
     const nowMonth =
       date.getMonth() + 1 < 10
         ? `0${date.getMonth() + 1}`
-        : `${date.getMonth() + 1}`;
+        : `${date.getMonth() + 1}`
 
-    const yearMonth = `${nowDate.getFullYear()}-${nowMonth}`;
+    const yearMonth = `${nowDate.getFullYear()}-${nowMonth}`
 
     const config = {
       params: {
         yearMonth: yearMonth,
       },
-    };
+    }
 
     axiosInstance
       .get(`/api/auth/water-places/${id}/trip-schedules`, config)
       .then((res) => {
-        setPeopleCnt({ tripPlanToWaterPlace: res.data.data });
-      });
-  };
+        setPeopleCnt({ tripPlanToWaterPlace: res.data.data })
+      })
+  }
 
-  const [scheduleInfo, setScheduleInfo] = useState(false);
-  const [yearDropdown, setYearDropdown] = useState(false);
-  const [innerWidth, setInnerWidth] = useState(window.innerWidth);
+  const [scheduleInfo, setScheduleInfo] = useState(false)
+  const [yearDropdown, setYearDropdown] = useState(false)
+  const [innerWidth, setInnerWidth] = useState(window.innerWidth)
 
   useEffect(() => {
     const resizeListener = () => {
-      setInnerWidth(window.innerWidth);
-    };
-    window.addEventListener("resize", resizeListener);
-  });
+      setInnerWidth(window.innerWidth)
+    }
+    window.addEventListener('resize', resizeListener)
+  })
 
   const congestionInfo = [
-    { peopleCnt: "46 ~", color: "#FA7F64" },
-    { peopleCnt: "31 ~ 45", color: "#FFD874" },
-    { peopleCnt: "16 ~ 30", color: "#8EBBFF" },
-    { peopleCnt: "1 ~ 15", color: "#E0E0E0" },
-  ];
+    { peopleCnt: '46 ~', color: '#FA7F64' },
+    { peopleCnt: '31 ~ 45', color: '#FFD874' },
+    { peopleCnt: '16 ~ 30', color: '#8EBBFF' },
+    { peopleCnt: '1 ~ 15', color: '#E0E0E0' },
+  ]
 
   return (
     <div className={styles.container}>
@@ -107,25 +108,25 @@ const ControlDate = ({
           {!yearDropdown ? (
             <span
               onClick={() => {
-                setYearDropdown(true);
-                changeYear(-1);
+                setYearDropdown(true)
+                changeYear(-1)
               }}
             >
               <MdArrowDropDown
                 color="#D9D9D9"
-                size={innerWidth <= 760 ? "35px" : "45px"}
+                size={innerWidth <= 760 ? '35px' : '45px'}
               />
             </span>
           ) : (
             <span
               onClick={() => {
-                setYearDropdown(false);
-                changeYear(+1);
+                setYearDropdown(false)
+                changeYear(+1)
               }}
             >
               <MdArrowDropUp
                 color="#D9D9D9"
-                size={innerWidth <= 760 ? "35px" : "45px"}
+                size={innerWidth <= 760 ? '35px' : '45px'}
               />
             </span>
           )}
@@ -138,14 +139,14 @@ const ControlDate = ({
                 nowDate.getMonth() + 1 === 1
               ) {
               } else {
-                changeMonth(-1);
-                getMonthTripSchedule(-1);
+                changeMonth(-1)
+                getMonthTripSchedule(-1)
               }
             }}
           >
             <MdNavigateBefore
               color="#D9D9D9"
-              size={innerWidth <= 760 ? "30px" : "40px"}
+              size={innerWidth <= 760 ? '30px' : '40px'}
             />
           </span>
           <h1>{`${nowDate.getMonth() + 1}`}</h1>
@@ -157,14 +158,14 @@ const ControlDate = ({
                 nowDate.getMonth() + 1 === 12
               ) {
               } else {
-                changeMonth(+1);
-                getMonthTripSchedule(+1);
+                changeMonth(+1)
+                getMonthTripSchedule(+1)
               }
             }}
           >
             <MdNavigateNext
               color="#D9D9D9"
-              size={innerWidth <= 760 ? "30px" : "40px"}
+              size={innerWidth <= 760 ? '30px' : '40px'}
             />
           </span>
         </div>
@@ -175,14 +176,14 @@ const ControlDate = ({
               style={
                 clickedDate !== undefined
                   ? {}
-                  : { backgroundColor: "#D3D3D3", cursor: "auto" }
+                  : { backgroundColor: '#D3D3D3', cursor: 'auto' }
               }
             >
-              {innerWidth <= 510 ? <BiCheck /> : "등록하기"}
+              {innerWidth <= 510 ? <BiCheck /> : '등록하기'}
             </span>
           ) : (
             <span onClick={() => setAddScheduleBtn(true)}>
-              {innerWidth <= 510 ? <BsFillFileEarmarkPostFill /> : "일정 추가"}
+              {innerWidth <= 510 ? <BsFillFileEarmarkPostFill /> : '일정 추가'}
             </span>
           )}
         </div>
@@ -194,7 +195,7 @@ const ControlDate = ({
               <span>{item.peopleCnt}</span>
               <div style={{ backgroundColor: item.color }} />
             </div>
-          );
+          )
         })}
       </div>
       {scheduleInfo && (
@@ -211,19 +212,19 @@ const ControlDate = ({
         />
       )}
     </div>
-  );
-};
+  )
+}
 
 interface ScheduleInfoProps {
-  nowDate: Date;
-  tripDate: Date | undefined;
-  waterPlaceName: string;
-  detailAddress: string;
-  setScheduleInfo: React.Dispatch<React.SetStateAction<boolean>>;
-  setAddScheduleBtn: React.Dispatch<React.SetStateAction<boolean>>;
-  setClickedDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
-  tripPlanToWaterPlace: tripPeopleCnt;
-  setPeopleCnt: React.Dispatch<React.SetStateAction<tripPeopleCnt>>;
+  nowDate: Date
+  tripDate: Date | undefined
+  waterPlaceName: string
+  detailAddress: string
+  setScheduleInfo: React.Dispatch<React.SetStateAction<boolean>>
+  setAddScheduleBtn: React.Dispatch<React.SetStateAction<boolean>>
+  setClickedDate: React.Dispatch<React.SetStateAction<Date | undefined>>
+  tripPlanToWaterPlace: TripPeopleCnt
+  setPeopleCnt: React.Dispatch<React.SetStateAction<TripPeopleCnt>>
 }
 
 const ScheduleInfo = ({
@@ -241,46 +242,46 @@ const ScheduleInfo = ({
             position: fixed; 
             top: -${window.scrollY}px;
             overflow-y: scroll;
-            width: 100%;`;
+            width: 100%;`
     return () => {
-      const scrollY = document.body.style.top;
-      document.body.style.cssText = "";
-      window.scrollTo(0, parseInt(scrollY || "0", 10) * -1);
-    };
-  }, []);
+      const scrollY = document.body.style.top
+      document.body.style.cssText = ''
+      window.scrollTo(0, parseInt(scrollY || '0', 10) * -1)
+    }
+  }, [])
 
-  const { id } = useParams();
-  const [peopleCount, setPeopleCount] = useState(0);
+  const { id } = useParams()
+  const [peopleCount, setPeopleCount] = useState(0)
 
   const dateFormat = (day: Date) => {
     if (nowDate.getMonth() + 1 < 10 && day.getDate() < 10) {
-      return `${day.getFullYear()}-0${day.getMonth() + 1}-0${day.getDate()}`;
+      return `${day.getFullYear()}-0${day.getMonth() + 1}-0${day.getDate()}`
     } else if (nowDate.getMonth() + 1 < 10 && day.getDate() >= 10) {
-      return `${day.getFullYear()}-0${day.getMonth() + 1}-${day.getDate()}`;
+      return `${day.getFullYear()}-0${day.getMonth() + 1}-${day.getDate()}`
     } else if (nowDate.getMonth() + 1 >= 10 && day.getDate() < 10) {
-      return `${day.getFullYear()}-${day.getMonth() + 1}-0${day.getDate()}`;
-    } else return `${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`;
-  };
+      return `${day.getFullYear()}-${day.getMonth() + 1}-0${day.getDate()}`
+    } else return `${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`
+  }
 
   const addSchedule = (tripDate: Date) => {
     const data = {
       waterPlaceId: Number(id),
       tripDate: dateFormat(tripDate),
       tripPartySize: peopleCount,
-    };
+    }
 
-    console.log(data);
+    console.log(data)
     axiosInstance
-      .post("/api/auth/trip-schedules", data)
+      .post('/api/auth/trip-schedules', data)
       .then((res) => {
-        console.log(res);
-        setPeopleCnt({ tripPlanToWaterPlace: res.data.data });
-        setScheduleInfo(false);
-        setAddScheduleBtn(false);
-        setClickedDate(undefined);
+        console.log(res)
+        setPeopleCnt({ tripPlanToWaterPlace: res.data.data })
+        setScheduleInfo(false)
+        setAddScheduleBtn(false)
+        setClickedDate(undefined)
       })
-      .catch((err) => console.log(err));
-  };
+      .catch((err) => console.log(err))
+  }
 
   return (
     <div className={styles.infoContainer}>
@@ -295,7 +296,7 @@ const ScheduleInfo = ({
             <span>인원</span>
             <span
               onClick={() => {
-                peopleCount !== 0 && setPeopleCount((prev) => prev - 1);
+                peopleCount !== 0 && setPeopleCount((prev) => prev - 1)
               }}
             >
               <AiFillMinusCircle color="#c3c3c3" size="25px" />
@@ -303,7 +304,7 @@ const ScheduleInfo = ({
             <input value={peopleCount} readOnly />
             <span
               onClick={() => {
-                setPeopleCount((prev) => prev + 1);
+                setPeopleCount((prev) => prev + 1)
               }}
             >
               <AiFillPlusCircle color="#c3c3c3" size="25px" />
@@ -313,9 +314,9 @@ const ScheduleInfo = ({
         <div className={styles.addBtn}>
           <span
             onClick={() => {
-              setScheduleInfo(false);
-              setAddScheduleBtn(false);
-              setClickedDate(undefined);
+              setScheduleInfo(false)
+              setAddScheduleBtn(false)
+              setClickedDate(undefined)
             }}
           >
             취소하기
@@ -324,7 +325,7 @@ const ScheduleInfo = ({
             onClick={() => peopleCount !== 0 && addSchedule(tripDate!)}
             style={
               peopleCount === 0
-                ? { backgroundColor: "#cdcdcd", cursor: "auto" }
+                ? { backgroundColor: '#cdcdcd', cursor: 'auto' }
                 : {}
             }
           >
@@ -333,7 +334,7 @@ const ScheduleInfo = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ControlDate;
+export default ControlDate

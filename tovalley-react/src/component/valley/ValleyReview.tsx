@@ -1,193 +1,193 @@
-import React, { FC, useEffect, useState } from "react";
-import styles from "../../css/valley/ValleyReview.module.css";
-import { MdOutlineChatBubble, MdImage } from "react-icons/md";
-import { FaUserCircle } from "react-icons/fa";
-import RatingStar from "../common/RatingStar";
-import axiosInstance from "../../axios_interceptor";
-import { useParams } from "react-router-dom";
-import DetailReviewImg from "./DetailReviewImg";
-import useDidMountEffect from "../../useDidMountEffect";
-import { AiOutlineComment } from "react-icons/ai";
-import { enterChatRoom } from "../../store/chat/chatRoomIdSlice";
-import { view } from "../../store/chat/chatViewSlice";
-import { useDispatch } from "react-redux";
+import React, { FC, useEffect, useState } from 'react'
+import styles from '../../css/valley/ValleyReview.module.css'
+import { MdOutlineChatBubble, MdImage } from 'react-icons/md'
+import { FaUserCircle } from 'react-icons/fa'
+import RatingStar from '../common/RatingStar'
+import axiosInstance from '../../axios_interceptor'
+import { useParams } from 'react-router-dom'
+import DetailReviewImg from './DetailReviewImg'
+import useDidMountEffect from '../../useDidMountEffect'
+import { AiOutlineComment } from 'react-icons/ai'
+import { enterChatRoom } from '../../store/chat/chatRoomIdSlice'
+import { view } from '../../store/chat/chatViewSlice'
+import { useDispatch } from 'react-redux'
 
 type valleyReview = {
-  waterPlaceRating: number;
-  reviewCnt: number;
+  waterPlaceRating: number
+  reviewCnt: number
   ratingRatio: {
-    "1": number;
-    "2": number;
-    "3": number;
-    "4": number;
-    "5": number;
-  };
+    '1': number
+    '2': number
+    '3': number
+    '4': number
+    '5': number
+  }
   reviews: {
     content: {
-      reviewId: number;
-      memberProfileImg: string | null;
-      nickname: string;
-      rating: number;
-      createdReviewDate: string;
-      content: string;
-      reviewImages: string[];
-      waterQuality: string;
-      isMyReview: boolean;
-    }[];
+      reviewId: number
+      memberProfileImg: string | null
+      nickname: string
+      rating: number
+      createdReviewDate: string
+      content: string
+      reviewImages: string[]
+      waterQuality: string
+      isMyReview: boolean
+    }[]
     pageable: {
       sort: {
-        empty: boolean;
-        unsorted: boolean;
-        sorted: boolean;
-      };
-      offset: number;
-      pageNumber: number;
-      pageSize: number;
-      paged: boolean;
-      unpaged: boolean;
-    };
-    last: boolean;
-    totalPages: number;
-    totalElements: number;
-    first: boolean;
+        empty: boolean
+        unsorted: boolean
+        sorted: boolean
+      }
+      offset: number
+      pageNumber: number
+      pageSize: number
+      paged: boolean
+      unpaged: boolean
+    }
+    last: boolean
+    totalPages: number
+    totalElements: number
+    first: boolean
     sort: {
-      empty: boolean;
-      unsorted: boolean;
-      sorted: boolean;
-    };
-    number: number;
-    size: number;
-    numberOfElements: number;
-    empty: boolean;
-  };
-};
+      empty: boolean
+      unsorted: boolean
+      sorted: boolean
+    }
+    number: number
+    size: number
+    numberOfElements: number
+    empty: boolean
+  }
+}
 
 interface Props {
   reviewRespDto: {
-    waterPlaceRating: number;
-    reviewCnt: number;
+    waterPlaceRating: number
+    reviewCnt: number
     ratingRatio: {
-      "1": number;
-      "2": number;
-      "3": number;
-      "4": number;
-      "5": number;
-    };
+      '1': number
+      '2': number
+      '3': number
+      '4': number
+      '5': number
+    }
     reviews: {
       content: {
-        reviewId: number;
-        memberProfileImg: string | null;
-        nickname: string;
-        rating: number;
-        createdReviewDate: string;
-        content: string;
-        reviewImages: string[];
-        waterQuality: string;
-        isMyReview: boolean;
-      }[];
+        reviewId: number
+        memberProfileImg: string | null
+        nickname: string
+        rating: number
+        createdReviewDate: string
+        content: string
+        reviewImages: string[]
+        waterQuality: string
+        isMyReview: boolean
+      }[]
       pageable: {
         sort: {
-          empty: boolean;
-          unsorted: boolean;
-          sorted: boolean;
-        };
-        offset: number;
-        pageNumber: number;
-        pageSize: number;
-        paged: boolean;
-        unpaged: boolean;
-      };
-      last: boolean;
-      totalPages: number;
-      totalElements: number;
-      first: boolean;
+          empty: boolean
+          unsorted: boolean
+          sorted: boolean
+        }
+        offset: number
+        pageNumber: number
+        pageSize: number
+        paged: boolean
+        unpaged: boolean
+      }
+      last: boolean
+      totalPages: number
+      totalElements: number
+      first: boolean
       sort: {
-        empty: boolean;
-        unsorted: boolean;
-        sorted: boolean;
-      };
-      number: number;
-      size: number;
-      numberOfElements: number;
-      empty: boolean;
-    };
-  };
-  setValleyReview: React.Dispatch<React.SetStateAction<valleyReview>>;
+        empty: boolean
+        unsorted: boolean
+        sorted: boolean
+      }
+      number: number
+      size: number
+      numberOfElements: number
+      empty: boolean
+    }
+  }
 }
 
-const ValleyReview: FC<Props> = ({ reviewRespDto, setValleyReview }) => {
-  const [sort, setSort] = useState("최신순");
-  const sortMenu = ["최신순", "평점 높은 순", "평점 낮은 순"];
-  const [page, setPage] = useState(1);
-  const [currPage, setCurrPage] = useState(page);
+const ValleyReview: FC<Props> = ({ reviewRespDto }) => {
+  const [sort, setSort] = useState('최신순')
+  const sortMenu = ['최신순', '평점 높은 순', '평점 낮은 순']
+  const [page, setPage] = useState(1)
+  const [currPage, setCurrPage] = useState(page)
   const [detailReview, setDetailReview] = useState<{
-    view: boolean;
-    images: string[];
-  }>({ view: false, images: [] });
-  const [innerWidth, setInnerWidth] = useState(window.innerWidth);
-  const dispatch = useDispatch();
+    view: boolean
+    images: string[]
+  }>({ view: false, images: [] })
+  const [innerWidth, setInnerWidth] = useState(window.innerWidth)
+  const dispatch = useDispatch()
+  const [valleyReview, setValleyReview] = useState()
 
   useEffect(() => {
     const resizeListener = () => {
-      setInnerWidth(window.innerWidth);
-    };
-    window.addEventListener("resize", resizeListener);
-  });
+      setInnerWidth(window.innerWidth)
+    }
+    window.addEventListener('resize', resizeListener)
+  })
 
-  let firstNum = currPage - (currPage % 5) + 1;
-  let lastNum = currPage - (currPage % 5) + 5;
+  let firstNum = currPage - (currPage % 5) + 1
+  let lastNum = currPage - (currPage % 5) + 5
 
-  const { id } = useParams();
+  const { id } = useParams()
 
   useDidMountEffect(() => {
     const config =
-      sort === "최신순"
+      sort === '최신순'
         ? {
             params: {
-              sort: "createdDate,desc",
+              sort: 'createdDate,desc',
               page: page - 1,
               size: 5,
             },
           }
-        : sort === "평점 높은 순"
+        : sort === '평점 높은 순'
         ? {
             params: {
-              sort: "rating,desc",
+              sort: 'rating,desc',
               page: page - 1,
               size: 5,
             },
           }
         : {
             params: {
-              sort: "rating,asc",
+              sort: 'rating,asc',
               page: page - 1,
               size: 5,
             },
-          };
+          }
 
-    console.log(config);
+    console.log(config)
 
     axiosInstance
       .get(`/api/auth/water-places/${id}/reviews`, config)
       .then((res) => {
-        console.log(res);
-        setValleyReview(res.data.data);
+        console.log(res)
+        setValleyReview(res.data.data)
       })
-      .catch((err) => console.log(err));
-  }, [sort, page]);
+      .catch((err) => console.log(err))
+  }, [sort, page])
 
   const newChatRoom = (nickname: string) => {
     axiosInstance
-      .post("/api/auth/chatroom", {
+      .post('/api/auth/chatroom', {
         // 채팅방 생성 or 기존채팅방 id 요청
         recipientNick: nickname,
       })
       .then((res) => {
-        console.log(res);
-        dispatch(enterChatRoom(res.data.data.chatRoomId));
-        dispatch(view(true));
-      });
-  };
+        console.log(res)
+        dispatch(enterChatRoom(res.data.data.chatRoomId))
+        dispatch(view(true))
+      })
+  }
 
   return (
     <div className={styles.valleyReview}>
@@ -201,10 +201,10 @@ const ValleyReview: FC<Props> = ({ reviewRespDto, setValleyReview }) => {
                 rating={reviewRespDto.waterPlaceRating}
                 size={
                   innerWidth <= 730
-                    ? "20px"
+                    ? '20px'
                     : innerWidth <= 880
-                    ? "25px"
-                    : "30px"
+                    ? '25px'
+                    : '30px'
                 }
               />
             </span>
@@ -220,7 +220,7 @@ const ValleyReview: FC<Props> = ({ reviewRespDto, setValleyReview }) => {
           <span>
             <MdOutlineChatBubble
               size={
-                innerWidth <= 730 ? "40px" : innerWidth <= 880 ? "50px" : "70px"
+                innerWidth <= 730 ? '40px' : innerWidth <= 880 ? '50px' : '70px'
               }
               color="#999999"
             />
@@ -241,7 +241,7 @@ const ValleyReview: FC<Props> = ({ reviewRespDto, setValleyReview }) => {
                           width: `calc(${reviewRespDto.ratingRatio[5]}/${reviewRespDto.reviewCnt}*100%)`,
                         }
                       : {
-                          width: "0",
+                          width: '0',
                         }
                   }
                 >
@@ -261,7 +261,7 @@ const ValleyReview: FC<Props> = ({ reviewRespDto, setValleyReview }) => {
                           width: `calc(${reviewRespDto.ratingRatio[4]}/${reviewRespDto.reviewCnt}*100%)`,
                         }
                       : {
-                          width: "0",
+                          width: '0',
                         }
                   }
                 >
@@ -281,7 +281,7 @@ const ValleyReview: FC<Props> = ({ reviewRespDto, setValleyReview }) => {
                           width: `calc(${reviewRespDto.ratingRatio[3]}/${reviewRespDto.reviewCnt}*100%)`,
                         }
                       : {
-                          width: "0",
+                          width: '0',
                         }
                   }
                 >
@@ -301,7 +301,7 @@ const ValleyReview: FC<Props> = ({ reviewRespDto, setValleyReview }) => {
                           width: `calc(${reviewRespDto.ratingRatio[2]}/${reviewRespDto.reviewCnt}*100%)`,
                         }
                       : {
-                          width: "0",
+                          width: '0',
                         }
                   }
                 >
@@ -321,7 +321,7 @@ const ValleyReview: FC<Props> = ({ reviewRespDto, setValleyReview }) => {
                           width: `calc(${reviewRespDto.ratingRatio[1]}/${reviewRespDto.reviewCnt}*100%)`,
                         }
                       : {
-                          width: "0",
+                          width: '0',
                         }
                   }
                 >
@@ -342,14 +342,14 @@ const ValleyReview: FC<Props> = ({ reviewRespDto, setValleyReview }) => {
                   onClick={() => setSort(item)}
                   style={
                     sort === item
-                      ? { fontWeight: "bold", color: "#353535" }
+                      ? { fontWeight: 'bold', color: '#353535' }
                       : {}
                   }
                 >
                   {item}
                 </span>
               </div>
-            );
+            )
           })}
         </div>
         <div className={styles.reviewContainer}>
@@ -363,13 +363,13 @@ const ValleyReview: FC<Props> = ({ reviewRespDto, setValleyReview }) => {
                     setDetailReview({ view: true, images: item.reviewImages })
                   }
                   style={
-                    item.reviewImages?.length === 0 ? {} : { cursor: "pointer" }
+                    item.reviewImages?.length === 0 ? {} : { cursor: 'pointer' }
                   }
                 >
                   <img
                     src={
                       item.reviewImages?.length === 0
-                        ? process.env.PUBLIC_URL + "/img/default-image.png"
+                        ? process.env.PUBLIC_URL + '/img/default-image.png'
                         : `${item.reviewImages[0]}`
                     }
                     alt="계곡 이미지"
@@ -384,7 +384,7 @@ const ValleyReview: FC<Props> = ({ reviewRespDto, setValleyReview }) => {
                       {item.memberProfileImg === null ? (
                         <span>
                           <FaUserCircle
-                            size={innerWidth <= 730 ? "25px" : "30px"}
+                            size={innerWidth <= 730 ? '25px' : '30px'}
                             color="#B7B7B7"
                           />
                         </span>
@@ -410,7 +410,7 @@ const ValleyReview: FC<Props> = ({ reviewRespDto, setValleyReview }) => {
                     <span>
                       <RatingStar
                         rating={item.rating}
-                        size={innerWidth <= 730 ? "16px" : "20px"}
+                        size={innerWidth <= 730 ? '16px' : '20px'}
                       />
                     </span>
                     <span>{item.rating}</span>
@@ -427,7 +427,7 @@ const ValleyReview: FC<Props> = ({ reviewRespDto, setValleyReview }) => {
                       >
                         <MdImage
                           color="#696969"
-                          size={innerWidth <= 730 ? "20px" : "28px"}
+                          size={innerWidth <= 730 ? '20px' : '28px'}
                         />
                       </span>
                     )}
@@ -435,15 +435,15 @@ const ValleyReview: FC<Props> = ({ reviewRespDto, setValleyReview }) => {
                   <span>{item.content}</span>
                 </div>
               </div>
-            );
+            )
           })}
         </div>
       </div>
       <div className={styles.paging}>
         <button
           onClick={() => {
-            setPage(page - 1);
-            setCurrPage(page - 2);
+            setPage(page - 1)
+            setCurrPage(page - 2)
           }}
           disabled={page === 1}
         >
@@ -451,7 +451,7 @@ const ValleyReview: FC<Props> = ({ reviewRespDto, setValleyReview }) => {
         </button>
         <button
           onClick={() => setPage(firstNum)}
-          aria-current={page === firstNum ? "page" : undefined}
+          aria-current={page === firstNum ? 'page' : undefined}
         >
           {firstNum}
         </button>
@@ -459,39 +459,39 @@ const ValleyReview: FC<Props> = ({ reviewRespDto, setValleyReview }) => {
           .fill(0)
           .map((_, i) => {
             if (firstNum + 1 + i > reviewRespDto.reviews.totalPages) {
-              return null;
+              return null
             } else {
               if (i <= 2) {
                 return (
                   <button
                     key={i + 1}
                     onClick={() => {
-                      setPage(firstNum + 1 + i);
+                      setPage(firstNum + 1 + i)
                     }}
                     aria-current={
-                      page === firstNum + 1 + i ? "page" : undefined
+                      page === firstNum + 1 + i ? 'page' : undefined
                     }
                   >
                     {firstNum + 1 + i}
                   </button>
-                );
+                )
               } else if (i >= 3) {
                 return (
                   <button
                     key={i + 1}
                     onClick={() => setPage(lastNum)}
-                    aria-current={page === lastNum ? "page" : undefined}
+                    aria-current={page === lastNum ? 'page' : undefined}
                   >
                     {lastNum}
                   </button>
-                );
+                )
               }
             }
           })}
         <button
           onClick={() => {
-            setPage(page + 1);
-            setCurrPage(page);
+            setPage(page + 1)
+            setCurrPage(page)
           }}
           disabled={page === reviewRespDto.reviews.totalPages}
         >
@@ -505,7 +505,7 @@ const ValleyReview: FC<Props> = ({ reviewRespDto, setValleyReview }) => {
         />
       )}
     </div>
-  );
-};
+  )
+}
 
-export default ValleyReview;
+export default ValleyReview

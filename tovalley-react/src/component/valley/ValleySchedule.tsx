@@ -1,20 +1,20 @@
-import React, { FC, useState } from "react";
-import ControlDate from "./calendar/ControlDate";
-import DateBox from "./calendar/DateBox";
-import styled from "styled-components";
+import React, { FC, useState } from 'react'
+import ControlDate from './calendar/ControlDate'
+import DateBox from './calendar/DateBox'
+import styled from 'styled-components'
+import { TripPeopleCnt } from 'types/valley'
 
 type tripPeopleCnt = {
   tripPlanToWaterPlace: {
-    [key: string]: number;
-  };
-};
+    [key: string]: number
+  }
+}
 
 interface Props {
-  tripPlanToWaterPlace: tripPeopleCnt;
-  waterPlaceName: string;
-  detailAddress: string;
-  setPeopleCnt: React.Dispatch<React.SetStateAction<tripPeopleCnt>>;
-  annualVisitors: string;
+  tripPlanToWaterPlace: TripPeopleCnt
+  waterPlaceName: string
+  detailAddress: string
+  annualVisitors: string
 }
 
 const Wrapper = styled.div`
@@ -23,7 +23,7 @@ const Wrapper = styled.div`
   @media screen and (max-width: 1000px) {
     margin-top: 0em;
   }
-`;
+`
 
 const Container = styled.div`
   width: 100%;
@@ -33,7 +33,7 @@ const Container = styled.div`
   border-radius: 10px;
   padding-bottom: 1em;
   margin-top: 1em;
-`;
+`
 
 const Title = styled.span`
   font-weight: bold;
@@ -42,7 +42,7 @@ const Title = styled.span`
   @media screen and (max-width: 730px) {
     font-size: 1.3rem;
   }
-`;
+`
 
 const AnnualVisitors = styled.div`
   padding: 1em 0 0 1.5em;
@@ -64,18 +64,20 @@ const AnnualVisitors = styled.div`
       border-radius: 5px;
     }
   }
-`;
+`
 
 const ValleySchedule: FC<Props> = ({
   tripPlanToWaterPlace,
   waterPlaceName,
   detailAddress,
-  setPeopleCnt,
   annualVisitors,
 }) => {
-  const [nowDate, setNowDate] = useState<Date>(new Date());
-  const [clickedDate, setClickedDate] = useState<Date>();
-  const [addScheduleBtn, setAddScheduleBtn] = useState(false);
+  const [nowDate, setNowDate] = useState<Date>(new Date())
+  const [clickedDate, setClickedDate] = useState<Date>()
+  const [addScheduleBtn, setAddScheduleBtn] = useState(false)
+  const [peopleCnt, setPeopleCnt] = useState<TripPeopleCnt>({
+    '2023-01-01': 0,
+  })
 
   return (
     <Wrapper>
@@ -101,7 +103,7 @@ const ValleySchedule: FC<Props> = ({
           tripPlanToWaterPlace={tripPlanToWaterPlace}
           addScheduleBtn={addScheduleBtn}
         />
-        {annualVisitors !== "" && (
+        {annualVisitors !== '' && (
           <AnnualVisitors>
             <span>연평균 방문자 수</span>
             <span>{(Number(annualVisitors) * 1000).toLocaleString()}</span>
@@ -109,7 +111,7 @@ const ValleySchedule: FC<Props> = ({
         )}
       </Container>
     </Wrapper>
-  );
-};
+  )
+}
 
-export default ValleySchedule;
+export default ValleySchedule
