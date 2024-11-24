@@ -6,14 +6,14 @@ const Input = ({
   onKeyDown,
 }: {
   type?: string
-  placeholder: string
+  placeholder?: string
   value: string
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void
 }) => {
   return (
     <input
-      type={type ?? ''}
+      type={type}
       required
       placeholder={placeholder}
       value={value}

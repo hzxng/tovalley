@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import FindInfoForm from './FindInfoForm'
-import Input from './Input'
+import Input from '../../../component/Input'
 import styles from '@styles/user/FindInfoModal.module.scss'
 import axios from 'axios'
 

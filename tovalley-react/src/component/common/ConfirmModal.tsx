@@ -1,15 +1,15 @@
-import React, { FC, useEffect } from "react";
-import styles from "../../css/common/ConfirmModal.module.css";
+import React, { FC, useEffect } from 'react'
+import styles from '../../css/common/ConfirmModal.module.css'
 
 interface Props {
-  content: string;
+  content: string
   handleModal?: React.Dispatch<
     React.SetStateAction<{
-      view: boolean;
-      content: string;
+      view: boolean
+      content: string
     }>
-  >;
-  CustomFunc?: () => void;
+  >
+  CustomFunc?: () => void
 }
 
 const ConfirmModal: FC<Props> = ({ content, handleModal, CustomFunc }) => {
@@ -18,13 +18,13 @@ const ConfirmModal: FC<Props> = ({ content, handleModal, CustomFunc }) => {
           position: fixed; 
           top: -${window.scrollY}px;
           overflow-y: scroll;
-          width: 100%;`;
+          width: 100%;`
     return () => {
-      const scrollY = document.body.style.top;
-      document.body.style.cssText = "";
-      window.scrollTo(0, parseInt(scrollY || "0", 10) * -1);
-    };
-  }, []);
+      const scrollY = document.body.style.top
+      document.body.style.cssText = ''
+      window.scrollTo(0, parseInt(scrollY || '0', 10) * -1)
+    }
+  }, [])
 
   return (
     <div className={styles.modalContainer}>
@@ -46,7 +46,7 @@ const ConfirmModal: FC<Props> = ({ content, handleModal, CustomFunc }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ConfirmModal;
+export default ConfirmModal

@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import FindInfoForm from './FindInfoForm'
-import styles from '@styles/user/FIndPassword.module.scss'
 import axios from 'axios'
-import Input from './Input'
 import useTimer, { MINUTES_IN_MS } from '@hooks/useTimer'
+import SubmitCode from './SubmitCode'
+import Input from '@component/Input'
+import styles from '@styles/user/FindPassword.module.scss'
 
 const localhost = process.env.REACT_APP_HOST
 
@@ -20,19 +21,10 @@ const FindPassword = ({
 }) => {
   const [inputText, setInputText] = useState('')
   const [isSubmit, setIsSubmit] = useState(false)
-  const [buttonText, setButtonText] = useState('확인')
-  const { setTimeLeft, minutes, second } = useTimer()
-
-  useEffect(() => {
-    if (minutes === '00' && second === '00') setButtonText('재전송')
-  }, [minutes, second])
+  const { setTimeLeft } = useTimer()
 
   const handleEmailInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value)
-  }
-
-  const handleCodeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputText(e.target.value)
   }
 
   const authEmail = () => {
@@ -48,7 +40,6 @@ const FindPassword = ({
         console.log(res)
         setLoading(false)
         setIsSubmit(true)
-        setButtonText('확인')
         setTimeLeft(MINUTES_IN_MS)
       })
       .catch((err) => {
@@ -62,7 +53,6 @@ const FindPassword = ({
             alert(err.response.data.msg)
           } else {
             setTimeLeft(0)
-            setButtonText('재전송')
           }
         }
       })
@@ -97,15 +87,6 @@ const FindPassword = ({
       })
   }
 
-  const handleSubmit = () => {
-    if (buttonText === '확인') authCode()
-    else {
-      setInputText('')
-      authEmail()
-      setButtonText('확인')
-    }
-  }
-
   return (
     <>
       <FindInfoForm
@@ -122,18 +103,7 @@ const FindPassword = ({
       </FindInfoForm>
       {isSubmit && (
         <div className={styles.confirmCode}>
-          <span>인증 코드가 메일로 전송되었습니다.</span>
-          <span className={styles.timer}>
-            {minutes} : {second}
-          </span>
-          <div className={styles.confirmCodeInput}>
-            <Input
-              placeholder="확인 코드"
-              value={inputText}
-              onChange={(e) => handleCodeInput(e)}
-            />
-            <button onClick={handleSubmit}>{buttonText}</button>
-          </div>
+          <SubmitCode authCode={authCode} email={email} />
         </div>
       )}
     </>

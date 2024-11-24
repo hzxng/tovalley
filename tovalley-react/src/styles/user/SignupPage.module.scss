@@ -1,0 +1,147 @@
+@import '@styles/variables.scss';
+@import '@styles/mixins.scss';
+
+.body {
+  margin: auto;
+  margin-top: 12em;
+  width: 70%;
+  max-width: 25em;
+}
+
+.signupContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 0.5em;
+
+  > span {
+    color: $primary;
+    font-weight: bold;
+    font-size: 1.4em;
+  }
+}
+
+.signupInput {
+  > div {
+    margin-top: 0.8em;
+    position: relative;
+
+    > span {
+      &:first-child {
+        color: #555555;
+        font-size: small;
+      }
+    }
+
+    &:nth-child(5) {
+      margin-top: 0.5em;
+      position: relative;
+    }
+  }
+
+  input {
+    border: 1px solid #b8b8b8;
+    padding: 0.9em 1em;
+    border-radius: 5px;
+    color: #555555;
+    width: 100%;
+    box-sizing: border-box;
+
+    &:focus {
+      border: none;
+      outline: 1px solid $primary;
+    }
+  }
+}
+
+.confirmCode {
+  span {
+    font-size: 0.8rem;
+    color: #8e8e8e;
+    margin-right: 0.5em;
+  }
+
+  > div > div {
+    position: relative;
+
+    button {
+      @include border-btn;
+    }
+  }
+}
+
+.alert {
+  color: $alert-red;
+}
+
+.available {
+  color: $alert-green;
+}
+
+.none {
+  color: transparent;
+}
+
+.default {
+  color: #b8b8b8;
+}
+
+.emailAlert {
+  font-size: 0.8rem;
+}
+
+.defaultAlert {
+  font-size: 0.7rem;
+}
+
+.confirmBtn {
+  @include border-btn;
+}
+
+.disableBtn {
+  @include border-btn;
+  color: #b8b8b8;
+  border: 1px solid #b8b8b8;
+}
+
+.check {
+  color: $alert-green;
+  position: absolute;
+  margin: 0.8em 0 0 1em;
+}
+
+.charCnt {
+  color: #b8b8b8;
+  font-size: 0.7rem;
+  position: absolute;
+  right: 5px;
+  bottom: -17px;
+}
+
+.signupBtn {
+  width: 98%;
+
+  button {
+    @include button($margin: 1em 0 0 0);
+    width: 100%;
+  }
+}
+
+.socialSignup {
+  margin: 2.5em 0 5em 0;
+  padding: 0 0.5em;
+}
+
+@media screen and (max-width: 500px) {
+  .confirmBtn {
+    font-size: 0.6rem;
+    padding: 0.6em 0.5em;
+    margin: 0.8em 0 0 1em;
+  }
+
+  .disableBtn {
+    font-size: 0.6rem;
+    padding: 0.6em 0.5em;
+    margin: 0.8em 0 0 1em;
+  }
+}

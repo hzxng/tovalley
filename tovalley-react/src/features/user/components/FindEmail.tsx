@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import axios from 'axios'
 import FindInfoForm from './FindInfoForm'
-import Input from './Input'
+import Input from '@component/Input'
 
 const localhost = process.env.REACT_APP_HOST
 

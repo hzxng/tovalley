@@ -26,6 +26,19 @@
   margin: $margin;
 }
 
+@mixin border-btn {
+  background-color: white;
+  color: $primary;
+  border: 1px solid $primary;
+  font-size: 0.9rem;
+  padding: 0.3em 0.5em;
+  border-radius: 5px;
+  cursor: pointer;
+  position: absolute;
+  margin: 0.6em 0 0 1em;
+  white-space: nowrap;
+}
+
 @mixin input($margin) {
   border: 1px solid #b8b8b8;
   border-radius: 7px;
