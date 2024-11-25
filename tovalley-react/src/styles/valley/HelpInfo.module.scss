@@ -1,0 +1,31 @@
+.helpInfo {
+  position: absolute;
+  top: 40px;
+  left: 110px;
+  z-index: 3;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0px 2px 2px rgb(221, 221, 221);
+  padding: 1em;
+  max-height: 420px;
+  overflow-y: scroll;
+
+  div {
+    span {
+      &:first-child {
+        font-weight: bold;
+        font-size: 0.9rem;
+        color: #434343;
+      }
+
+      &:last-child {
+        font-size: 0.8rem;
+        color: #525252;
+      }
+    }
+
+    &:last-child {
+      margin-top: 0.8em;
+    }
+  }
+}

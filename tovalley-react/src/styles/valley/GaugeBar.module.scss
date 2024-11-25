@@ -1,0 +1,50 @@
+.gauge {
+  margin-right: 0.7em;
+
+  > span {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #848484;
+  }
+}
+
+.gaugeDetail {
+  position: relative;
+
+  > span {
+    &:nth-child(2) {
+      position: absolute;
+      left: 20px;
+      top: 0px;
+    }
+
+    &:nth-child(3) {
+      position: absolute;
+      left: 23px;
+    }
+
+    &:last-child {
+      position: absolute;
+      left: 20px;
+      bottom: 0px;
+    }
+  }
+}
+
+.gaugeBar {
+  background: linear-gradient(to top, #95d2ff, #cbe2cb);
+  width: 14px;
+  height: 100px;
+  margin: 0.3em 0 0 0.2em;
+
+  div {
+    width: 14px;
+    height: 3px;
+    background-color: #f19797;
+    position: absolute;
+  }
+}
+
+.ntu {
+  background: linear-gradient(to top, #fff1bd, #ffbb95);
+}

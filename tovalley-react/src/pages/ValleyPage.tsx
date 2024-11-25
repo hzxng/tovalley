@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import ValleyQuality from '../component/valley/valleyQuality/ValleyQuality'
 import ValleySchedule from '../component/valley/ValleySchedule'
 import ValleyReview from '../component/valley/ValleyReview'
 import axiosInstance from '../axios_interceptor'
@@ -10,6 +9,7 @@ import LoginModal from '@features/valley/components/LoginModal'
 import DangerSegments from '@features/valley/components/DangerSegment'
 import ValleyInfo from '@features/valley/components/ValleyInfo'
 import ValleyTitle from '@features/valley/components/ValleyTitle'
+import ValleyQuality from '@features/valley/components/ValleyQuality'
 
 const ValleyPage = () => {
   const [valley, setValley] = useState<ValleyData | null>(null)
