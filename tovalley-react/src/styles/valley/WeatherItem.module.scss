@@ -1,0 +1,266 @@
+@import '@styles/variables.scss';
+
+.small {
+  font-size: 0.6rem;
+}
+
+.today {
+  > span {
+    color: $primary;
+  }
+}
+
+.weatherItem {
+  flex-grow: 1;
+  padding: 0 0.6em;
+  display: flex;
+  justify-content: center;
+
+  &:not(:last-of-type) {
+    border-right: 1px solid $light-gray;
+  }
+
+  > div {
+    min-width: 95px;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+}
+
+.mobileWeatherItem {
+  padding: 0.5em 0.7em;
+  display: flex;
+
+  &:not(:last-of-type) {
+    border-bottom: 1px solid $light-gray;
+  }
+}
+
+.weatherInfo {
+  margin: 0.2em 0.8em 0 1em;
+}
+
+.weatherInfoIcon {
+  min-height: 4em;
+
+  > span {
+    display: block;
+    text-align: center;
+    margin-top: -0.5em;
+
+    &:nth-child(2) {
+      font-weight: bold;
+      color: #5a5a5a;
+      margin-top: -0.5em;
+      font-size: 0.8rem;
+    }
+  }
+}
+
+.temperature {
+  position: relative;
+  margin-bottom: 0.6em;
+  text-align: center;
+
+  > span {
+    font-weight: bold;
+
+    &:first-child {
+      color: #3378fc;
+    }
+
+    &:nth-child(2) {
+      color: #c7c7c7;
+    }
+
+    &:last-child {
+      color: #fd4848;
+      font-size: 1.4rem;
+    }
+  }
+}
+
+.weatherItemDetail {
+  display: flex;
+  justify-content: space-between;
+  margin: 0.5em 0;
+  align-items: center;
+
+  > span {
+    &:first-child {
+      color: #656565;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    &:last-child {
+      color: #727272;
+      font-size: 0.7rem;
+      border: 1px solid #a5a5a5;
+      padding: 0.2em 0.6em;
+      border-radius: 20px;
+    }
+  }
+}
+
+.mobileWeatherDetail {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.moblieWeatherItemDetail {
+  display: flex;
+  justify-content: space-between;
+
+  span {
+    color: #727272;
+    border: 1px solid #a5a5a5;
+    padding: 0.2em 0.6em;
+    border-radius: 20px;
+    font-size: 0.6rem;
+  }
+
+  div {
+    width: calc(100% / 5);
+    text-align: center;
+  }
+}
+
+.mobileWeatherDesc {
+  display: flex;
+  justify-content: space-between;
+
+  span {
+    font-size: 0.6rem;
+    color: #656565;
+    font-weight: 600;
+  }
+
+  div {
+    width: calc(100% / 5);
+    text-align: center;
+  }
+}
+
+.dayInfo {
+  margin-top: 0.7em;
+
+  > span {
+    display: block;
+    text-align: center;
+
+    &:first-child {
+      font-weight: bold;
+      font-size: 1rem;
+    }
+  }
+}
+
+@media screen and (max-width: 730px) {
+  .weatherItem {
+    > div {
+      min-width: 50px;
+      width: 100%;
+    }
+  }
+
+  .weatherItemDetail {
+    > span {
+      &:first-child {
+        font-size: 0.7rem;
+      }
+
+      &:last-child {
+        font-size: 0.5rem;
+      }
+    }
+  }
+
+  .temperature {
+    > span {
+      font-size: 0.8rem;
+
+      &:last-child {
+        font-size: 1rem;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 540px) {
+  .weatherInfoIcon {
+    > span {
+      &:nth-child(2) {
+        display: none;
+      }
+    }
+  }
+
+  .weatherInfoIcon {
+    min-height: 0;
+  }
+
+  .weatherItemDetail {
+    > span {
+      &:first-child {
+        font-size: 0.5rem;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 470px) {
+  .temperature {
+    margin-bottom: 0;
+    margin-top: -0.8em;
+  }
+
+  .dayInfo {
+    margin-top: 0.5em;
+  }
+}
+
+@media screen and (max-width: 440px) {
+  .moblieWeatherItemDetail {
+    span {
+      font-size: 0.5rem;
+    }
+  }
+}
+
+@media screen and (max-width: 410px) {
+  .temperature {
+    > span {
+      font-size: 0.6rem;
+
+      &:last-child {
+        font-size: 0.8rem;
+      }
+    }
+  }
+
+  .dayInfo {
+    > span {
+      &:last-child {
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 390px) {
+  .mobileWeatherItem {
+    padding: 0.5em 0.5em;
+  }
+
+  .weatherInfoIcon {
+    img {
+      margin-top: 0.2em;
+      width: 35px;
+    }
+  }
+}

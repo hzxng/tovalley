@@ -1,4 +1,4 @@
-interface WaterPlaceWeathers {
+export interface WaterPlaceWeathers {
   weatherDate: string
   climateIcon: string
   climateDescription: string
@@ -11,13 +11,13 @@ interface WaterPlaceWeathers {
   dayFeelsLike: number
 }
 
-interface WaterQualityReviews {
+export interface WaterQualityReviews {
   깨끗해요: number
   괜찮아요: number
   더러워요: number
 }
 
-interface WaterPlaceDetails {
+export interface WaterPlaceDetails {
   waterPlaceImage: string | null
   waterPlaceName: string
   latitude: string
@@ -38,7 +38,7 @@ interface WaterPlaceDetails {
   waterQualityReviews: WaterQualityReviews
 }
 
-interface RescueSupplies {
+export interface RescueSupplies {
   lifeBoatNum: number
   portableStandNum: number
   lifeJacketNum: number
@@ -47,7 +47,7 @@ interface RescueSupplies {
   rescueRodNum: number
 }
 
-interface Accidents {
+export interface Accidents {
   totalDeathCnt: number
   totalDisappearanceCnt: number
   totalInjuryCnt: number
@@ -57,7 +57,7 @@ export interface TripPeopleCnt {
   [key: string]: number
 }
 
-interface ReviewContent {
+export interface ReviewContent {
   reviewId: number
   memberProfileImg: string | null
   nickname: string
@@ -69,7 +69,7 @@ interface ReviewContent {
   isMyReview: boolean
 }
 
-interface ReviewRespDto {
+export interface ReviewRespDto {
   waterPlaceRating: number
   reviewCnt: number
   ratingRatio: {

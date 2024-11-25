@@ -1,7 +1,12 @@
 import { AccidentCountDto } from 'types/main'
 import styles from './AccidentTable.module.scss'
+import { Accidents } from 'types/valley'
 
-const AccidentTable = ({ accident }: { accident: AccidentCountDto }) => {
+const AccidentTable = ({
+  accident,
+}: {
+  accident: AccidentCountDto | Accidents
+}) => {
   return (
     <div className={styles.graph}>
       <div className={styles.graphTitle}>

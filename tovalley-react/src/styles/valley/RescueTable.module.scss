@@ -1,0 +1,54 @@
+@import '@styles/variables.scss';
+
+.rescueList {
+  display: flex;
+  border: 1px solid $primary;
+  padding: 1em 0.5em;
+  border-radius: 8px;
+  justify-content: space-around;
+  margin-top: 0.5em;
+}
+
+.rescueItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  > span {
+    &:first-child {
+      font-size: 30px;
+      color: $primary;
+    }
+
+    &:nth-child(2) {
+      color: #828282;
+      font-size: small;
+    }
+
+    &:nth-child(3) {
+      color: #717171;
+      font-weight: bold;
+      font-size: 1.4em;
+    }
+  }
+}
+
+@media screen and (max-width: 540px) {
+  .rescueItem {
+    > span {
+      &:first-child {
+        font-size: 22px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 390px) {
+  .rescueItem {
+    > span {
+      &:nth-child(2) {
+        font-size: 0.5rem;
+      }
+    }
+  }
+}
