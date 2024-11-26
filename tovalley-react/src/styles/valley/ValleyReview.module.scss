@@ -1,0 +1,62 @@
+.valleyReview {
+  margin-top: 5em;
+}
+
+.valleyReview > span {
+  font-weight: bold;
+  font-size: 1.6em;
+}
+
+.reviewList {
+  padding: 0 3%;
+}
+
+.reviewSort {
+  display: flex;
+  justify-content: right;
+  margin: 3em 1em 1em 0;
+}
+
+.reviewSort div {
+  padding: 0 1.4em;
+  color: #696969;
+}
+
+.reviewSort div:not(:last-of-type) {
+  border-right: 1px solid #9e9e9e;
+}
+
+.reviewSort div > span {
+  cursor: pointer;
+}
+
+.clicked {
+  font-weight: bold;
+  color: #353535;
+}
+
+@media screen and (max-width: 730px) {
+  .valleyReview {
+    margin-top: 4em;
+  }
+
+  .valleyReview > span {
+    font-size: 1.3em;
+  }
+}
+
+@media screen and (max-width: 440px) {
+  .reviewSort {
+    display: flex;
+    justify-content: right;
+    margin: 2em 0 1em 0;
+  }
+
+  .reviewSort div {
+    padding: 0 0.8em;
+  }
+
+  .reviewSort div > span {
+    font-size: 0.9rem;
+  }
+}

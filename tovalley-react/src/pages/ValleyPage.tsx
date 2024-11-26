@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react'
-import ValleySchedule from '../component/valley/ValleySchedule'
-import ValleyReview from '../component/valley/ValleyReview'
 import axiosInstance from '../axios_interceptor'
 import styles from '@styles/valley/ValleyPage.module.scss'
 import { data } from 'dummy/valley-data'
@@ -10,6 +8,8 @@ import DangerSegments from '@features/valley/components/DangerSegment'
 import ValleyInfo from '@features/valley/components/ValleyInfo'
 import ValleyTitle from '@features/valley/components/ValleyTitle'
 import ValleyQuality from '@features/valley/components/ValleyQuality'
+import ValleySchedule from '@features/valley/components/ValleySchedule'
+import ValleyReview from '@features/valley/components/ValleyReview'
 
 const ValleyPage = () => {
   const [valley, setValley] = useState<ValleyData | null>(null)

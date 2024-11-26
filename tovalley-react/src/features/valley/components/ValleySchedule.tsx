@@ -1,21 +1,8 @@
-import React, { FC, useState } from 'react'
-import ControlDate from './calendar/ControlDate'
-import DateBox from './calendar/DateBox'
+import ControlDate from '@component/valley/calendar/ControlDate'
+import DateBox from '@component/valley/calendar/DateBox'
+import { useState } from 'react'
 import styled from 'styled-components'
 import { TripPeopleCnt } from 'types/valley'
-
-type tripPeopleCnt = {
-  tripPlanToWaterPlace: {
-    [key: string]: number
-  }
-}
-
-interface Props {
-  tripPlanToWaterPlace: TripPeopleCnt
-  waterPlaceName: string
-  detailAddress: string
-  annualVisitors: string
-}
 
 const Wrapper = styled.div`
   margin-top: 5em;
@@ -66,11 +53,16 @@ const AnnualVisitors = styled.div`
   }
 `
 
-const ValleySchedule: FC<Props> = ({
+const ValleySchedule = ({
   tripPlanToWaterPlace,
   waterPlaceName,
   detailAddress,
   annualVisitors,
+}: {
+  tripPlanToWaterPlace: TripPeopleCnt
+  waterPlaceName: string
+  detailAddress: string
+  annualVisitors: string
 }) => {
   const [nowDate, setNowDate] = useState<Date>(new Date())
   const [clickedDate, setClickedDate] = useState<Date>()
@@ -103,7 +95,7 @@ const ValleySchedule: FC<Props> = ({
           tripPlanToWaterPlace={tripPlanToWaterPlace}
           addScheduleBtn={addScheduleBtn}
         />
-        {annualVisitors !== '' && (
+        {annualVisitors && (
           <AnnualVisitors>
             <span>연평균 방문자 수</span>
             <span>{(Number(annualVisitors) * 1000).toLocaleString()}</span>
