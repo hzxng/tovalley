@@ -2,7 +2,7 @@ import { NationalWeather } from 'types/main'
 import cn from 'classnames'
 import styles from '@styles/home/Weather.module.scss'
 import { getDayOfWeek } from '@utils/getDayOfWeek'
-import { dateFormat } from '../utils/dateFormat'
+import { dateFormat } from '@utils/dateFormat'
 
 const WeatherDate = ({
   item,

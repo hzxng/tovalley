@@ -1,0 +1,170 @@
+@import '@styles/variables.scss';
+
+.valleyInfo {
+  padding: 0 10%;
+  display: flex;
+  margin-top: 3em;
+}
+
+.valleyMap {
+  width: 70%;
+  margin-right: 2.5em;
+  min-width: 400px;
+  flex-grow: 1;
+
+  > span {
+    color: #717171;
+    font-size: 0.9rem;
+    margin-left: 0.5em;
+  }
+}
+
+.valleyPlaceMenu {
+  margin-bottom: 1.5em;
+}
+
+.placeMenu {
+  border: 1px solid $primary;
+  color: $primary;
+  padding: 0.5em 0.7em;
+  border-radius: 8px;
+  margin-right: 0.5em;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.clickedMenu {
+  background-color: $primary;
+  color: white;
+}
+
+.valleyPlace {
+  margin-top: 0.5em;
+}
+
+.valleyDetail {
+  width: 100%;
+  margin-top: 0.5em;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.valleyWeather {
+  flex-grow: 1;
+
+  > span {
+    font-weight: bold;
+    font-size: 1.3rem;
+  }
+}
+
+.weatherList {
+  margin-top: 0.5em;
+  display: flex;
+  border: 1px solid $light-gray;
+  border-radius: 8px;
+  padding: 1em 0;
+  min-width: 400px;
+  overflow: hidden;
+}
+
+.mobileWeatherList {
+  margin-top: 0.5em;
+  border: 1px solid $light-gray;
+  border-radius: 8px;
+  padding: 0 0.8em;
+  display: none;
+}
+
+.valleyAccident {
+  margin-top: 1.5em;
+  flex-grow: 1;
+
+  > div {
+    margin: 0.5em 0 1.5em 0;
+
+    > div {
+      &:first-child {
+        span {
+          padding: 0.7em;
+          font-size: 1.1rem;
+        }
+      }
+
+      &:last-child {
+        span {
+          padding: 0.6em 0;
+          font-size: 1.5rem;
+        }
+      }
+    }
+  }
+}
+
+.title {
+  color: #6c6c6c;
+  font-weight: bold;
+}
+
+.rescueSupplies {
+  flex-grow: 1;
+}
+
+@media screen and (max-width: 1260px) {
+  .valleyInfo {
+    flex-direction: column;
+  }
+
+  .valleyMap {
+    width: 100%;
+    margin-right: 0;
+    min-width: 0;
+  }
+
+  .valleyDetail {
+    margin-top: 2.5em;
+  }
+}
+
+@media screen and (max-width: 730px) {
+  .valleyInfo {
+    padding: 0 7%;
+  }
+
+  .valleyWeather {
+    > span {
+      font-size: 1rem;
+    }
+  }
+}
+
+@media screen and (max-width: 540px) {
+  .rescueItem {
+    > span {
+      &:nth-child(2) {
+        font-size: 0.6rem;
+      }
+
+      &:nth-child(3) {
+        font-size: 1rem;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 470px) {
+  .weatherList {
+    display: none;
+  }
+
+  .mobileWeatherList {
+    display: block;
+  }
+}
+
+@media screen and (max-width: 390px) {
+  .mobileWeatherList {
+    padding: 0 0.5em;
+  }
+}

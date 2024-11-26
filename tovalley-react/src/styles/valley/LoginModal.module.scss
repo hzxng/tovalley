@@ -1,0 +1,30 @@
+@import '@styles/mixins.scss';
+
+.modalContainer {
+  z-index: 3;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ffffffbd;
+  backdrop-filter: blur(2px);
+  background-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgb(255, 255, 255) 100%
+  );
+}
+
+.modalBox {
+  @include modal-box($margin: -90px 0 0 -130px);
+  box-shadow: 0px 2px 4px #b5b5b5;
+}
+
+.modalContent {
+  @include modal-content;
+}
+
+.confirm {
+  @include modal-confirm;
+}

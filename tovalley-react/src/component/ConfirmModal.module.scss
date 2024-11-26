@@ -1,35 +1,14 @@
 @import '@styles/variables.scss';
+@import '@styles/mixins.scss';
 
 .modalBox {
-  width: 280px;
-  height: 110px;
-  border-radius: 15px;
-  background-color: #ffffff;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-left: -130px;
-  margin-top: -55px;
+  @include modal-box($margin: -55px 0 0 -130px);
 }
 
 .modalContent {
-  height: 70px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  font-weight: bold;
-  font-size: 0.8rem;
-  padding: 1em;
-  box-sizing: border-box;
+  @include modal-content;
 }
 
 .confirm {
-  border-top: 1px solid rgb(231, 231, 231);
-  color: $primary;
-  padding: 0.4em;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  font-weight: bold;
+  @include modal-confirm;
 }

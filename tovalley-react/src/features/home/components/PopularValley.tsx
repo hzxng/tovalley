@@ -41,7 +41,7 @@ const PopularValley = ({ place }: { place: NationalPopularWaterPlaces[] }) => {
   const getPopluarValley = (cond: string) => {
     const config = {
       params: {
-        cond: cond,
+        cond,
       },
     }
 
