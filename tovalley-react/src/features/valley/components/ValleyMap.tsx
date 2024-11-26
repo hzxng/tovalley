@@ -5,10 +5,10 @@ import {
   Marker,
   InfoWindow,
 } from '@react-google-maps/api'
-import useDidMountEffect from '../../../useDidMountEffect'
 import styled from 'styled-components'
 import RatingStar from '@component/RatingStar'
 import { Place } from '../utils/types'
+import useDidMountEffect from '@hooks/useDidMountEffect'
 
 const containerStyle = {
   width: '100%',

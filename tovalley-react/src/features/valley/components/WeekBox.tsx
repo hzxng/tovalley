@@ -1,8 +1,7 @@
-import React from "react";
-import styled from "styled-components";
+import styled from 'styled-components'
 
 interface ContainerProps {
-  weekend: string;
+  weekend: string
 }
 
 const Container = styled.div<ContainerProps>`
@@ -16,24 +15,20 @@ const Container = styled.div<ContainerProps>`
     font-weight: bold;
     font-size: 1.1em;
     color: ${({ weekend }) =>
-      weekend === "일" ? `#F52E2E` : weekend === "토" ? `#567BFD` : ``};
+      weekend === '일' ? `#F52E2E` : weekend === '토' ? `#567BFD` : ``};
   }
 
   @media screen and (max-width: 450px) {
     padding: 0 0.6em;
   }
-`;
+`
 
-interface Props {
-  weekName: string;
-}
-
-const WeekBox = ({ weekName }: Props) => {
+const WeekBox = ({ weekName }: { weekName: string }) => {
   return (
     <Container weekend={weekName}>
       <p>{weekName}</p>
     </Container>
-  );
-};
+  )
+}
 
-export default WeekBox;
+export default WeekBox

@@ -1,0 +1,52 @@
+.container {
+  margin-top: 5em;
+}
+
+.title {
+  font-weight: bold;
+  font-size: 1.6rem;
+}
+
+.calendar {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #8e8e8e;
+  border-radius: 10px;
+  padding-bottom: 1em;
+  margin-top: 1em;
+}
+
+.annualVisitors {
+  padding: 1em 0 0 1.5em;
+
+  span {
+    &:first-child {
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin-right: 0.5em;
+      color: #434343;
+    }
+
+    &:last-child {
+      font-weight: bold;
+      font-size: 1rem;
+      background-color: #8f8f8f;
+      color: white;
+      padding: 0.2em 0.5em;
+      border-radius: 5px;
+    }
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .container {
+    margin-top: 0em;
+  }
+}
+
+@media screen and (max-width: 730px) {
+  .title {
+    font-size: 1.3rem;
+  }
+}

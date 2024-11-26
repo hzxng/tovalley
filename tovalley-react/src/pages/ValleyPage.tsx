@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import axiosInstance from '../axios_interceptor'
 import styles from '@styles/valley/ValleyPage.module.scss'
 import { data } from 'dummy/valley-data'
 import { ValleyData } from 'types/valley'

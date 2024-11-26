@@ -2,12 +2,12 @@ import { useState } from 'react'
 import styles from '@styles/valley/ValleyReview.module.scss'
 import { useParams } from 'react-router-dom'
 import { ReviewRespDto } from 'types/valley'
-import useDidMountEffect from 'useDidMountEffect'
 import axiosInstance from 'axios_interceptor'
 import PagingBtn from '@component/PagingBtn'
 import ReviewStatistics from './ReviewStatistics'
 import cn from 'classnames'
 import ValleyReviewItem from './ValleyReviewItem'
+import useDidMountEffect from '@hooks/useDidMountEffect'
 
 const ValleyReview = ({ reviewRespDto }: { reviewRespDto: ReviewRespDto }) => {
   const [sort, setSort] = useState('최신순')

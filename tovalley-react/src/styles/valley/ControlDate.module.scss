@@ -1,0 +1,266 @@
+@import '@styles/variables.scss';
+
+.container {
+  width: 100%;
+  height: 15%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1em 1em 0em 1em;
+  box-sizing: border-box;
+}
+
+.controlCalendar {
+  display: flex;
+  align-items: center;
+  margin: 0 2em;
+}
+
+.controlYear {
+  display: flex;
+  align-items: center;
+  margin-right: 2em;
+
+  h1 {
+    font-size: 1.6rem;
+  }
+
+  > span {
+    color: #d9d9d9;
+    font-size: 45px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+}
+
+.controlMonth {
+  display: flex;
+  align-items: center;
+
+  h1 {
+    font-size: 2.3rem;
+    margin-left: 0.5em;
+  }
+
+  h2 {
+    font-size: 2rem;
+    margin: 0 0.5em 0 0.1em;
+  }
+
+  > span {
+    color: #d9d9d9;
+    font-size: 40px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+}
+
+.addSchedule {
+  margin-left: 2.5em;
+}
+
+.register {
+  display: flex;
+  gap: 0.5em;
+
+  > span {
+    &:last-child {
+      opacity: 0.6;
+    }
+  }
+}
+
+.addScheduleBtn {
+  background-color: $blue;
+  color: white;
+  font-weight: bold;
+  padding: 0.6em 1.6em;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.deactivate {
+  background-color: #d3d3d3;
+  cursor: auto;
+}
+
+.congestionInfo {
+  width: 140px;
+
+  > div {
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    margin-right: 1em;
+
+    > span {
+      font-weight: 500;
+      margin-right: 0.8em;
+      min-width: 60px;
+      text-align: right;
+      font-size: 0.9rem;
+    }
+
+    > div {
+      width: 100%;
+      height: 9px;
+      border-radius: 4px;
+      color: rgb(212, 212, 212);
+    }
+  }
+}
+
+@media screen and (max-width: 880px) {
+  .controlYear {
+    margin-right: 0.5em;
+  }
+
+  .controlMonth {
+    h1 {
+      font-size: 1.8rem;
+    }
+
+    .controlMonth h2 {
+      font-size: 1.6rem;
+    }
+  }
+
+  .addSchedule {
+    margin-left: 1em;
+
+    > span {
+      padding: 0.6em 1em;
+      font-size: 0.8rem;
+    }
+  }
+}
+
+@media screen and (max-width: 760px) {
+  .controlCalendar {
+    margin: 0 1em;
+  }
+
+  .controlYear {
+    h1 {
+      font-size: 1.2rem;
+    }
+
+    > span {
+      font-size: 35px;
+    }
+  }
+
+  .controlMonth {
+    h1 {
+      font-size: 1.4rem;
+      margin: 0 0 0.1em 0.2em;
+    }
+
+    h2 {
+      font-size: 1.3rem;
+      margin: 0 0.2em 0.1em 0.1em;
+    }
+
+    > span {
+      font-size: 30px;
+    }
+  }
+}
+
+@media screen and (max-width: 580px) {
+  .controlYear {
+    margin-right: 0;
+  }
+
+  .addSchedule {
+    margin-left: 0.3em;
+
+    > span {
+      font-size: 0.7rem;
+    }
+  }
+
+  .congestionInfo {
+    width: 110px;
+
+    > div {
+      margin-right: 0.5em;
+
+      > span {
+        min-width: 50px;
+        text-align: right;
+        font-size: 0.7rem;
+      }
+
+      > div {
+        height: 5px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 510px) {
+  .addSchedule {
+    > span {
+      padding: 0.6em 0.7em;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .controlYear {
+    h1 {
+      font-size: 1rem;
+    }
+  }
+
+  .controlMonth {
+    h1 {
+      font-size: 1.2rem;
+      margin: 0 0 0.1em 0;
+    }
+
+    .controlMonth h2 {
+      font-size: 1.2rem;
+      margin: 0 0 0.1em 0.1em;
+    }
+  }
+
+  .controlCalendar {
+    margin: 0 0.2em;
+  }
+
+  .congestionInfo {
+    > div {
+      > span {
+        min-width: 50px;
+        font-size: 0.6rem;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 390px) {
+  .congestionInfo {
+    > div {
+      > span {
+        min-width: 40px;
+      }
+    }
+  }
+
+  .addSchedule {
+    margin-right: 0.3em;
+
+    > span {
+      padding: 0.6em 0.8em;
+      font-size: 0.5rem;
+    }
+  }
+}
