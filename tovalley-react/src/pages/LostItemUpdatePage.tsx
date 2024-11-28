@@ -1,113 +1,113 @@
-import React, { useEffect, useState } from "react";
-import styles from "../css/lostItem/LostItemWrite.module.css";
-import Header from "../component/header/Header";
-import Footer from "../component/footer/Footer";
-import { LuPencil } from "react-icons/lu";
-import { FaPlus } from "react-icons/fa6";
-import { AiFillPicture } from "react-icons/ai";
-import { IoIosCloseCircle } from "react-icons/io";
-import { useSaveImg } from "../composables/imgController";
-import { useNavigate, useParams } from "react-router-dom";
-import axiosInstance from "../axios_interceptor";
-import ValleyModal from "../component/lostItem/ValleyModal";
-import { PlaceName } from "../typings/db";
-import ConfirmModal from "../component/common/ConfirmModal";
+import React, { useEffect, useState } from 'react'
+import styles from '../css/lostItem/LostItemWrite.module.css'
+import Header from '../component/header/Header'
+import Footer from '../component/footer/Footer'
+import { LuPencil } from 'react-icons/lu'
+import { FaPlus } from 'react-icons/fa6'
+import { AiFillPicture } from 'react-icons/ai'
+import { IoIosCloseCircle } from 'react-icons/io'
+import { useSaveImg } from '../composables/imgController'
+import { useNavigate, useParams } from 'react-router-dom'
+import axiosInstance from '../axios_interceptor'
+import ConfirmModal from '../component/common/ConfirmModal'
+import ValleyModal from '@features/lostItem/components/ValleyModal'
+import { PlaceName } from 'types/lost-found'
 
 const LostItemUpdatePage = () => {
-  const { category, id } = useParams();
+  const { category, id } = useParams()
   const { uploadImg, setUploadImg, imgFiles, saveImgFile, handleDeleteImage } =
-    useSaveImg();
+    useSaveImg()
   const [currentCategory, setCurrentCategory] = useState(
-    category === "LOST" ? "찾아요" : "찾았어요"
-  );
+    category === 'LOST' ? '찾아요' : '찾았어요'
+  )
   const clickCategory = (category: string) => {
-    setCurrentCategory(category);
-  };
+    setCurrentCategory(category)
+  }
   const [write, setWrite] = useState({
-    title: "",
-    content: "",
-  });
-  const [modalView, setModalView] = useState(false);
-  const [selectedPlace, setSelectedPlace] = useState<PlaceName[]>([]);
-  const [deleteImg, setDeleteImg] = useState<string[]>([]);
-  const [confirm, setConfirm] = useState({ view: false, content: "" });
-  const [alert, setAlert] = useState({ view: false, content: "" });
-  const navigation = useNavigate();
+    title: '',
+    content: '',
+  })
+  const [modalView, setModalView] = useState(false)
+  const [selectedPlace, setSelectedPlace] = useState<PlaceName[]>([])
+  const [deleteImg, setDeleteImg] = useState<string[]>([])
+  const [confirm, setConfirm] = useState({ view: false, content: '' })
+  const [alert, setAlert] = useState({ view: false, content: '' })
+  const navigation = useNavigate()
   const toBack = () => {
-    navigation(-1);
-  };
+    navigation(-1)
+  }
 
   useEffect(() => {
     axiosInstance
       .get(`/api/lostItem/${id}`)
       .then((res) => {
-        console.log(res);
+        console.log(res)
         setSelectedPlace([
           {
             waterPlaceId: res.data.data.waterPlaceId,
             waterPlaceName: res.data.data.waterPlaceName,
             address: res.data.data.waterPlaceAddress,
           },
-        ]);
+        ])
         setWrite({
           title: res.data.data.title,
           content: res.data.data.content,
-        });
-        setUploadImg(res.data.data.postImages);
+        })
+        setUploadImg(res.data.data.postImages)
       })
-      .catch((err) => console.log(err));
-  }, [id]);
+      .catch((err) => console.log(err))
+  }, [id])
 
   const closeModal = () => {
-    setModalView(false);
-  };
+    setModalView(false)
+  }
 
   const toListPage = () => {
-    window.location.replace("/lost-item");
-  };
+    window.location.replace('/lost-item')
+  }
 
   const writeLostPost = (e: any) => {
-    e.preventDefault();
-    const formData = new FormData();
+    e.preventDefault()
+    const formData = new FormData()
 
-    let category;
-    if (currentCategory === "찾아요") category = "LOST";
-    else category = "FOUND";
+    let category
+    if (currentCategory === '찾아요') category = 'LOST'
+    else category = 'FOUND'
 
     if (
       selectedPlace.length === 0 ||
-      write.title === "" ||
-      write.content === ""
+      write.title === '' ||
+      write.content === ''
     ) {
-      setAlert({ view: true, content: "항목을 모두 입력해주세요." });
+      setAlert({ view: true, content: '항목을 모두 입력해주세요.' })
     } else {
-      formData.append("category", category);
-      formData.append("lostFoundBoardId", `${id}`);
-      formData.append("waterPlaceId", `${selectedPlace[0].waterPlaceId}`);
-      formData.append("title", write.title);
-      formData.append("content", write.content);
+      formData.append('category', category)
+      formData.append('lostFoundBoardId', `${id}`)
+      formData.append('waterPlaceId', `${selectedPlace[0].waterPlaceId}`)
+      formData.append('title', write.title)
+      formData.append('content', write.content)
       for (let i = 0; i < imgFiles.length; i++) {
-        formData.append("postImage", imgFiles[i]);
+        formData.append('postImage', imgFiles[i])
       }
       if (deleteImg.length !== 0) {
         for (let i = 0; i < deleteImg.length; i++) {
-          formData.append("deleteImage", deleteImg[i]);
+          formData.append('deleteImage', deleteImg[i])
         }
       }
 
       axiosInstance
-        .patch("/api/auth/lostItem", formData)
+        .patch('/api/auth/lostItem', formData)
         .then((res) => {
-          console.log(res);
+          console.log(res)
           res.status === 200 &&
             setConfirm({
               view: true,
-              content: "글이 수정되었습니다.",
-            });
+              content: '글이 수정되었습니다.',
+            })
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.log(err))
     }
-  };
+  }
   return (
     <div>
       <Header />
@@ -116,7 +116,7 @@ const LostItemUpdatePage = () => {
           <div className={styles.contentWrap}>
             <div className={styles.category}>
               <h4>카테고리</h4>
-              {["찾아요", "찾았어요"].map((item) => (
+              {['찾아요', '찾았어요'].map((item) => (
                 <span
                   key={item}
                   className={
@@ -192,9 +192,9 @@ const LostItemUpdatePage = () => {
                   </div>
                   <span
                     onClick={() => {
-                      handleDeleteImage(id);
-                      const deleteUrlList = deleteImg.concat([`${image}`]);
-                      setDeleteImg(deleteUrlList);
+                      handleDeleteImage(id)
+                      const deleteUrlList = deleteImg.concat([`${image}`])
+                      setDeleteImg(deleteUrlList)
                     }}
                   >
                     <IoIosCloseCircle color="#F6483D" size="30px" />
@@ -230,7 +230,6 @@ const LostItemUpdatePage = () => {
         </div>
         {modalView && (
           <ValleyModal
-            selectedPlace={selectedPlace}
             setSelectedPlace={setSelectedPlace}
             closeModal={closeModal}
             writePage={true}
@@ -245,7 +244,7 @@ const LostItemUpdatePage = () => {
       </form>
       <Footer />
     </div>
-  );
-};
+  )
+}
 
-export default LostItemUpdatePage;
+export default LostItemUpdatePage

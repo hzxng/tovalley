@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import styles from '@styles/home/Report.module.scss'
-import { data } from 'dummy/main-data'
 import ToggleBtn from '@component/ToggleBtn'
 import ReportContainer from './ReportContainer'
-import { WeatherAlerts, WeatherPreAlerts } from 'types/main'
+import { WeatherAlert, WeatherAlerts, WeatherPreAlerts } from 'types/main'
+// import { data } from 'dummy/main-data'
 
-const Report = () => {
-  const alert = data.weatherAlert
+const Report = ({ alert }: { alert: WeatherAlert }) => {
+  // const alert = data.weatherAlert
   const [alertActive, setAlertActive] = useState<boolean>(true)
 
   let currAlertList: WeatherAlerts[] = alert.weatherAlerts

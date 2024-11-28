@@ -11,12 +11,6 @@ export interface LostList {
   }[]
 }
 
-export interface PlaceName {
-  waterPlaceId: number
-  waterPlaceName: string
-  address: string
-}
-
 export interface LostPost {
   data: {
     title: string

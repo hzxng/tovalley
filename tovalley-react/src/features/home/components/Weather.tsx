@@ -62,7 +62,7 @@ const Weather = ({
           </div>
         </div>
         <div className={styles.weatherInfoDetail}>
-          <Report />
+          <Report alert={alert} />
           <WeatherDetail dailyNationalWeather={regionClicked} />
         </div>
       </div>
