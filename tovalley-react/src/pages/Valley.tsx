@@ -12,7 +12,7 @@ import ValleyReview from '@features/valley/components/ValleyReview'
 import axiosInstance from '@utils/axios_interceptor'
 import { useParams } from 'react-router-dom'
 
-const ValleyPage = () => {
+const Valley = () => {
   const [valley, setValley] = useState<ValleyData | null>(null)
   const { id } = useParams()
 
@@ -76,4 +76,4 @@ const ValleyPage = () => {
   )
 }
 
-export default ValleyPage
+export default Valley

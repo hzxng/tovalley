@@ -10,7 +10,7 @@ import ConfirmModal from '@component/ConfirmModal'
 
 const localhost = process.env.REACT_APP_HOST
 
-const SignupPage = () => {
+const Signup = () => {
   const [inputInfo, setInputInfo] = useState({
     name: '',
     email: '',
@@ -334,4 +334,4 @@ const SignupPage = () => {
   )
 }
 
-export default SignupPage
+export default Signup

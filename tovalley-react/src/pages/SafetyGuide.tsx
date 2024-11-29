@@ -1,38 +1,38 @@
-import React, { useState } from "react";
-import Header from "../component/header/Header";
-import styles from "../css/safetyGuide/SafetyGuide.module.css";
-import Footer from "../component/footer/Footer";
+import React, { useState } from 'react'
+import Header from '../component/header/Header'
+import styles from '../css/safetyGuide/SafetyGuide.module.css'
+import Footer from '../component/footer/Footer'
 import {
   FaPlantWilt,
   FaBridgeWater,
   FaHouseFloodWater,
   FaCampground,
-} from "react-icons/fa6";
-import { FaSwimmer } from "react-icons/fa";
-import { GiWaterSplash } from "react-icons/gi";
+} from 'react-icons/fa6'
+import { FaSwimmer } from 'react-icons/fa'
+import { GiWaterSplash } from 'react-icons/gi'
 
-const SafetyGuidePage = () => {
-  const [category, setCategory] = useState("물놀이 안전수칙");
-  const [detailCategory, setDetailCategory] = useState("물놀이 10대 안전수칙");
-  const [tipCategory, setTipCategory] = useState("수초에 감겼을 때");
+const SafetyGuide = () => {
+  const [category, setCategory] = useState('물놀이 안전수칙')
+  const [detailCategory, setDetailCategory] = useState('물놀이 10대 안전수칙')
+  const [tipCategory, setTipCategory] = useState('수초에 감겼을 때')
 
   const categoryArr = [
-    "물놀이 10대 안전수칙",
-    "안전한 물놀이",
-    "물놀이 전 준비 사항",
-    "어린이 동반 시 유의사항",
-  ];
+    '물놀이 10대 안전수칙',
+    '안전한 물놀이',
+    '물놀이 전 준비 사항',
+    '어린이 동반 시 유의사항',
+  ]
 
   const tipArr1 = [
-    "수초에 감겼을 때",
-    "수영 중 경련이 일어났을 때",
-    "하천이나 계곡물을 건널 때",
-  ];
+    '수초에 감겼을 때',
+    '수영 중 경련이 일어났을 때',
+    '하천이나 계곡물을 건널 때',
+  ]
   const tipArr2 = [
-    "물에 빠졌을 때",
-    "침수・고립되었을 때",
-    "계곡에서 야영지를 선택할 때",
-  ];
+    '물에 빠졌을 때',
+    '침수・고립되었을 때',
+    '계곡에서 야영지를 선택할 때',
+  ]
 
   return (
     <div className={styles.safetyGuidePage}>
@@ -41,12 +41,12 @@ const SafetyGuidePage = () => {
         <div className={styles.body}>
           <div className={styles.category}>
             <span
-              onClick={() => setCategory("물놀이 안전수칙")}
+              onClick={() => setCategory('물놀이 안전수칙')}
               style={
-                category === "물놀이 안전수칙"
+                category === '물놀이 안전수칙'
                   ? {
-                      backgroundColor: "#66a5fc",
-                      color: "white",
+                      backgroundColor: '#66a5fc',
+                      color: 'white',
                     }
                   : {}
               }
@@ -54,12 +54,12 @@ const SafetyGuidePage = () => {
               물놀이 안전수칙
             </span>
             <span
-              onClick={() => setCategory("물놀이 사고 행동요령")}
+              onClick={() => setCategory('물놀이 사고 행동요령')}
               style={
-                category === "물놀이 사고 행동요령"
+                category === '물놀이 사고 행동요령'
                   ? {
-                      backgroundColor: "#66a5fc",
-                      color: "white",
+                      backgroundColor: '#66a5fc',
+                      color: 'white',
                     }
                   : {}
               }
@@ -67,7 +67,7 @@ const SafetyGuidePage = () => {
               물놀이 사고 행동요령
             </span>
           </div>
-          {category === "물놀이 안전수칙" ? (
+          {category === '물놀이 안전수칙' ? (
             <div className={styles.guideContainer}>
               <div className={styles.detailCategory}>
                 {categoryArr.map((item) => {
@@ -76,17 +76,17 @@ const SafetyGuidePage = () => {
                       <span
                         onClick={() => setDetailCategory(item)}
                         style={
-                          detailCategory === item ? { color: "black" } : {}
+                          detailCategory === item ? { color: 'black' } : {}
                         }
                       >
                         {item}
                       </span>
                     </div>
-                  );
+                  )
                 })}
               </div>
               <div className={styles.guide}>
-                {detailCategory === "물놀이 10대 안전수칙" ? (
+                {detailCategory === '물놀이 10대 안전수칙' ? (
                   <>
                     <p>
                       <span>01</span> 수영을 하기 전에는 손, 발 등의 경련을
@@ -151,7 +151,7 @@ const SafetyGuidePage = () => {
                       </span>
                     </div>
                   </>
-                ) : detailCategory === "안전한 물놀이" ? (
+                ) : detailCategory === '안전한 물놀이' ? (
                   <>
                     <p>
                       <span>01</span> 물이 갑자기 깊어지는 곳은 특히 위험하다.
@@ -181,7 +181,7 @@ const SafetyGuidePage = () => {
                       안전하게 구조를 한다.
                     </p>
                   </>
-                ) : detailCategory === "물놀이 전 준비 사항" ? (
+                ) : detailCategory === '물놀이 전 준비 사항' ? (
                   <>
                     <p>
                       <span>01</span> 일반적으로 수영하기에 알맞은 수온은 25~26℃
@@ -295,13 +295,13 @@ const SafetyGuidePage = () => {
                       <div
                         key={item}
                         onClick={() => {
-                          setTipCategory(item);
+                          setTipCategory(item)
                         }}
                       >
                         <span
                           style={
                             tipCategory === item
-                              ? { color: "#66a5fc", borderColor: "#66a5fc" }
+                              ? { color: '#66a5fc', borderColor: '#66a5fc' }
                               : {}
                           }
                         >
@@ -315,13 +315,13 @@ const SafetyGuidePage = () => {
                         </span>
                         <span
                           style={
-                            tipCategory === item ? { color: "#66a5fc" } : {}
+                            tipCategory === item ? { color: '#66a5fc' } : {}
                           }
                         >
                           {item}
                         </span>
                       </div>
-                    );
+                    )
                   })}
                 </div>
                 <div className={styles.iconsList}>
@@ -330,13 +330,13 @@ const SafetyGuidePage = () => {
                       <div
                         key={item}
                         onClick={() => {
-                          setTipCategory(item);
+                          setTipCategory(item)
                         }}
                       >
                         <span
                           style={
                             tipCategory === item
-                              ? { color: "#66a5fc", borderColor: "#66a5fc" }
+                              ? { color: '#66a5fc', borderColor: '#66a5fc' }
                               : {}
                           }
                         >
@@ -350,19 +350,19 @@ const SafetyGuidePage = () => {
                         </span>
                         <span
                           style={
-                            tipCategory === item ? { color: "#66a5fc" } : {}
+                            tipCategory === item ? { color: '#66a5fc' } : {}
                           }
                         >
                           {item}
                         </span>
                       </div>
-                    );
+                    )
                   })}
                 </div>
               </div>
 
               <div className={styles.behaviorTipsContent}>
-                {tipCategory === "수초에 감겼을 때" ? (
+                {tipCategory === '수초에 감겼을 때' ? (
                   <>
                     <p>
                       <span>▪︎</span>
@@ -383,7 +383,7 @@ const SafetyGuidePage = () => {
                       </p>
                     </p>
                   </>
-                ) : tipCategory === "수영 중 경련이 일어났을 때" ? (
+                ) : tipCategory === '수영 중 경련이 일어났을 때' ? (
                   <>
                     <p>
                       <span>▪︎</span>
@@ -411,7 +411,7 @@ const SafetyGuidePage = () => {
                       </p>
                     </p>
                   </>
-                ) : tipCategory === "하천이나 계곡물을 건널 때" ? (
+                ) : tipCategory === '하천이나 계곡물을 건널 때' ? (
                   <>
                     <p>
                       <span>▪︎</span>
@@ -458,7 +458,7 @@ const SafetyGuidePage = () => {
                       </p>
                     </p>
                   </>
-                ) : tipCategory === "물에 빠졌을 때" ? (
+                ) : tipCategory === '물에 빠졌을 때' ? (
                   <>
                     <p>
                       <span>▪︎</span>
@@ -476,7 +476,7 @@ const SafetyGuidePage = () => {
                       </p>
                     </p>
                   </>
-                ) : tipCategory === "침수・고립되었을 때" ? (
+                ) : tipCategory === '침수・고립되었을 때' ? (
                   <>
                     <p>
                       <span>▪︎</span>
@@ -542,7 +542,7 @@ const SafetyGuidePage = () => {
       </div>
       <Footer />
     </div>
-  );
-};
+  )
+}
 
-export default SafetyGuidePage;
+export default SafetyGuide

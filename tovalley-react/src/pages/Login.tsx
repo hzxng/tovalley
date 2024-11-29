@@ -10,7 +10,7 @@ import axiosInstance from '@utils/axios_interceptor'
 
 const cookies = new Cookies()
 
-const LoginPage = () => {
+const Login = () => {
   const [login, setLogin] = useState<{
     email: string
     password: string
@@ -122,4 +122,4 @@ const LoginPage = () => {
   )
 }
 
-export default LoginPage
+export default Login

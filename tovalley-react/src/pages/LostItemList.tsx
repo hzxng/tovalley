@@ -14,7 +14,7 @@ import ValleyModal from '@features/lostItem/components/ValleyModal'
 
 const localhost = process.env.REACT_APP_HOST
 
-const LostItemListPage = () => {
+const LostItemList = () => {
   const lostItemCategory = ['전체', '물건 찾아요', '주인 찾아요']
   const [currentCategory, setCurrentCategory] = useState('전체')
   const [except, setExcept] = useState(false)
@@ -151,4 +151,4 @@ const LostItemListPage = () => {
   )
 }
 
-export default LostItemListPage
+export default LostItemList

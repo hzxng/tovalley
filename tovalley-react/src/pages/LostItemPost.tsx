@@ -16,7 +16,7 @@ import CommentItem from '@features/lostItem/components/CommentItem'
 import CustomModal from '@component/CustomModal'
 import axiosInstance from '@utils/axios_interceptor'
 
-const LostItemPostPage = () => {
+const LostItemPost = () => {
   const { category, id } = useParams()
 
   const [lostPost, setLostPost] = useState<LostPost | null>(null)
@@ -241,4 +241,4 @@ const LostItemPostPage = () => {
   )
 }
 
-export default LostItemPostPage
+export default LostItemPost
