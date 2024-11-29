@@ -1,46 +1,46 @@
-import React, { useEffect, useState } from "react";
-import Header from "../component/header/Header";
-import Footer from "../component/footer/Footer";
-import styles from "../css/lostItem/LostItemPost.module.css";
-import { AiOutlineComment } from "react-icons/ai";
-import { FaRegComment } from "react-icons/fa";
-import { MdLocationPin } from "react-icons/md";
-import { LostPost, LostPostComment } from "../typings/db";
-import { useNavigate, useParams } from "react-router-dom";
-import axiosInstance from "../axios_interceptor";
-import { elapsedTime } from "../composables/elapsedTime";
-import CustomModal from "../component/common/CustomModal";
-import { FaCheck } from "react-icons/fa6";
-import { useDispatch } from "react-redux";
-import { view } from "../store/chat/chatViewSlice";
-import { enterChatRoom } from "../store/chat/chatRoomIdSlice";
-import { Cookies } from "react-cookie";
+import { useEffect, useState } from 'react'
+import styles from '@styles/lostItem/LostItemPost.module.scss'
+import { AiOutlineComment } from 'react-icons/ai'
+import { FaRegComment } from 'react-icons/fa'
+import { MdLocationPin } from 'react-icons/md'
+import { useNavigate, useParams } from 'react-router-dom'
+import { FaCheck } from 'react-icons/fa6'
+import { useDispatch } from 'react-redux'
+import { view } from '../store/chat/chatViewSlice'
+import { enterChatRoom } from '../store/chat/chatRoomIdSlice'
+import { Cookies } from 'react-cookie'
+import { LostPost, LostPostComment } from 'types/lost-found'
+import { elapsedTime } from '@utils/elapsedTime'
+import cn from 'classnames'
+import CommentItem from '@features/lostItem/components/CommentItem'
+import CustomModal from '@component/CustomModal'
+import axiosInstance from '@utils/axios_interceptor'
 
 const LostItemPostPage = () => {
-  const [lostPost, setLostPost] = useState<LostPost>();
-  const { category, id } = useParams();
-  const [commentList, setCommentList] = useState<LostPostComment[]>();
-  const [comment, setComment] = useState("");
-  const [deleteModal, setDeleteModal] = useState(false);
-  const [resolveCheck, setResolveCheck] = useState(false);
-  const [commentDeleteModal, setCommentDeleteModal] = useState(false);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const cookies = new Cookies();
+  const { category, id } = useParams()
+
+  const [lostPost, setLostPost] = useState<LostPost | null>(null)
+  const [commentList, setCommentList] = useState<LostPostComment[] | null>(null)
+  const [resolveCheck, setResolveCheck] = useState(false)
+  const [commentText, setCommentText] = useState('')
+  const [deleteModal, setDeleteModal] = useState(false)
+
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const cookies = new Cookies()
 
   useEffect(() => {
     axiosInstance
       .get(`/api/lostItem/${id}`)
       .then((res) => {
-        console.log(res);
-        setLostPost({ data: res.data.data });
-        setCommentList(res.data.data.comments);
-        setResolveCheck(res.data.data.isResolved);
+        setLostPost(res.data.data)
+        setCommentList(res.data.data.comments)
+        setResolveCheck(res.data.data.isResolved)
       })
-      .catch((err) => console.log(err));
-  }, [id]);
+      .catch((err) => console.log(err))
+  }, [id])
 
-  const resolveStatus = () => {
+  const checkResolve = () => {
     axiosInstance
       .patch(
         `/api/auth/lostItem/${id}`,
@@ -51,254 +51,194 @@ const LostItemPostPage = () => {
           },
         }
       )
-      .then((res) => {
-        console.log(res);
-        setResolveCheck(!resolveCheck);
+      .then(() => {
+        setResolveCheck(!resolveCheck)
       })
-      .catch((err) => console.log(err));
-  };
+      .catch((err) => console.log(err))
+  }
 
   const deletePost = () => {
     axiosInstance
       .delete(`/api/auth/lostItem/${id}`)
       .then((res) => {
-        console.log(res);
-        window.location.replace("/lost-item");
+        console.log(res)
+        window.location.replace('/lost-item')
       })
-      .catch((err) => console.log(err));
-  };
+      .catch((err) => console.log(err))
+  }
 
   const closeDeleteModal = () => {
-    setDeleteModal(false);
-    setCommentDeleteModal(false);
-  };
+    setDeleteModal(false)
+  }
 
   const addComment = () => {
     axiosInstance
       .post(`/api/auth/lostItem/${id}/comment`, {
-        commentContent: comment,
+        commentContent: commentText,
       })
       .then((res) => {
-        console.log(res);
-        if (commentList && commentList?.length > 0) {
-          setCommentList([
-            ...commentList,
-            {
-              commentId: res.data.data.commentId,
-              commentAuthor: res.data.data.commentAuthor,
-              commentContent: res.data.data.commentContent,
-              commentCreateAt: res.data.data.commentCreateAt,
-              commentByUser: true,
-              commentAuthorProfile: res.data.data.commentAuthorProfile,
-            },
-          ]);
+        const newComment = {
+          commentId: res.data.data.commentId,
+          commentAuthor: res.data.data.commentAuthor,
+          commentContent: res.data.data.commentContent,
+          commentCreateAt: res.data.data.commentCreateAt,
+          commentByUser: true,
+          commentAuthorProfile: res.data.data.commentAuthorProfile,
+        }
+        if (commentList && commentList.length > 0) {
+          setCommentList([...commentList, newComment])
         } else {
-          setCommentList([
-            {
-              commentId: res.data.data.commentId,
-              commentAuthor: res.data.data.commentAuthor,
-              commentContent: res.data.data.commentContent,
-              commentCreateAt: res.data.data.commentCreateAt,
-              commentByUser: true,
-              commentAuthorProfile: res.data.data.commentAuthorProfile,
-            },
-          ]);
+          setCommentList([newComment])
         }
         // const newCommentList = commentList?.concat([res.data.data]);
-        setComment("");
+        setCommentText('')
       })
-      .catch((err) => console.log(err));
-  };
+      .catch((err) => console.log(err))
+  }
 
   const deleteComment = (item: LostPostComment) => {
     axiosInstance
       .delete(`/api/auth/lostItem/${id}/comment/${item.commentId}`)
       .then((res) => {
-        console.log(res);
+        console.log(res)
 
-        const newCommentList = commentList?.filter((comment) => {
-          return comment !== item;
-        });
-        setCommentList(newCommentList);
+        const newCommentList = commentList!.filter((comment) => {
+          return comment !== item
+        })
+        setCommentList(newCommentList)
       })
-      .catch((err) => console.log(err));
-  };
+      .catch((err) => console.log(err))
+  }
 
-  const toUpdatePage = () => {
-    navigate(`/lost-item/${category}/${id}/update`);
-  };
+  const moveToUpdatePage = () => {
+    navigate(`/lost-item/${category}/${id}/update`)
+  }
 
   const newChatRoom = (nickname: string) => {
     axiosInstance
-      .post("/api/auth/chatroom", {
+      .post('/api/auth/chatroom', {
         // 채팅방 생성 or 기존채팅방 id 요청
         recipientNick: nickname,
       })
       .then((res) => {
-        console.log(res);
-        dispatch(enterChatRoom(res.data.data.chatRoomId));
-        dispatch(view(true));
-      });
-  };
+        console.log(res)
+        dispatch(enterChatRoom(res.data.data.chatRoomId))
+        dispatch(view(true))
+      })
+  }
+
+  if (!lostPost || !commentList) return <div>loading</div>
 
   return (
-    <div>
-      <Header />
-      <div className={styles.body}>
-        <div className={styles.lostItemPost}>
-          <div className={styles.locationInfo}>
-            <MdLocationPin color="#66A5FC" size="28px" />
-            <h4>{lostPost?.data.waterPlaceName}</h4>
-            <span>{lostPost?.data.waterPlaceAddress}</span>
-          </div>
-          <div className={styles.postTop}>
-            <div className={styles.authorInfo}>
-              <div className={styles.profileImage}>
-                <img
-                  src={
-                    lostPost?.data.boardAuthorProfile
-                      ? lostPost?.data.boardAuthorProfile
-                      : process.env.PUBLIC_URL + "/img/user-profile.png"
-                  }
-                  alt="author-profile"
-                />
-              </div>
-              <div className={styles.authorName}>
-                <h4>{lostPost?.data.author}</h4>
-                <span>
-                  {lostPost ? elapsedTime(lostPost.data.postCreateAt) : ""}
-                </span>
-              </div>
-            </div>
-            {!lostPost?.data.isMyBoard && (
-              <div
-                className={styles.chatBtn}
-                onClick={() => lostPost && newChatRoom(lostPost.data.author)}
-              >
-                <AiOutlineComment size="22px" />
-                <span>채팅하기</span>
-              </div>
-            )}
-          </div>
-          <h1>{lostPost?.data.title}</h1>
-          <p>{lostPost?.data.content}</p>
-          <div className={styles.imageList}>
-            {lostPost?.data.postImages.map((img) => {
-              return (
-                <div key={img} className={styles.imageContainer}>
-                  <img src={img} alt="post-img" />
-                </div>
-              );
-            })}
-          </div>
-          <div className={styles.postBottom}>
-            <div className={styles.comment}>
-              <FaRegComment />
-              {/* <span>{lostPost?.data.commentCnt}</span> */}
-              <span>{commentList?.length}</span>
-            </div>
-            {lostPost?.data.isMyBoard && (
-              <div className={styles.modifyBtn}>
-                <div className={styles.solvedStatus}>
-                  <div
-                    className={resolveCheck ? styles.checked : styles.checkBox}
-                    onClick={() => {
-                      resolveStatus();
-                    }}
-                  >
-                    <FaCheck />
-                  </div>
-                  <span>해결 완료</span>
-                </div>
-                <div className={styles.deleteBtn}>
-                  <div>
-                    <span onClick={() => setDeleteModal(true)}>삭제</span>
-                  </div>
-                  <div>
-                    <span onClick={() => toUpdatePage()}>수정</span>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
+    <div className={styles.body}>
+      <div className={styles.lostItemPost}>
+        <div className={styles.locationInfo}>
+          <MdLocationPin color="#66A5FC" size="28px" />
+          <h4>{lostPost.waterPlaceName}</h4>
+          <span>{lostPost.waterPlaceAddress}</span>
         </div>
-        {cookies.get("ISLOGIN") && (
-          <div className={styles.postComment}>
-            <div className={styles.commentInput}>
-              <input
-                placeholder="댓글을 입력하세요."
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
+        <div className={styles.postTop}>
+          <div className={styles.authorInfo}>
+            <div className={styles.profileImage}>
+              <img
+                src={
+                  lostPost.boardAuthorProfile ??
+                  process.env.PUBLIC_URL + '/img/user-profile.png'
+                }
+                alt="author-profile"
               />
             </div>
-            <div className={styles.uploadBtn} onClick={addComment}>
-              등록
+            <div className={styles.authorName}>
+              <h4>{lostPost.author}</h4>
+              <span>{elapsedTime(lostPost.postCreateAt)}</span>
             </div>
           </div>
-        )}
-        <div className={styles.commentList}>
-          {commentList &&
-            commentList.length > 0 &&
-            commentList?.map((item) => (
-              <div key={item.commentId} className={styles.commentItem}>
-                <div className={styles.commentTop}>
-                  <div className={styles.commentInfo}>
-                    <div className={styles.commentProfileImage}>
-                      <img
-                        src={
-                          item.commentAuthorProfile
-                            ? item.commentAuthorProfile
-                            : process.env.PUBLIC_URL + "/img/user-profile.png"
-                        }
-                        alt="author-profile"
-                      />
-                    </div>
-                    <span className={styles.commentWriterName}>
-                      {item.commentAuthor}
-                    </span>
-                    <span>{elapsedTime(item.commentCreateAt)}</span>
-                  </div>
-                  {item.commentByUser ? (
-                    <div
-                      className={styles.deleteComment}
-                      onClick={() => {
-                        setCommentDeleteModal(true);
-                      }}
-                    >
-                      삭제
-                    </div>
-                  ) : (
-                    <div
-                      className={styles.commentChatBtn}
-                      onClick={() => newChatRoom(item.commentAuthor)}
-                    >
-                      <AiOutlineComment size="25px" />
-                      <span>채팅</span>
-                    </div>
-                  )}
-                  {commentDeleteModal && (
-                    <CustomModal
-                      content="댓글을 삭제하시겠습니까?"
-                      customFunc={() => deleteComment(item)}
-                      handleModal={closeDeleteModal}
-                    />
-                  )}
-                </div>
-                <p>{item.commentContent}</p>
-              </div>
-            ))}
+          {!lostPost.isMyBoard && (
+            <div
+              className={styles.chatBtn}
+              onClick={() => newChatRoom(lostPost.author)}
+            >
+              <AiOutlineComment size="22px" />
+              <span>채팅하기</span>
+            </div>
+          )}
         </div>
-        {deleteModal && (
-          <CustomModal
-            content="정말 삭제하시겠습니까?"
-            customFunc={deletePost}
-            handleModal={closeDeleteModal}
-          />
-        )}
+        <h1>{lostPost.title}</h1>
+        <p>{lostPost.content}</p>
+        <div className={styles.imageList}>
+          {lostPost.postImages.map((img) => {
+            return (
+              <div key={img} className={styles.imageContainer}>
+                <img src={img} alt="post-img" />
+              </div>
+            )
+          })}
+        </div>
+        <div className={styles.postBottom}>
+          <div className={styles.comment}>
+            <FaRegComment />
+            {/* <span>{lostPost.commentCnt}</span> */}
+            <span>{commentList.length}</span>
+          </div>
+          {lostPost.isMyBoard && (
+            <div className={styles.modifyBtn}>
+              <div className={styles.solvedStatus}>
+                <div
+                  className={cn(styles.checkBox, {
+                    [styles.checked]: resolveCheck,
+                  })}
+                  onClick={checkResolve}
+                >
+                  <FaCheck />
+                </div>
+                <span>해결 완료</span>
+              </div>
+              <div className={styles.deleteBtn}>
+                <div>
+                  <span onClick={() => setDeleteModal(true)}>삭제</span>
+                </div>
+                <div>
+                  <span onClick={moveToUpdatePage}>수정</span>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
-      <Footer />
+      {cookies.get('ISLOGIN') && (
+        <div className={styles.postComment}>
+          <div className={styles.commentInput}>
+            <input
+              placeholder="댓글을 입력하세요."
+              value={commentText}
+              onChange={(e) => setCommentText(e.target.value)}
+            />
+          </div>
+          <div className={styles.uploadBtn} onClick={addComment}>
+            등록
+          </div>
+        </div>
+      )}
+      {commentList.length > 0 && (
+        <div className={styles.commentList}>
+          {commentList.map((item) => (
+            <CommentItem
+              item={item}
+              newChatRoom={newChatRoom}
+              deleteComment={deleteComment}
+            />
+          ))}
+        </div>
+      )}
+      {deleteModal && (
+        <CustomModal
+          content="정말 삭제하시겠습니까?"
+          customFunc={deletePost}
+          handleModal={closeDeleteModal}
+        />
+      )}
     </div>
-  );
-};
+  )
+}
 
-export default LostItemPostPage;
+export default LostItemPostPage

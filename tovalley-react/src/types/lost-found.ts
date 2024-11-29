@@ -30,3 +30,27 @@ export interface PlaceName {
   waterPlaceName: string
   address: string
 }
+
+export interface LostPostComment {
+  commentId: number
+  commentAuthor: string
+  commentContent: string
+  commentCreateAt: string
+  commentByUser: boolean
+  commentAuthorProfile: string
+}
+
+export interface LostPost {
+  title: string
+  content: string
+  author: string
+  waterPlaceName: string
+  waterPlaceAddress: string
+  postCreateAt: string
+  postImages: string[]
+  isResolved: boolean
+  isMyBoard: boolean
+  boardAuthorProfile: string
+  commentCnt: number
+  comments: LostPostComment[]
+}
