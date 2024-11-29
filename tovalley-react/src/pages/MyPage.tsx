@@ -1,227 +1,227 @@
-import React, { FC, useCallback, useEffect, useRef, useState } from "react";
-import Header from "../component/header/Header";
-import Footer from "../component/footer/Footer";
-import styles from "../css/user/MyPage.module.css";
-import RatingStar from "../component/common/RatingStar";
-import axiosInstance from "../axios_interceptor";
-import ConfirmModal from "../component/common/ConfirmModal";
-import TripSchedule from "../component/user/TripSchedule";
-import { useNavigate } from "react-router-dom";
-import { RiDeleteBin6Line } from "react-icons/ri";
-import { elapsedTime } from "../composables/elapsedTime";
+import React, { FC, useCallback, useEffect, useRef, useState } from 'react'
+import Header from '../component/header/Header'
+import Footer from '../component/footer/Footer'
+import styles from '../css/user/MyPage.module.css'
+import RatingStar from '../component/common/RatingStar'
+import axiosInstance from '../axios_interceptor'
+import ConfirmModal from '../component/common/ConfirmModal'
+import TripSchedule from '../component/user/TripSchedule'
+import { useNavigate } from 'react-router-dom'
+import { RiDeleteBin6Line } from 'react-icons/ri'
+import { elapsedTime } from '@utils/elapsedTime'
 
 type user = {
   userProfile: {
-    memberProfileImg: string | null;
-    memberName: string;
-    memberNick: string;
-  };
+    memberProfileImg: string | null
+    memberName: string
+    memberNick: string
+  }
   myReviews: {
     content: {
-      reviewId: number; // 리뷰 Id(PK)
-      waterPlaceId: number; // 물놀이 장소 Id(PK)
-      waterPlaceName: string; // 물놀이 장소명
-      rating: number; // 내가 작성한 평점
-      createdReviewDate: string; // 내가 리뷰를 작성한 시간
-      content: string; // 내가 작성한 리뷰 내용
-      reviewImages: string | null; // 내가 추가한 리뷰 이미지들
-      waterQuality: string; // 내가 작성한 수질 정보
-    }[];
+      reviewId: number // 리뷰 Id(PK)
+      waterPlaceId: number // 물놀이 장소 Id(PK)
+      waterPlaceName: string // 물놀이 장소명
+      rating: number // 내가 작성한 평점
+      createdReviewDate: string // 내가 리뷰를 작성한 시간
+      content: string // 내가 작성한 리뷰 내용
+      reviewImages: string | null // 내가 추가한 리뷰 이미지들
+      waterQuality: string // 내가 작성한 수질 정보
+    }[]
     pageable: {
       sort: {
-        empty: boolean;
-        unsorted: boolean;
-        sorted: boolean;
-      };
-      offset: number;
-      pageNumber: number;
-      pageSize: number;
-      paged: boolean;
-      unpaged: boolean;
-    };
-    size: number; // 요청한 응답 개수
-    number: number; // 응답된 페이지
+        empty: boolean
+        unsorted: boolean
+        sorted: boolean
+      }
+      offset: number
+      pageNumber: number
+      pageSize: number
+      paged: boolean
+      unpaged: boolean
+    }
+    size: number // 요청한 응답 개수
+    number: number // 응답된 페이지
     sort: {
-      empty: boolean;
-      unsorted: boolean;
-      sorted: boolean;
-    };
-    first: boolean; // 첫번째 페이지인지 여부
-    last: boolean; // 마지막 페이지인지 여부
-    numberOfElements: number; // 조회된 개수
-    empty: boolean;
-  };
+      empty: boolean
+      unsorted: boolean
+      sorted: boolean
+    }
+    first: boolean // 첫번째 페이지인지 여부
+    last: boolean // 마지막 페이지인지 여부
+    numberOfElements: number // 조회된 개수
+    empty: boolean
+  }
   myUpcomingTripSchedules: // 앞으로의 일정 리스트 (최대 5개)
   {
-    tripScheduleId: number; // 여행 일정 Id(PK)
-    waterPlaceId: number; // 물놀이 장소 Id(PK)
-    waterPlaceName: string; // 물놀이 장소명
-    waterPlaceImg: string | null; // 물놀이 장소 이미지
-    waterPlaceAddr: string; // 물놀이 장소 주소
-    waterPlaceRating: number; // 물놀이 장소 평점
-    waterPlaceReviewCnt: number; // 물놀이 장소 리뷰 개수
-    waterPlaceTraffic: number; // 물놀이 장소 혼잡도(해당 날짜에 해당 계곡에 가는 인원수)
-    tripDate: string; // 내가 계획한 여행 날자
-    tripPartySize: number; // 함께 가는 여행 인원수
+    tripScheduleId: number // 여행 일정 Id(PK)
+    waterPlaceId: number // 물놀이 장소 Id(PK)
+    waterPlaceName: string // 물놀이 장소명
+    waterPlaceImg: string | null // 물놀이 장소 이미지
+    waterPlaceAddr: string // 물놀이 장소 주소
+    waterPlaceRating: number // 물놀이 장소 평점
+    waterPlaceReviewCnt: number // 물놀이 장소 리뷰 개수
+    waterPlaceTraffic: number // 물놀이 장소 혼잡도(해당 날짜에 해당 계곡에 가는 인원수)
+    tripDate: string // 내가 계획한 여행 날자
+    tripPartySize: number // 함께 가는 여행 인원수
     rescueSupplies: {
-      lifeBoatNum: number; // 인명구조함
-      portableStandNum: number; // 이동식거치대
-      lifeJacketNum: number; // 구명조끼
-      lifeRingNum: number; // 구명환
-      rescueRopeNum: number; // 구명로프
-      rescueRodNum: number; // 구조봉
-    };
-    hasReview: boolean; // 리뷰 작성 여부(앞으로의 일정은 리뷰를 작성할 수 없음)
-  }[];
+      lifeBoatNum: number // 인명구조함
+      portableStandNum: number // 이동식거치대
+      lifeJacketNum: number // 구명조끼
+      lifeRingNum: number // 구명환
+      rescueRopeNum: number // 구명로프
+      rescueRodNum: number // 구조봉
+    }
+    hasReview: boolean // 리뷰 작성 여부(앞으로의 일정은 리뷰를 작성할 수 없음)
+  }[]
   myLostFoundBoards: {
     content: {
-      lostFoundBoardId: number;
-      title: string;
-      postCreateAt: string;
-    }[];
+      lostFoundBoardId: number
+      title: string
+      postCreateAt: string
+    }[]
     pageable: {
       sort: {
-        empty: boolean;
-        sorted: boolean;
-        unsorted: boolean;
-      };
-      offset: number;
-      pageNumber: number;
-      pageSize: number;
-      paged: boolean;
-      unpaged: boolean;
-    };
-    first: boolean;
-    last: boolean;
-    size: number;
-    number: number;
+        empty: boolean
+        sorted: boolean
+        unsorted: boolean
+      }
+      offset: number
+      pageNumber: number
+      pageSize: number
+      paged: boolean
+      unpaged: boolean
+    }
+    first: boolean
+    last: boolean
+    size: number
+    number: number
     sort: {
-      empty: boolean;
-      sorted: boolean;
-      unsorted: boolean;
-    };
-    numberOfElements: number;
-    empty: boolean;
-  };
-};
+      empty: boolean
+      sorted: boolean
+      unsorted: boolean
+    }
+    numberOfElements: number
+    empty: boolean
+  }
+}
 
 type preSchedule = {
   content: {
-    tripScheduleId: number;
-    waterPlaceId: number;
-    waterPlaceName: string;
-    waterPlaceImg: string | null;
-    waterPlaceAddr: string;
-    waterPlaceRating: number | string;
-    waterPlaceReviewCnt: number | string;
-    waterPlaceTraffic: number;
-    tripDate: string;
-    tripPartySize: number;
+    tripScheduleId: number
+    waterPlaceId: number
+    waterPlaceName: string
+    waterPlaceImg: string | null
+    waterPlaceAddr: string
+    waterPlaceRating: number | string
+    waterPlaceReviewCnt: number | string
+    waterPlaceTraffic: number
+    tripDate: string
+    tripPartySize: number
     rescueSupplies: {
-      lifeBoatNum: number;
-      portableStandNum: number;
-      lifeJacketNum: number;
-      lifeRingNum: number;
-      rescueRopeNum: number;
-      rescueRodNum: number;
-    };
-    hasReview: boolean;
-  }[];
+      lifeBoatNum: number
+      portableStandNum: number
+      lifeJacketNum: number
+      lifeRingNum: number
+      rescueRopeNum: number
+      rescueRodNum: number
+    }
+    hasReview: boolean
+  }[]
   pageable: {
     sort: {
-      empty: boolean;
-      unsorted: boolean;
-      sorted: boolean;
-    };
-    offset: number;
-    pageNumber: number;
-    pageSize: number;
-    paged: boolean;
-    unpaged: boolean;
-  };
-  number: number;
+      empty: boolean
+      unsorted: boolean
+      sorted: boolean
+    }
+    offset: number
+    pageNumber: number
+    pageSize: number
+    paged: boolean
+    unpaged: boolean
+  }
+  number: number
   sort: {
-    empty: boolean;
-    unsorted: boolean;
-    sorted: boolean;
-  };
-  first: boolean;
-  last: boolean;
-  size: number;
-  numberOfElements: number;
-  empty: boolean;
-};
+    empty: boolean
+    unsorted: boolean
+    sorted: boolean
+  }
+  first: boolean
+  last: boolean
+  size: number
+  numberOfElements: number
+  empty: boolean
+}
 
 type schedule = {
-  tripScheduleId: number;
-  waterPlaceId: number;
-  waterPlaceName: string;
-  waterPlaceImg: string | null;
-  waterPlaceAddr: string;
-  waterPlaceRating: number | string;
-  waterPlaceReviewCnt: number | string;
-  waterPlaceTraffic: number;
-  tripDate: string;
-  tripPartySize: number;
+  tripScheduleId: number
+  waterPlaceId: number
+  waterPlaceName: string
+  waterPlaceImg: string | null
+  waterPlaceAddr: string
+  waterPlaceRating: number | string
+  waterPlaceReviewCnt: number | string
+  waterPlaceTraffic: number
+  tripDate: string
+  tripPartySize: number
   rescueSupplies: {
-    lifeBoatNum: number;
-    portableStandNum: number;
-    lifeJacketNum: number;
-    lifeRingNum: number;
-    rescueRopeNum: number;
-    rescueRodNum: number;
-  };
-  hasReview: boolean;
-}[];
+    lifeBoatNum: number
+    portableStandNum: number
+    lifeJacketNum: number
+    lifeRingNum: number
+    rescueRopeNum: number
+    rescueRodNum: number
+  }
+  hasReview: boolean
+}[]
 
 const MyPage = () => {
   const [nickUpdate, setNickUpdate] = useState({
     click: false,
     duplicateCheck: false,
-    inputNick: "",
+    inputNick: '',
     available: false,
-  });
+  })
   const [confirmView, setConfirmView] = useState({
     view: false,
-    content: "",
-  });
+    content: '',
+  })
   const [changeImg, setChangeImg] = useState<{
-    modal: boolean;
-    imgFile: string | null | ArrayBuffer;
+    modal: boolean
+    imgFile: string | null | ArrayBuffer
   }>({
     modal: false,
-    imgFile: "",
-  });
+    imgFile: '',
+  })
 
-  const imgRef = useRef<HTMLInputElement>(null);
-  const [scheduleBtn, setScheduleBtn] = useState("앞으로의 일정");
-  const [userImg, setUserImg] = useState("");
-  const [deleteBtn, setDeleteBtn] = useState(false);
-  const [loginModal, setLoginModal] = useState(false);
-  const navigation = useNavigate();
-  const [currentCategory, setCurrentCategory] = useState("내 리뷰");
-  const target = useRef<HTMLDivElement>(null);
-  const [isPageEnd, setIsPageEnd] = useState<boolean>(false);
-  const [page, setPage] = useState(0);
-  const [newMyPost, setNewMyPost] = useState();
+  const imgRef = useRef<HTMLInputElement>(null)
+  const [scheduleBtn, setScheduleBtn] = useState('앞으로의 일정')
+  const [userImg, setUserImg] = useState('')
+  const [deleteBtn, setDeleteBtn] = useState(false)
+  const [loginModal, setLoginModal] = useState(false)
+  const navigation = useNavigate()
+  const [currentCategory, setCurrentCategory] = useState('내 리뷰')
+  const target = useRef<HTMLDivElement>(null)
+  const [isPageEnd, setIsPageEnd] = useState<boolean>(false)
+  const [page, setPage] = useState(0)
+  const [newMyPost, setNewMyPost] = useState()
 
   const [user, setUser] = useState<user>({
     userProfile: {
-      memberProfileImg: "",
-      memberName: "",
-      memberNick: "",
+      memberProfileImg: '',
+      memberName: '',
+      memberNick: '',
     },
     myReviews: {
       content: [
         {
           reviewId: 0,
           waterPlaceId: 0,
-          waterPlaceName: "",
+          waterPlaceName: '',
           rating: 0,
-          createdReviewDate: "",
-          content: "",
-          reviewImages: "",
-          waterQuality: "",
+          createdReviewDate: '',
+          content: '',
+          reviewImages: '',
+          waterQuality: '',
         },
       ],
       pageable: {
@@ -252,13 +252,13 @@ const MyPage = () => {
       {
         tripScheduleId: 0,
         waterPlaceId: 0,
-        waterPlaceName: "",
-        waterPlaceImg: "",
-        waterPlaceAddr: "",
+        waterPlaceName: '',
+        waterPlaceImg: '',
+        waterPlaceAddr: '',
         waterPlaceRating: 0,
         waterPlaceReviewCnt: 0,
         waterPlaceTraffic: 0,
-        tripDate: "",
+        tripDate: '',
         tripPartySize: 0,
         rescueSupplies: {
           lifeBoatNum: 0,
@@ -275,8 +275,8 @@ const MyPage = () => {
       content: [
         {
           lostFoundBoardId: 0,
-          title: "",
-          postCreateAt: "",
+          title: '',
+          postCreateAt: '',
         },
       ],
       pageable: {
@@ -303,19 +303,19 @@ const MyPage = () => {
       numberOfElements: 0,
       empty: false,
     },
-  });
+  })
 
   const [upCommingSchedule, setUpCommingSchedule] = useState<schedule>([
     {
       tripScheduleId: 0,
       waterPlaceId: 0,
-      waterPlaceName: "",
-      waterPlaceImg: "",
-      waterPlaceAddr: "",
+      waterPlaceName: '',
+      waterPlaceImg: '',
+      waterPlaceAddr: '',
       waterPlaceRating: 0,
       waterPlaceReviewCnt: 0,
       waterPlaceTraffic: 0,
-      tripDate: "",
+      tripDate: '',
       tripPartySize: 0,
       rescueSupplies: {
         lifeBoatNum: 0,
@@ -327,20 +327,20 @@ const MyPage = () => {
       },
       hasReview: false,
     },
-  ]);
+  ])
 
   const [preSchedule, setPreSchedule] = useState<preSchedule>({
     content: [
       {
         tripScheduleId: 0,
         waterPlaceId: 0,
-        waterPlaceName: "",
-        waterPlaceImg: "",
-        waterPlaceAddr: "",
+        waterPlaceName: '',
+        waterPlaceImg: '',
+        waterPlaceAddr: '',
         waterPlaceRating: 0,
         waterPlaceReviewCnt: 0,
         waterPlaceTraffic: 0,
-        tripDate: "",
+        tripDate: '',
         tripPartySize: 0,
         rescueSupplies: {
           lifeBoatNum: 0,
@@ -376,146 +376,146 @@ const MyPage = () => {
     size: 0,
     numberOfElements: 0,
     empty: false,
-  });
+  })
 
   useEffect(() => {
     axiosInstance
-      .get("/api/auth/my-page")
+      .get('/api/auth/my-page')
       .then((res) => {
-        console.log(res);
-        setUser(res.data.data);
-        setUserImg(res.data.data.userProfile.memberProfileImg);
-        setUpCommingSchedule(res.data.data.myUpcomingTripSchedules);
+        console.log(res)
+        setUser(res.data.data)
+        setUserImg(res.data.data.userProfile.memberProfileImg)
+        setUpCommingSchedule(res.data.data.myUpcomingTripSchedules)
       })
       .catch((err) => {
-        console.log(err);
-        err.response.status === 401 && setLoginModal(true);
-      });
-  }, []);
+        console.log(err)
+        err.response.status === 401 && setLoginModal(true)
+      })
+  }, [])
 
   const checkNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const regExp = /^[가-힣a-zA-Z0-9]{1,10}$/;
+    const regExp = /^[가-힣a-zA-Z0-9]{1,10}$/
     if (regExp.test(e.target.value) === true) {
-      setNickUpdate({ ...nickUpdate, available: true });
+      setNickUpdate({ ...nickUpdate, available: true })
     } else {
-      setNickUpdate({ ...nickUpdate, available: false });
+      setNickUpdate({ ...nickUpdate, available: false })
     }
-  };
+  }
 
   // 닉네임 중복 체크
   const checkDuplication = () => {
     const data = {
       nickname: nickUpdate.inputNick,
-    };
+    }
 
     nickUpdate.available
       ? axiosInstance
           .post(`/api/members/check-nickname`, data)
           .then((res) => {
-            console.log(res);
+            console.log(res)
             if (res.status === 200) {
               setConfirmView({
                 view: true,
-                content: "사용 가능한 닉네임입니다.",
-              });
-              setNickUpdate({ ...nickUpdate, duplicateCheck: true });
+                content: '사용 가능한 닉네임입니다.',
+              })
+              setNickUpdate({ ...nickUpdate, duplicateCheck: true })
             }
           })
           .catch((err) => console.log(err))
       : setConfirmView({
           view: true,
-          content: "한/영, 숫자 포함 20자 이내로 작성해주세요.",
-        });
-  };
+          content: '한/영, 숫자 포함 20자 이내로 작성해주세요.',
+        })
+  }
 
   // 닉네임 수정
   const handleResetNicname = () => {
     const data = {
       nickname: nickUpdate.inputNick,
-    };
+    }
 
     axiosInstance
-      .post("/api/auth/members/set-nickname", data)
+      .post('/api/auth/members/set-nickname', data)
       .then((res) => {
-        console.log(res);
-        setNickUpdate({ ...nickUpdate, click: false });
+        console.log(res)
+        setNickUpdate({ ...nickUpdate, click: false })
       })
-      .catch((err) => console.log(err));
-  };
+      .catch((err) => console.log(err))
+  }
 
   const getPreSchedule = () => {
     axiosInstance
-      .get("/api/auth/my-page/pre-schedules")
+      .get('/api/auth/my-page/pre-schedules')
       .then((res) => {
-        console.log(res);
-        setPreSchedule(res.data.data);
+        console.log(res)
+        setPreSchedule(res.data.data)
       })
-      .catch((err) => console.log(err));
-  };
+      .catch((err) => console.log(err))
+  }
 
   const getUpcomingSchedule = () => {
     axiosInstance
-      .get("/api/auth/my-page/upcoming-schedules")
+      .get('/api/auth/my-page/upcoming-schedules')
       .then((res) => {
-        console.log(res);
-        setUpCommingSchedule(res.data.data);
+        console.log(res)
+        setUpCommingSchedule(res.data.data)
       })
-      .catch((err) => console.log(err));
-  };
+      .catch((err) => console.log(err))
+  }
 
   const saveImgFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      const file = e.target.files[0];
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
+      const file = e.target.files[0]
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
 
       reader.onload = () => {
-        setChangeImg({ imgFile: reader.result, modal: false });
-        reader.result === null || reader.result === ""
-          ? setUserImg("")
-          : setUserImg(reader.result.toString());
-      };
+        setChangeImg({ imgFile: reader.result, modal: false })
+        reader.result === null || reader.result === ''
+          ? setUserImg('')
+          : setUserImg(reader.result.toString())
+      }
 
-      const formData = new FormData();
+      const formData = new FormData()
       if (file !== undefined) {
-        formData.append("image", file);
+        formData.append('image', file)
       }
 
       axiosInstance
-        .post("/api/auth/members/profile-image", formData)
+        .post('/api/auth/members/profile-image', formData)
         .then((res) => {
-          console.log(res);
+          console.log(res)
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.log(err))
     }
-  };
+  }
 
   const getMyPost = useCallback(async () => {
     try {
-      const res = await axiosInstance.get("/api/auth/my-board", {
+      const res = await axiosInstance.get('/api/auth/my-board', {
         params: {
           page,
         },
-      });
-      console.log(res);
-      setNewMyPost(res.data.content);
+      })
+      console.log(res)
+      setNewMyPost(res.data.content)
       if (res.data.last || res.data.data.content.length < 5) {
-        setIsPageEnd(true);
+        setIsPageEnd(true)
       }
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
-    let newUser = user;
+    let newUser = user
     if (newMyPost)
       newUser.myLostFoundBoards.content = [
         ...user.myLostFoundBoards.content,
         ...newMyPost,
-      ];
-    setUser(newUser);
-  }, [newMyPost]);
+      ]
+    setUser(newUser)
+  }, [newMyPost])
 
   const handleObserver = useCallback(
     async (
@@ -523,29 +523,29 @@ const MyPage = () => {
       observer: IntersectionObserver
     ) => {
       if (entry.isIntersecting) {
-        observer.unobserve(entry.target);
-        setPage((prev) => prev + 1);
-        await getMyPost();
+        observer.unobserve(entry.target)
+        setPage((prev) => prev + 1)
+        await getMyPost()
       }
     },
     []
-  );
+  )
 
   useEffect(() => {
-    if (!target.current) return;
+    if (!target.current) return
 
     const option = {
       root: null,
-      rootMargin: "0px",
+      rootMargin: '0px',
       threshold: 0,
-    };
+    }
 
-    const observer = new IntersectionObserver(handleObserver, option);
+    const observer = new IntersectionObserver(handleObserver, option)
 
-    target.current && observer.observe(target.current);
+    target.current && observer.observe(target.current)
 
-    return () => observer && observer.disconnect();
-  }, [handleObserver, isPageEnd]);
+    return () => observer && observer.disconnect()
+  }, [handleObserver, isPageEnd])
 
   return (
     <div className={styles.myPageContainer}>
@@ -566,8 +566,8 @@ const MyPage = () => {
                   >
                     <img
                       src={
-                        userImg === null || userImg === ""
-                          ? process.env.PUBLIC_URL + "/img/user-profile.png"
+                        userImg === null || userImg === ''
+                          ? process.env.PUBLIC_URL + '/img/user-profile.png'
                           : userImg
                       }
                       alt="사용자 프로필 이미지"
@@ -623,23 +623,23 @@ const MyPage = () => {
                   {!nickUpdate.click && (
                     <span
                       onClick={() => {
-                        if (nickUpdate.inputNick === "") {
+                        if (nickUpdate.inputNick === '') {
                           setNickUpdate({
                             ...nickUpdate,
                             inputNick: user.userProfile.memberNick,
                             click: true,
-                          });
+                          })
                         } else {
                           setNickUpdate({
                             ...nickUpdate,
                             duplicateCheck: false,
                             click: true,
-                          });
+                          })
                         }
                       }}
                       style={
-                        user.userProfile.memberNick === ""
-                          ? { marginLeft: "0" }
+                        user.userProfile.memberNick === ''
+                          ? { marginLeft: '0' }
                           : {}
                       }
                     >
@@ -650,20 +650,20 @@ const MyPage = () => {
                     <span
                       onClick={() => {
                         if (!nickUpdate.duplicateCheck) {
-                          checkDuplication();
+                          checkDuplication()
                         } else {
-                          handleResetNicname();
+                          handleResetNicname()
                           setUser({
                             ...user,
                             userProfile: {
                               ...user.userProfile,
                               memberNick: nickUpdate.inputNick,
                             },
-                          });
+                          })
                         }
                       }}
                     >
-                      {nickUpdate.duplicateCheck ? "저장" : "중복검사"}
+                      {nickUpdate.duplicateCheck ? '저장' : '중복검사'}
                     </span>
                   )}
                   {nickUpdate.click && (
@@ -675,7 +675,7 @@ const MyPage = () => {
                             inputNick: user.userProfile.memberNick,
                             duplicateCheck: false,
                             click: false,
-                          });
+                          })
                         }
                       }}
                     >
@@ -700,27 +700,27 @@ const MyPage = () => {
               <div className={styles.myReviewCategoryWrap}>
                 <div
                   className={`${
-                    currentCategory === "내 리뷰"
+                    currentCategory === '내 리뷰'
                       ? styles.categoryClicked
                       : styles.categoryColor
                   } ${styles.myReviewCategory}`}
-                  onClick={() => setCurrentCategory("내 리뷰")}
+                  onClick={() => setCurrentCategory('내 리뷰')}
                 >
                   <h4>내 리뷰</h4>
                 </div>
                 <div
                   className={`${
-                    currentCategory === "내 글"
+                    currentCategory === '내 글'
                       ? styles.categoryClicked
                       : styles.categoryColor
                   } ${styles.myReviewCategory}`}
-                  onClick={() => setCurrentCategory("내 글")}
+                  onClick={() => setCurrentCategory('내 글')}
                 >
                   <h4>내 글</h4>
                 </div>
               </div>
               <div className={styles.reviewContainer}>
-                {currentCategory === "내 리뷰" ? (
+                {currentCategory === '내 리뷰' ? (
                   user.myReviews.content.map((item) => {
                     return (
                       <div key={item.reviewId} className={styles.reviewItem}>
@@ -748,8 +748,8 @@ const MyPage = () => {
                             style={
                               item.reviewImages === null
                                 ? {
-                                    borderRadius: "0 0 5px 5px",
-                                    borderLeft: "1px solid #bcbcbc",
+                                    borderRadius: '0 0 5px 5px',
+                                    borderLeft: '1px solid #bcbcbc',
                                   }
                                 : {}
                             }
@@ -773,7 +773,7 @@ const MyPage = () => {
                           </div>
                         </div>
                       </div>
-                    );
+                    )
                   })
                 ) : (
                   <div>
@@ -787,12 +787,12 @@ const MyPage = () => {
                           <p>{post.title}</p>
                           <span>{elapsedTime(post.postCreateAt)}</span>
                         </div>
-                      );
+                      )
                     })}
                     {!isPageEnd && (
                       <div
                         ref={target}
-                        style={{ width: "100%", height: "5px" }}
+                        style={{ width: '100%', height: '5px' }}
                       />
                     )}
                   </div>
@@ -807,11 +807,11 @@ const MyPage = () => {
               <div>
                 <span
                   onClick={() => {
-                    setScheduleBtn("앞으로의 일정");
-                    getUpcomingSchedule();
+                    setScheduleBtn('앞으로의 일정')
+                    getUpcomingSchedule()
                   }}
                   style={
-                    scheduleBtn === "앞으로의 일정" ? { color: "black" } : {}
+                    scheduleBtn === '앞으로의 일정' ? { color: 'black' } : {}
                   }
                 >
                   앞으로의 일정
@@ -820,16 +820,16 @@ const MyPage = () => {
               <div>
                 <span
                   onClick={() => {
-                    setScheduleBtn("지난 일정");
-                    getPreSchedule();
+                    setScheduleBtn('지난 일정')
+                    getPreSchedule()
                   }}
-                  style={scheduleBtn === "지난 일정" ? { color: "black" } : {}}
+                  style={scheduleBtn === '지난 일정' ? { color: 'black' } : {}}
                 >
                   지난 일정
                 </span>
               </div>
             </div>
-            {scheduleBtn === "앞으로의 일정" && (
+            {scheduleBtn === '앞으로의 일정' && (
               <span
                 onClick={() => setDeleteBtn(true)}
                 className={styles.deleteButton}
@@ -837,7 +837,7 @@ const MyPage = () => {
                 삭제
               </span>
             )}
-            {scheduleBtn === "앞으로의 일정" && (
+            {scheduleBtn === '앞으로의 일정' && (
               <span
                 onClick={() => setDeleteBtn(true)}
                 className={styles.deleteIcon}
@@ -847,7 +847,7 @@ const MyPage = () => {
             )}
           </div>
           <div className={styles.scheduleList}>
-            {scheduleBtn === "앞으로의 일정" ? (
+            {scheduleBtn === '앞으로의 일정' ? (
               <TripSchedule
                 scheduleBtn={scheduleBtn}
                 tripSchedules={upCommingSchedule}
@@ -874,22 +874,22 @@ const MyPage = () => {
       {loginModal && <LoginModal />}
       <Footer />
     </div>
-  );
-};
+  )
+}
 
 interface ProfileProp {
   changeImg: {
-    modal: boolean;
-    imgFile: string | null | ArrayBuffer;
-  };
+    modal: boolean
+    imgFile: string | null | ArrayBuffer
+  }
   setChangeImg: React.Dispatch<
     React.SetStateAction<{
-      modal: boolean;
-      imgFile: string | null | ArrayBuffer;
+      modal: boolean
+      imgFile: string | null | ArrayBuffer
     }>
-  >;
-  imgRef: React.RefObject<HTMLInputElement>;
-  setUserImg: React.Dispatch<React.SetStateAction<string>>;
+  >
+  imgRef: React.RefObject<HTMLInputElement>
+  setUserImg: React.Dispatch<React.SetStateAction<string>>
 }
 
 const Profile: FC<ProfileProp> = ({
@@ -903,29 +903,29 @@ const Profile: FC<ProfileProp> = ({
       position: fixed; 
       top: -${window.scrollY}px;
       overflow-y: scroll;
-      width: 100%;`;
+      width: 100%;`
     return () => {
-      const scrollY = document.body.style.top;
-      document.body.style.cssText = "";
-      window.scrollTo(0, parseInt(scrollY || "0", 10) * -1);
-    };
-  }, []);
+      const scrollY = document.body.style.top
+      document.body.style.cssText = ''
+      window.scrollTo(0, parseInt(scrollY || '0', 10) * -1)
+    }
+  }, [])
 
   const deleteProfileImg = (e: React.MouseEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     if (imgRef.current) {
-      imgRef.current.value = "";
-      setUserImg("");
-      setChangeImg({ imgFile: "", modal: false });
+      imgRef.current.value = ''
+      setUserImg('')
+      setChangeImg({ imgFile: '', modal: false })
     }
 
     axiosInstance
-      .post("/api/auth/members/profile-image")
+      .post('/api/auth/members/profile-image')
       .then((res) => {
-        console.log(res);
+        console.log(res)
       })
-      .catch((err) => console.log(err));
-  };
+      .catch((err) => console.log(err))
+  }
 
   return (
     <div className={styles.modalContainer}>
@@ -948,8 +948,8 @@ const Profile: FC<ProfileProp> = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 const LoginModal = () => {
   useEffect(() => {
@@ -957,15 +957,15 @@ const LoginModal = () => {
           position: fixed; 
           top: -${window.scrollY}px;
           overflow-y: scroll;
-          width: 100%;`;
+          width: 100%;`
     return () => {
-      const scrollY = document.body.style.top;
-      document.body.style.cssText = "";
-      window.scrollTo(0, parseInt(scrollY || "0", 10) * -1);
-    };
-  }, []);
+      const scrollY = document.body.style.top
+      document.body.style.cssText = ''
+      window.scrollTo(0, parseInt(scrollY || '0', 10) * -1)
+    }
+  }, [])
 
-  const navigation = useNavigate();
+  const navigation = useNavigate()
 
   return (
     <div className={styles.modalContainer}>
@@ -973,12 +973,12 @@ const LoginModal = () => {
         <div className={styles.modalContent}>
           <span>로그인이 필요합니다.</span>
         </div>
-        <div className={styles.confirm} onClick={() => navigation("/login")}>
+        <div className={styles.confirm} onClick={() => navigation('/login')}>
           로그인
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default MyPage;
+export default MyPage

@@ -1,0 +1,68 @@
+@import '@styles/variables.scss';
+
+.commentItem {
+  border-bottom: 1px solid $light-gray;
+  padding: 1em 0.5em 0;
+
+  > p {
+    font-size: 1.1rem;
+    margin: 0.5em 0 1em;
+  }
+}
+
+.commentTop {
+  display: flex;
+  justify-content: space-between;
+}
+
+.commentInfo {
+  display: flex;
+  align-items: center;
+
+  > span {
+    &:last-child {
+      color: #b2afaf;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+.commentProfileImage {
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-right: 0.5em;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.commentWriterName {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-right: 0.5em;
+}
+
+.commentChatBtn {
+  color: $primary;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  span {
+    margin-left: 0.3em;
+  }
+}
+
+.deleteComment {
+  font-weight: 700;
+  color: #8b8b8b;
+  cursor: pointer;
+}

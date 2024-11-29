@@ -9,9 +9,12 @@ import ValleyTitle from '@features/valley/components/ValleyTitle'
 import ValleyQuality from '@features/valley/components/ValleyQuality'
 import ValleySchedule from '@features/valley/components/ValleySchedule'
 import ValleyReview from '@features/valley/components/ValleyReview'
+import axiosInstance from '@utils/axios_interceptor'
+import { useParams } from 'react-router-dom'
 
-const ValleyPage = () => {
+const Valley = () => {
   const [valley, setValley] = useState<ValleyData | null>(null)
+  const { id } = useParams()
 
   const [loginModal, setLoginModal] = useState(false)
   const [dangerSegmentsView, setDangerSegmentsView] = useState(false)
@@ -30,10 +33,6 @@ const ValleyPage = () => {
     //   .then((res) => {
     //     console.log(res)
     //     setValley(res.data.data)
-    //     setValleyReview(res.data.data.reviewRespDto)
-    //     setPeopleCnt({
-    //       tripPlanToWaterPlace: res.data.data.tripPlanToWaterPlace,
-    //     })
     //   })
     //   .catch((err) => {
     //     console.log(err)
@@ -77,4 +76,4 @@ const ValleyPage = () => {
   )
 }
 
-export default ValleyPage
+export default Valley

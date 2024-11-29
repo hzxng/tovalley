@@ -6,25 +6,25 @@ import Accident from '@features/home/components/Accident'
 import PopularValley from '@features/home/components/PopularValley'
 import RecentPost from '@features/home/components/RecentPost'
 import { MainData } from 'types/main'
-import { data } from 'dummy/main-data'
+// import { data } from 'dummy/main-data'
 
 const localhost = process.env.REACT_APP_HOST
 
 const Home = () => {
   const [loading, setLoading] = useState(false)
-  const [main, setMain] = useState<MainData | null>(data)
+  const [main, setMain] = useState<MainData | null>()
 
-  // useEffect(() => {
-  //   setLoading(true)
-  //   axios
-  //     .get(`${localhost}/api/main-page`)
-  //     .then((res) => {
-  //       console.log(res)
-  //       setMain(res.data.data)
-  //     })
-  //     .catch((err) => console.log(err))
-  //     .finally(() => setLoading(false))
-  // }, [])
+  useEffect(() => {
+    setLoading(true)
+    axios
+      .get(`${localhost}/api/main-page`)
+      .then((res) => {
+        console.log(res)
+        setMain(res.data.data)
+      })
+      .catch((err) => console.log(err))
+      .finally(() => setLoading(false))
+  }, [])
 
   if (loading || !main) {
     return <div>loading</div>

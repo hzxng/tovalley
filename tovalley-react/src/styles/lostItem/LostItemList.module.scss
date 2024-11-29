@@ -1,0 +1,106 @@
+@import '@styles/variables.scss';
+
+.lostItemListPage {
+  margin-top: 180px;
+  padding: 0 10%;
+  min-height: 60vh;
+}
+
+.categoryWrap {
+  display: flex;
+  justify-content: space-between;
+}
+
+.category {
+  display: flex;
+}
+
+.categoryItem {
+  background-color: #f2f2f2;
+  padding: 0.5em 1.5em;
+  border-radius: 20px;
+  cursor: pointer;
+  margin-right: 0.6em;
+  font-size: 1rem;
+}
+
+.clicked {
+  background-color: $primary;
+  color: white;
+}
+
+.writeBtn {
+  border: 1.5px solid #d3d3d3;
+  display: flex;
+  align-items: center;
+  padding: 0 1.5em;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 1rem;
+
+  span {
+    margin-left: 0.3em;
+  }
+}
+
+.filter {
+  display: flex;
+  align-items: center;
+  margin-top: 2em;
+
+  > span {
+    color: #656565;
+    font-size: 1rem;
+    margin-right: 1.5em;
+  }
+}
+
+.checkBox {
+  padding: 0.2em;
+  display: flex;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 0.5em;
+  background-color: #eeeeee;
+  color: #999999;
+}
+
+.exceptCheck {
+  background-color: $primary;
+  color: white;
+}
+
+.filterList {
+  display: flex;
+}
+
+.valleyFilter,
+.searchValley {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid $primary;
+  border-radius: 20px;
+  padding: 0.3em 1em;
+  color: $primary;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-right: 1em;
+}
+
+.searchValley {
+  cursor: pointer;
+}
+
+.valleyFilter {
+  padding: 0.3em 1em 0.3em 0.5em;
+
+  > span {
+    &:first-child {
+      cursor: pointer;
+    }
+
+    &:last-child {
+      margin-left: 0.5em;
+    }
+  }
+}

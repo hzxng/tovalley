@@ -1,0 +1,118 @@
+@import '@styles/variables.scss';
+
+.modalWrap {
+  width: 700px;
+  height: 400px;
+  border-radius: 15px;
+  background-color: #ffffff;
+  position: absolute;
+  left: 50%;
+  margin-left: -350px;
+  margin-top: 200px;
+  box-shadow: 0 0 4px 4px rgba(212, 212, 212, 0.268);
+  overflow: hidden;
+  padding: 1.8em 1.5em;
+}
+
+.searchContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.searchInput {
+  width: 100%;
+  box-sizing: border-box;
+  margin-right: 2em;
+  border-radius: 30px;
+  border: 1px solid $light-gray;
+  padding: 0.6em 2em;
+  font-size: 0.9rem;
+
+  &:focus {
+    outline: none;
+  }
+
+  &::placeholder {
+    font-size: 0.9rem;
+    color: #656565;
+  }
+}
+
+.searchBtn {
+  display: flex;
+
+  button {
+    white-space: nowrap;
+    margin-right: 0.5em;
+    padding: 0 1.2em;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    font-weight: 900;
+
+    &:first-child {
+      border: 1px solid #d6d6d6;
+      background-color: white;
+      color: #d6d6d6;
+    }
+
+    &:last-child {
+      background-color: $primary;
+      color: white;
+    }
+  }
+}
+
+.scroll {
+  overflow-y: scroll;
+  margin-top: 1em;
+  height: 360px;
+}
+
+.selectedPlace {
+  padding: 0 0.2em;
+  display: flex;
+  flex-wrap: wrap;
+
+  div {
+    flex-shrink: 0;
+    background-color: rgb(234, 234, 234);
+    padding: 0.5em 1.2em;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #656565;
+    margin: 0 0.5em 0.5em 0;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+
+    span {
+      &:first-child {
+        margin-right: 0.3em;
+        font-size: 0.7rem;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.placeNameContainer {
+  padding: 1em 0.2em;
+  height: 320px;
+}
+
+.scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.placeNameBox {
+  margin-bottom: 1.5em;
+}
+
+.placeTitle {
+  color: $primary;
+  font-size: 1.3rem;
+  font-weight: 800;
+  display: block;
+  margin-left: 0.5em;
+}
