@@ -1,8 +1,5 @@
-import React from "react";
-import Header from "../component/header/Header";
-import Footer from "../component/footer/Footer";
-import styled from "styled-components";
-import { PiWarningCircleBold } from "react-icons/pi";
+import styled from 'styled-components'
+import { PiWarningCircleBold } from 'react-icons/pi'
 
 const Container = styled.div`
   display: flex;
@@ -68,16 +65,15 @@ const Container = styled.div`
       }
     }
   }
-`;
+`
 
 const SocialLoginException = () => {
   return (
     <div>
-      <Header />
-      <div style={{ display: "flex", justifyContent: "center" }}>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
         <Container>
           <img
-            src={process.env.PUBLIC_URL + "/img/투계곡-logo.png"}
+            src={process.env.PUBLIC_URL + '/img/투계곡-logo.png'}
             alt="tovalley logo"
             width="190px"
           />
@@ -91,13 +87,12 @@ const SocialLoginException = () => {
           </div>
           <div>
             <span>자세한 사항은 tovalley 관리자에게 문의 바랍니다.</span>
-            <span onClick={() => window.location.replace("/login")}>확인</span>
+            <span onClick={() => window.location.replace('/login')}>확인</span>
           </div>
         </Container>
       </div>
-      <Footer />
     </div>
-  );
-};
+  )
+}
 
-export default SocialLoginException;
+export default SocialLoginException
