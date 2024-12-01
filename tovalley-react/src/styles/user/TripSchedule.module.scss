@@ -1,0 +1,50 @@
+@import '@styles/variables.scss';
+
+.schedule {
+  margin-top: 6em;
+}
+
+.scheduleControl {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.categoryWrap {
+  display: flex;
+}
+
+.scheduleList {
+  margin-bottom: 10em;
+}
+
+.deleteButton {
+  background-color: $primary;
+  color: white;
+  cursor: pointer;
+  padding: 0.4em 1em;
+  border-radius: 8px;
+  margin-right: 0.5em;
+}
+
+.deleteIcon {
+  display: none;
+  margin-right: 0.5em;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 1040px) {
+  .schedule {
+    margin-top: 4em;
+  }
+}
+
+@media screen and (max-width: 460px) {
+  .deleteButton {
+    display: none;
+  }
+
+  .deleteIcon {
+    display: block;
+  }
+}

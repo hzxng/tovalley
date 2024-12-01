@@ -10,7 +10,7 @@ import cn from 'classnames'
 import ValleyMap from './ValleyMap'
 import AccidentTable from '@component/AccidentTable'
 import WeatherItem from './WeatherItem'
-import RescueTable from './RescueTable'
+import RescueTable from '../../../component/RescueTable'
 
 const ValleyInfo = ({
   waterPlaceDetails,
@@ -74,10 +74,13 @@ const ValleyInfo = ({
         </div>
         <div className={styles.rescueSupplies}>
           <span className={styles.title}>구조용품 및 안내표지판 현황</span>
-          <RescueTable
-            rescueSupplies={rescueSupplies}
-            dangerSignboardsNum={waterPlaceDetails.dangerSignboardsNum}
-          />
+          <div className={styles.rescueList}>
+            <RescueTable
+              rescueSupplies={rescueSupplies}
+              dangerSignboardsNum={waterPlaceDetails.dangerSignboardsNum}
+              isDetailPage
+            />
+          </div>
         </div>
       </div>
     </div>

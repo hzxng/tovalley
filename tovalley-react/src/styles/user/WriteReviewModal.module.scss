@@ -1,0 +1,298 @@
+@import '@styles/variables.scss';
+@import '@styles/mixins.scss';
+
+.modalBox {
+  width: 500px;
+  height: 95vh;
+  max-height: 57em;
+  border-radius: 5px;
+  background-color: #ffffff;
+  position: absolute;
+  left: 50%;
+  margin-left: -250px;
+  margin-top: 20px;
+  overflow-y: scroll;
+}
+
+.writeTitle {
+  border-bottom: 1px solid #b5b5b5;
+  display: flex;
+  justify-content: center;
+  padding: 1em;
+  position: relative;
+
+  > span {
+    &:first-child {
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    &:last-child {
+      position: absolute;
+      right: 20px;
+      top: 13px;
+      cursor: pointer;
+      color: #b5b5b5;
+      font-size: 26px;
+    }
+  }
+}
+
+.writeDetail {
+  padding: 1em 2.5em;
+  margin-top: 1em;
+}
+
+.valleyInfo {
+  display: flex;
+  height: 130px;
+  width: 100%;
+
+  > img {
+    border-radius: 5px 0 0 5px;
+    margin: 0;
+    height: 130px;
+    width: 130px;
+  }
+}
+
+.valleyInfoDetail {
+  border: 1px solid #b5b5b5;
+  border-left: none;
+  border-radius: 0 5px 5px 0;
+  width: 100%;
+  padding: 0.8em 1em;
+
+  > h4 {
+    max-width: 250px;
+    margin: 0;
+    font-size: 1.1rem;
+    margin-bottom: 0.3em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  > span {
+    color: #929292;
+    font-size: 0.9rem;
+  }
+
+  > div {
+    &:nth-child(3) {
+      margin-top: 1em;
+    }
+
+    > span {
+      &:first-child {
+        color: #929292;
+        font-size: 0.9rem;
+        margin-right: 1em;
+      }
+
+      &:last-child {
+        font-size: 0.9rem;
+      }
+    }
+  }
+}
+
+.writeStar {
+  display: flex;
+  justify-content: center;
+  margin: 2em 0 1em 0;
+
+  > span {
+    cursor: pointer;
+    font-size: 40px;
+  }
+}
+
+.reviewTextarea {
+  border: 1px solid #d1d1d1;
+  background-color: #f4f4f4;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 5px;
+  height: 300px;
+  padding: 1.2em 1.5em;
+  position: relative;
+
+  > textarea {
+    border: none;
+    background-color: transparent;
+    width: 100%;
+    box-sizing: border-box;
+    height: 250px;
+    resize: none;
+
+    &:focus {
+      outline: none;
+    }
+
+    &::placeholder {
+      color: #848484;
+    }
+  }
+
+  > span {
+    color: #848484;
+    position: absolute;
+    font-size: small;
+    right: 20px;
+    bottom: 10px;
+  }
+}
+
+.pictureBtn {
+  border: 1px solid #b5b5b5;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5em;
+  cursor: pointer;
+  margin-top: 1em;
+  margin-bottom: 1em;
+
+  > span {
+    &:last-child {
+      font-weight: bold;
+      margin-left: 0.5em;
+    }
+  }
+}
+
+.imgInput[type='file'] {
+  display: none;
+}
+
+.previewImg {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 2em;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.imageContainer {
+  display: inline-block;
+  position: relative;
+  margin-right: 1.5em;
+  border: 1px solid #b5b5b5;
+  border-radius: 10px;
+
+  > div {
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+
+    > img {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 9px;
+    }
+  }
+
+  > span {
+    position: absolute;
+    cursor: pointer;
+    top: -15px;
+    right: -15px;
+  }
+}
+
+.writeQuality {
+  margin-top: 2em;
+
+  > span {
+    font-weight: bold;
+    font-size: 0.9rem;
+  }
+
+  > div {
+    margin-top: 0.8em;
+    display: flex;
+  }
+}
+
+.reviewBtn {
+  margin: 2em 0 1.5em 0;
+  display: flex;
+  padding: 0 2.5em;
+
+  > button {
+    &:first-child {
+      border: 1px solid #b5b5b5;
+      color: #5e5e5e;
+      font-weight: bold;
+      background-color: transparent;
+      border-radius: 5px;
+      padding: 0.5em;
+      margin-right: 0.5em;
+      width: 100%;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    &:last-child {
+      @include button($margin: auto);
+      border-radius: 5px;
+      padding: 0.6em;
+      width: 100%;
+    }
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .modalBox {
+    width: 400px;
+    margin-left: -200px;
+  }
+
+  .reviewBtn {
+    margin: 1em 0 1.5em 0;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .modalBox {
+    width: 340px;
+    margin-left: -170px;
+  }
+
+  .writeDetail {
+    padding: 1em 1.5em;
+  }
+
+  .valleyInfoDetail {
+    > h4 {
+      font-size: 0.9rem;
+    }
+
+    > span {
+      font-size: 0.8rem;
+    }
+
+    > div {
+      > span {
+        &:first-child {
+          font-size: 0.8rem;
+          margin-right: 0.5em;
+        }
+
+        &:last-child {
+          font-size: 0.8rem;
+        }
+      }
+    }
+  }
+
+  .reviewBtn {
+    margin: 0.8em 0 1.5em 0;
+    padding: 0 1.5em;
+  }
+}

@@ -18,7 +18,7 @@ const Input = ({
       placeholder={placeholder}
       value={value}
       onChange={onChange}
-      onKeyDown={onkeydown ? onKeyDown : () => {}}
+      onKeyDown={onKeyDown}
     />
   )
 }
