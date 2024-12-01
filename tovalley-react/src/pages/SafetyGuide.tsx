@@ -1,7 +1,5 @@
-import React, { useState } from 'react'
-import Header from '../component/header/Header'
-import styles from '../css/safetyGuide/SafetyGuide.module.css'
-import Footer from '../component/footer/Footer'
+import { useState } from 'react'
+import styles from '@styles/safetyGuide/SafetyGuide.module.scss'
 import {
   FaPlantWilt,
   FaBridgeWater,
@@ -36,7 +34,6 @@ const SafetyGuide = () => {
 
   return (
     <div className={styles.safetyGuidePage}>
-      <Header />
       <div className={styles.safetyGuide}>
         <div className={styles.body}>
           <div className={styles.category}>
@@ -540,7 +537,6 @@ const SafetyGuide = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   )
 }
