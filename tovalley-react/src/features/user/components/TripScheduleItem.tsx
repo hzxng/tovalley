@@ -44,6 +44,10 @@ const TripScheduleItem = ({
     setWriteReviewModal(true)
   }
 
+  const handleModalClose = () => {
+    setWriteReviewModal(false)
+  }
+
   return (
     <div className={styles.scheduleItem}>
       {scheduleBtn === '앞으로의 일정' && (
@@ -110,7 +114,7 @@ const TripScheduleItem = ({
       </div>
       {writeReviewModal && (
         <WriteReviewModal
-          setWriteReviewView={setWriteReviewModal}
+          handleModalClose={handleModalClose}
           valleyInfo={{
             id: schedule.tripScheduleId,
             title: schedule.waterPlaceName,

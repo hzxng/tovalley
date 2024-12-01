@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
+import { useState } from 'react'
 import styles from '@styles/user/WriteReviewModal.module.scss'
 import { BsCameraFill } from 'react-icons/bs'
 import {
@@ -11,9 +11,15 @@ import { MdOutlineStar } from 'react-icons/md'
 import { IoIosCloseCircle } from 'react-icons/io'
 import axiosInstance from '@utils/axios_interceptor'
 import ConfirmModal from '@component/ConfirmModal'
+import Modal from '@component/Modal'
+import { useSaveImg } from '@hooks/useSaveImg'
+import QualityBtn from './QualityBtn'
 
-interface Props {
-  setWriteReviewView: React.Dispatch<React.SetStateAction<boolean>>
+const WriteReviewModal = ({
+  handleModalClose,
+  valleyInfo,
+}: {
+  handleModalClose: () => void
   valleyInfo: {
     id: number
     title: string
@@ -22,47 +28,18 @@ interface Props {
     people: number
     img: string | null
   }
-}
-
-const WriteReviewModal: FC<Props> = ({ setWriteReviewView, valleyInfo }) => {
-  useEffect(() => {
-    document.body.style.cssText = `
-              position: fixed; 
-              top: -${window.scrollY}px;
-              overflow-y: scroll;
-              width: 100%;`
-    return () => {
-      const scrollY = document.body.style.top
-      document.body.style.cssText = ''
-      window.scrollTo(0, parseInt(scrollY || '0', 10) * -1)
-    }
-  }, [])
-
-  const qualityBtn = ['깨끗해요', '괜찮아요', '더러워요']
+}) => {
   const [review, setReview] = useState({
     quality: '',
     content: '',
   })
-  const [uploadImg, setUploadImg] = useState<String[]>([])
-  const [imgFiles, setImgFiles] = useState<File[]>([])
   const [confirm, setConfirm] = useState({ view: false, content: '' })
+  const [rating, setRating] = useState<number>(0)
+  const { uploadImg, imgFiles, saveImgFile, handleDeleteImage } = useSaveImg()
 
-  const [star, setStar] = useState({
-    one: false,
-    two: false,
-    three: false,
-    four: false,
-    five: false,
-  })
-
-  const [innerWidth, setInnerWidth] = useState(window.innerWidth)
-
-  useEffect(() => {
-    const resizeListener = () => {
-      setInnerWidth(window.innerWidth)
-    }
-    window.addEventListener('resize', resizeListener)
-  })
+  const handleClickStar = (index: number) => {
+    setRating(index)
+  }
 
   const handleWriteReview = (e: any) => {
     e.preventDefault()
@@ -75,13 +52,6 @@ const WriteReviewModal: FC<Props> = ({ setWriteReviewView, valleyInfo }) => {
         ? 'FINE'
         : 'DIRTY'
 
-    let rating
-    if (star.five) rating = 5
-    else if (star.four) rating = 4
-    else if (star.three) rating = 3
-    else if (star.two) rating = 2
-    else rating = 1
-
     formData.append('tripScheduleId', `${valleyInfo.id}`)
     formData.append('waterQuality', quality)
     formData.append('rating', `${rating}`)
@@ -92,11 +62,7 @@ const WriteReviewModal: FC<Props> = ({ setWriteReviewView, valleyInfo }) => {
       }
     }
 
-    if (
-      review.quality !== '' &&
-      review.content !== '' &&
-      (star.one || star.two || star.three || star.four || star.five)
-    ) {
+    if (review.quality && review.content && rating) {
       axiosInstance
         .post('/api/auth/reviews', formData)
         .then((res) => {
@@ -113,42 +79,8 @@ const WriteReviewModal: FC<Props> = ({ setWriteReviewView, valleyInfo }) => {
     }
   }
 
-  const saveImgFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const files = e.target.files
-
-      if (!files[0]) return
-
-      let imgUrlList = [...uploadImg]
-      let imgList = [...imgFiles]
-
-      for (let i = 0; i < files.length; i++) {
-        const currentImageUrl = URL.createObjectURL(files[i])
-        imgUrlList.push(currentImageUrl)
-        imgList.push(files[i])
-      }
-
-      if (imgUrlList.length > 5) {
-        imgUrlList = imgUrlList.slice(0, 5)
-        imgList = imgList.slice(0, 5)
-      }
-
-      setUploadImg(imgUrlList)
-      setImgFiles(imgList)
-
-      if (uploadImg.length + files.length > 5) {
-        return alert('최대 5개 사진만 첨부할 수 있습니다.')
-      }
-    }
-  }
-
-  const handleDeleteImage = (id: number) => {
-    setUploadImg(uploadImg.filter((_, index) => index !== id))
-    setImgFiles(imgFiles.filter((_, index) => index !== id))
-  }
-
   return (
-    <div className={styles.modalContainer}>
+    <Modal>
       <form
         className={styles.modalBox}
         onSubmit={handleWriteReview}
@@ -156,24 +88,16 @@ const WriteReviewModal: FC<Props> = ({ setWriteReviewView, valleyInfo }) => {
       >
         <div className={styles.writeTitle}>
           <span>리뷰쓰기</span>
-          <span onClick={() => setWriteReviewView(false)}>
-            <MdClose color="#B5B5B5" size="26px" />
+          <span onClick={handleModalClose}>
+            <MdClose />
           </span>
         </div>
         <div className={styles.writeDetail}>
           <div className={styles.valleyInfo}>
             <img
-              // src={
-              //   valleyInfo.img === null
-              //     ? process.env.PUBLIC_URL + "/img/default-image.png"
-              //     : valleyInfo.img
-              // }
               src={
-                valleyInfo.id === 48
-                  ? process.env.PUBLIC_URL + '/img/dummy/계곡이미지5.jpg'
-                  : valleyInfo.id === 44
-                  ? process.env.PUBLIC_URL + '/img/dummy/계곡이미지6.jpg'
-                  : process.env.PUBLIC_URL + '/img/dummy/계곡이미지7.jpg'
+                valleyInfo.img ??
+                process.env.PUBLIC_URL + '/img/default-image.png'
               }
               alt="계곡 이미지"
               width="120px"
@@ -192,11 +116,17 @@ const WriteReviewModal: FC<Props> = ({ setWriteReviewView, valleyInfo }) => {
             </div>
           </div>
           <div className={styles.writeStar}>
-            <StarItem num="one" item={star.one} setStar={setStar} />
-            <StarItem num="two" item={star.two} setStar={setStar} />
-            <StarItem num="three" item={star.three} setStar={setStar} />
-            <StarItem num="four" item={star.four} setStar={setStar} />
-            <StarItem num="five" item={star.five} setStar={setStar} />
+            {Array.from({ length: 5 }).map((_, index) => {
+              const starIndex = index + 1
+              return (
+                <span key={index}>
+                  <MdOutlineStar
+                    color={starIndex <= rating ? '#66A5FC' : '#B5B5B5'}
+                    onClick={() => handleClickStar(starIndex)}
+                  />
+                </span>
+              )
+            })}
           </div>
           <div className={styles.reviewContent}>
             <div className={styles.reviewTextarea}>
@@ -244,174 +174,36 @@ const WriteReviewModal: FC<Props> = ({ setWriteReviewView, valleyInfo }) => {
           <div className={styles.writeQuality}>
             <span>수질은 괜찮았나요?</span>
             <div>
-              {qualityBtn.map((item, index) => {
-                return (
-                  <div
-                    key={index}
-                    onClick={() => setReview({ ...review, quality: item })}
-                    style={
-                      review.quality === item ? { borderColor: '#66A5FC' } : {}
-                    }
-                  >
-                    <span
-                      style={
-                        review.quality === item
-                          ? { color: '#66A5FC' }
-                          : { color: '#5E5E5E' }
-                      }
-                    >
-                      {index === 0 ? (
-                        <FaRegFaceGrinSquint
-                          size={innerWidth <= 600 ? '13px' : ''}
-                        />
-                      ) : index === 1 ? (
-                        <FaRegFaceSmile
-                          size={innerWidth <= 600 ? '13px' : ''}
-                        />
-                      ) : (
-                        <FaRegFaceFrown
-                          size={innerWidth <= 600 ? '13px' : ''}
-                        />
-                      )}
-                    </span>
-                    <span
-                      style={
-                        review.quality === item ? { color: '#66A5FC' } : {}
-                      }
-                    >
-                      {item}
-                    </span>
-                  </div>
-                )
-              })}
+              <QualityBtn review={review} setReview={setReview} name="깨끗해요">
+                <FaRegFaceGrinSquint />
+              </QualityBtn>
+              <QualityBtn review={review} setReview={setReview} name="괜찮아요">
+                <FaRegFaceSmile />
+              </QualityBtn>
+              <QualityBtn review={review} setReview={setReview} name="더러워요">
+                <FaRegFaceFrown />
+              </QualityBtn>
             </div>
           </div>
         </div>
         <div className={styles.reviewBtn}>
-          <button type="button" onClick={() => setWriteReviewView(false)}>
+          <button type="button" onClick={handleModalClose}>
             취소
           </button>
           <button>등록</button>
         </div>
       </form>
-      {confirm.view && confirm.content === '항목을 모두 입력해주세요.' && (
-        <ConfirmModal content={confirm.content} handleModal={setConfirm} />
+      {confirm.view && (
+        <ConfirmModal
+          content={confirm.content}
+          handleModal={
+            confirm.content === '항목을 모두 입력해주세요.'
+              ? setConfirm
+              : undefined
+          }
+        />
       )}
-      {confirm.view &&
-        confirm.content === '리뷰가 정상적으로 등록되었습니다.' && (
-          <ConfirmModal content={confirm.content} />
-        )}
-    </div>
-  )
-}
-
-interface StarProps {
-  num: string
-  item: boolean
-  setStar: React.Dispatch<
-    React.SetStateAction<{
-      one: boolean
-      two: boolean
-      three: boolean
-      four: boolean
-      five: boolean
-    }>
-  >
-}
-
-const StarItem: FC<StarProps> = ({ num, item, setStar }) => {
-  return (
-    <span
-      onClick={() => {
-        if (item === false) {
-          num === 'one'
-            ? setStar({
-                one: true,
-                two: false,
-                three: false,
-                four: false,
-                five: false,
-              })
-            : num === 'two'
-            ? setStar({
-                one: true,
-                two: true,
-                three: false,
-                four: false,
-                five: false,
-              })
-            : num === 'three'
-            ? setStar({
-                one: true,
-                two: true,
-                three: true,
-                four: false,
-                five: false,
-              })
-            : num === 'four'
-            ? setStar({
-                one: true,
-                two: true,
-                three: true,
-                four: true,
-                five: false,
-              })
-            : setStar({
-                one: true,
-                two: true,
-                three: true,
-                four: true,
-                five: true,
-              })
-        } else {
-          num === 'one'
-            ? setStar({
-                one: false,
-                two: false,
-                three: false,
-                four: false,
-                five: false,
-              })
-            : num === 'two'
-            ? setStar({
-                one: true,
-                two: false,
-                three: false,
-                four: false,
-                five: false,
-              })
-            : num === 'three'
-            ? setStar({
-                one: true,
-                two: true,
-                three: false,
-                four: false,
-                five: false,
-              })
-            : num === 'four'
-            ? setStar({
-                one: true,
-                two: true,
-                three: true,
-                four: false,
-                five: false,
-              })
-            : setStar({
-                one: true,
-                two: true,
-                three: true,
-                four: true,
-                five: false,
-              })
-        }
-      }}
-    >
-      {item === true ? (
-        <MdOutlineStar color="#66A5FC" size="40px" />
-      ) : (
-        <MdOutlineStar color="#B5B5B5" size="40px" />
-      )}
-    </span>
+    </Modal>
   )
 }
 

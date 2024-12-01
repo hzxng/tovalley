@@ -1,0 +1,63 @@
+@import '@styles/variables.scss';
+
+.qualityBtn {
+  border: 1px solid #b5b5b5;
+  border-radius: 5px;
+  padding: 0.5em 1.5em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+  &:not(:last-of-type) {
+    margin-right: 0.3em;
+  }
+
+  &.clicked {
+    border-color: $primary;
+  }
+}
+
+.qualityIcon {
+  color: #5e5e5e;
+
+  &.clicked {
+    color: $primary;
+  }
+}
+
+.qualityText {
+  font-weight: bold;
+  color: #5e5e5e;
+  font-size: 0.9rem;
+  margin-left: 0.3em;
+
+  &.clicked {
+    color: $primary;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .qualityBtn {
+    padding: 0.5em 1em;
+  }
+
+  .qualityText {
+    font-size: 0.8rem;
+  }
+
+  .qualityIcon {
+    font-size: 13px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .qualityBtn {
+    padding: 0.5em 0.8em;
+  }
+
+  .qualityText {
+    font-size: 0.8rem;
+  }
+}
