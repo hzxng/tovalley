@@ -1,21 +1,18 @@
 import { useEffect, useState } from 'react'
 import styles from '@styles/user/MyPage.module.scss'
 import { useNavigate } from 'react-router-dom'
-import { RiDeleteBin6Line } from 'react-icons/ri'
 import { elapsedTime } from '@utils/elapsedTime'
-import { LostFoundContent, PreSchedule, Schedule, User } from 'types/user'
+import { LostFoundContent, User } from 'types/user'
 import ProfileImage from '@features/user/components/ProfileImage'
 import MyNickName from '@features/user/components/MyNickName'
-import cn from 'classnames'
 import MyReviewItem from '@features/user/components/MyReviewItem'
 import axiosInstance from '@utils/axios_interceptor'
 import LoginModal from '@component/LoginModal'
 import useObserver from '@hooks/useObserver'
 import TripSchedule from '@features/user/components/TripSchedule'
+import Category from '@features/user/components/Category'
 
 const MyPage = () => {
-  const [scheduleBtn, setScheduleBtn] = useState('앞으로의 일정')
-  const [deleteBtn, setDeleteBtn] = useState(false)
   const [loginModal, setLoginModal] = useState(false)
   const navigation = useNavigate()
   const [currentCategory, setCurrentCategory] = useState('내 리뷰')
@@ -23,10 +20,7 @@ const MyPage = () => {
     LostFoundContent[] | null
   >(null)
   const [user, setUser] = useState<User | null>(null)
-  const [upCommingSchedule, setUpCommingSchedule] = useState<Schedule[] | null>(
-    null
-  )
-  const [preSchedule, setPreSchedule] = useState<PreSchedule | null>(null)
+
   const [isPageEnd, setIsPageEnd] = useState<boolean>(false)
 
   const getMyPost = async () => {
@@ -49,13 +43,11 @@ const MyPage = () => {
   const { target, page } = useObserver(getMyPost, isPageEnd)
 
   useEffect(() => {
-    getPreSchedule()
     axiosInstance
       .get('/api/auth/my-page')
       .then((res) => {
         console.log(res)
         setUser(res.data.data)
-        setUpCommingSchedule(res.data.data.myUpcomingTripSchedules)
         setMyLostFoundBoards(res.data.data.myLostFoundBoards.content)
 
         if (res.data.data.myLostFoundBoards.pageable.last) setIsPageEnd(true)
@@ -66,54 +58,11 @@ const MyPage = () => {
       })
   }, [])
 
-  const getPreSchedule = () => {
-    axiosInstance
-      .get('/api/auth/my-page/pre-schedules')
-      .then((res) => {
-        setPreSchedule(res.data.data)
-      })
-      .catch((err) => console.log(err))
-  }
-
-  const getUpcomingSchedule = () => {
-    axiosInstance
-      .get('/api/auth/my-page/upcoming-schedules')
-      .then((res) => {
-        setUpCommingSchedule(res.data.data)
-      })
-      .catch((err) => console.log(err))
-  }
-
   const moveToLostItemPage = () => {
     navigation(`/lost-item`)
   }
 
-  const Category = ({
-    name,
-    category,
-    setCategory,
-  }: {
-    name: string
-    category: string
-    setCategory: React.Dispatch<React.SetStateAction<string>>
-  }) => {
-    return (
-      <span
-        className={cn(styles.category, {
-          [styles.active]: category === name,
-        })}
-        onClick={() => {
-          setCategory(name)
-          getUpcomingSchedule()
-        }}
-      >
-        {name}
-      </span>
-    )
-  }
-
-  if (!user || !upCommingSchedule || !preSchedule || !myLostFoundBoards)
-    return <div>loading</div>
+  if (!user || !myLostFoundBoards) return <div>loading</div>
 
   return (
     <div className={styles.myPageContainer}>
@@ -174,61 +123,7 @@ const MyPage = () => {
             </div>
           </div>
         </div>
-        <div className={styles.schedule}>
-          <div className={styles.scheduleControl}>
-            <div className={styles.categoryWrap}>
-              <Category
-                name="앞으로의 일정"
-                category={scheduleBtn}
-                setCategory={setScheduleBtn}
-              />
-              <Category
-                name="지난 일정"
-                category={scheduleBtn}
-                setCategory={setScheduleBtn}
-              />
-            </div>
-            {scheduleBtn === '앞으로의 일정' && (
-              <>
-                <span
-                  onClick={() => setDeleteBtn(true)}
-                  className={styles.deleteButton}
-                >
-                  삭제
-                </span>
-                <span
-                  onClick={() => setDeleteBtn(true)}
-                  className={styles.deleteIcon}
-                >
-                  <RiDeleteBin6Line color="#66a5fc" size="25px" />
-                </span>
-              </>
-            )}
-          </div>
-          <div className={styles.scheduleList}>
-            {scheduleBtn === '앞으로의 일정' ? (
-              <TripSchedule
-                scheduleBtn={scheduleBtn}
-                tripSchedules={upCommingSchedule}
-                setUpCommingSchedule={setUpCommingSchedule}
-                setPreSchedule={setPreSchedule}
-                preSchedule={preSchedule}
-                deleteBtn={deleteBtn}
-                setDeleteBtn={setDeleteBtn}
-              />
-            ) : (
-              <TripSchedule
-                scheduleBtn={scheduleBtn}
-                tripSchedules={preSchedule.content}
-                setUpCommingSchedule={setUpCommingSchedule}
-                setPreSchedule={setPreSchedule}
-                preSchedule={preSchedule}
-                deleteBtn={deleteBtn}
-                setDeleteBtn={setDeleteBtn}
-              />
-            )}
-          </div>
-        </div>
+        <TripSchedule tripSchedules={user.myUpcomingTripSchedules} />
       </div>
       {loginModal && <LoginModal />}
     </div>

@@ -81,7 +81,7 @@ export interface Schedule {
   waterPlaceName: string // 물놀이 장소명
   waterPlaceImg: string | null // 물놀이 장소 이미지
   waterPlaceAddr: string // 물놀이 장소 주소
-  waterPlaceRating: number // 물놀이 장소 평점
+  waterPlaceRating: number | string // 물놀이 장소 평점
   waterPlaceReviewCnt: number // 물놀이 장소 리뷰 개수
   waterPlaceTraffic: number // 물놀이 장소 혼잡도(해당 날짜에 해당 계곡에 가는 인원수)
   tripDate: string // 내가 계획한 여행 날자

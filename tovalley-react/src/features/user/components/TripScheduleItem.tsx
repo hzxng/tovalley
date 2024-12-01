@@ -1,80 +1,54 @@
-import React, { FC, useEffect, useState } from 'react'
+import { useState } from 'react'
 import styles from '@styles/user/TripScheduleItem.module.scss'
-import { TbChartDonut4, TbJumpRope } from 'react-icons/tb'
-import {
-  MdEmojiPeople,
-  MdHomeRepairService,
-  MdCheckBoxOutlineBlank,
-  MdCheckBox,
-} from 'react-icons/md'
-import { FaVest } from 'react-icons/fa'
-import { LuUtilityPole } from 'react-icons/lu'
+import { MdCheckBoxOutlineBlank, MdCheckBox } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
 import WriteReviewModal from './WriteReviewModal'
+import { Schedule } from 'types/user'
+import RescueTable from '@component/RescueTable'
+import styled from 'styled-components'
 
-type schedule = {
-  tripScheduleId: number
-  waterPlaceId: number
-  waterPlaceName: string
-  waterPlaceImg: string | null
-  waterPlaceAddr: string
-  waterPlaceRating: number | string
-  waterPlaceReviewCnt: number | string
-  waterPlaceTraffic: number
-  tripDate: string
-  tripPartySize: number
-  rescueSupplies: {
-    lifeBoatNum: number
-    portableStandNum: number
-    lifeJacketNum: number
-    lifeRingNum: number
-    rescueRopeNum: number
-    rescueRodNum: number
-  }
-  hasReview: boolean
-}
+const Congestion = styled.div<{ traffic: number }>`
+  background-color: ${({ traffic }) =>
+    traffic >= 15
+      ? `#FA7F64`
+      : traffic >= 10
+      ? `#FFD874`
+      : traffic >= 5
+      ? `#8EBBFF`
+      : `#E0E0E0`};
+`
 
-interface Props {
-  schedule: schedule
-  scheduleBtn: string
-  checkItemHandler: (id: schedule, isChecked: boolean) => void
-  checkedItems: schedule[]
-}
-
-const TripScheduleItem: FC<Props> = ({
+const TripScheduleItem = ({
   schedule,
   scheduleBtn,
   checkItemHandler,
-  checkedItems,
+}: {
+  schedule: Schedule
+  scheduleBtn: string
+  checkItemHandler: (id: Schedule, isChecked: boolean) => void
 }) => {
-  const [writeReviewView, setWriteReviewView] = useState(false)
+  const [writeReviewModal, setWriteReviewModal] = useState(false)
   const [check, setCheck] = useState(false)
   const navigation = useNavigate()
 
-  const [innerWidth, setInnerWidth] = useState(window.innerWidth)
+  const moveToValleyPage = () => {
+    navigation(`/valley/${schedule.waterPlaceId}`)
+  }
 
-  useEffect(() => {
-    const resizeListener = () => {
-      setInnerWidth(window.innerWidth)
-    }
-    window.addEventListener('resize', resizeListener)
-  })
+  const handleCheck = () => {
+    checkItemHandler(schedule, !check)
+    setCheck(!check)
+  }
+
+  const handleModal = () => {
+    setWriteReviewModal(true)
+  }
 
   return (
     <div className={styles.scheduleItem}>
       {scheduleBtn === '앞으로의 일정' && (
-        <span
-          className={styles.scheduleCheck}
-          onClick={() => {
-            checkItemHandler(schedule, !check)
-            setCheck(!check)
-          }}
-        >
-          {checkedItems.includes(schedule) ? (
-            <MdCheckBox color="#66A5FC" size="25px" />
-          ) : (
-            <MdCheckBoxOutlineBlank color="#66A5FC" size="25px" />
-          )}
+        <span className={styles.scheduleCheck} onClick={handleCheck}>
+          {check ? <MdCheckBox /> : <MdCheckBoxOutlineBlank />}
         </span>
       )}
       <div className={styles.scheduleValleyInfo}>
@@ -82,37 +56,18 @@ const TripScheduleItem: FC<Props> = ({
           <div className={styles.imageContainer}>
             <img
               src={
-                schedule.waterPlaceImg === null
-                  ? process.env.PUBLIC_URL + '/img/default-image.png'
-                  : schedule.waterPlaceImg
+                schedule.waterPlaceImg ??
+                process.env.PUBLIC_URL + '/img/default-image.png'
               }
               alt="계곡 사진"
-              // src={
-              //   schedule.tripScheduleId === 48
-              //     ? process.env.PUBLIC_URL + "/img/dummy/계곡이미지5.jpg"
-              //     : schedule.tripScheduleId === 44
-              //     ? process.env.PUBLIC_URL + "/img/dummy/계곡이미지6.jpg"
-              //     : process.env.PUBLIC_URL + "/img/dummy/계곡이미지7.jpg"
-              // }
             />
           </div>
-          <div
-            className={styles.scheduleInfo}
-            onClick={() => navigation(`/valley/${schedule.waterPlaceId}`)}
-          >
+          <div className={styles.scheduleInfo} onClick={moveToValleyPage}>
             <h4>{schedule.waterPlaceName}</h4>
             <span>{schedule.waterPlaceAddr}</span>
-            <span>
-              {schedule.waterPlaceRating === '' ? 0 : schedule.waterPlaceRating}
-            </span>
+            <span>{schedule.waterPlaceRating ?? 0}</span>
             <span>/5</span>
-            <span>
-              리뷰{' '}
-              {schedule.waterPlaceReviewCnt === ''
-                ? 0
-                : schedule.waterPlaceReviewCnt}
-              개
-            </span>
+            <span>리뷰 {schedule.waterPlaceReviewCnt ?? 0}개</span>
             <div className={styles.reservationInfo}>
               <div>
                 <span>날짜</span>
@@ -127,189 +82,45 @@ const TripScheduleItem: FC<Props> = ({
         </div>
       </div>
       <div className={styles.valleyInfo}>
-        {scheduleBtn === '앞으로의 일정' && (
+        {scheduleBtn === '앞으로의 일정' ? (
           <div className={styles.congestion}>
             <span>계곡 혼잡도</span>
-            <div
-              style={
-                schedule.waterPlaceTraffic >= 15
-                  ? { backgroundColor: '#FA7F64' }
-                  : schedule.waterPlaceTraffic >= 10
-                  ? { backgroundColor: '#FFD874' }
-                  : schedule.waterPlaceTraffic >= 5
-                  ? { backgroundColor: '#8EBBFF' }
-                  : { backgroundColor: '#E0E0E0' }
-              }
-            ></div>
+            <Congestion traffic={schedule.waterPlaceTraffic} />
           </div>
-        )}
-        {scheduleBtn === '지난 일정' && (
+        ) : (
           <div className={styles.writeReviewBtn}>
             {!schedule.hasReview && (
-              <span onClick={() => setWriteReviewView(true)}>리뷰 쓰기</span>
-            )}
-            {writeReviewView && (
-              <WriteReviewModal
-                setWriteReviewView={setWriteReviewView}
-                valleyInfo={{
-                  id: schedule.tripScheduleId,
-                  title: schedule.waterPlaceName,
-                  addr: schedule.waterPlaceAddr,
-                  tripDate: schedule.tripDate,
-                  people: schedule.tripPartySize,
-                  img: schedule.waterPlaceImg,
-                }}
-              />
+              <span onClick={handleModal}>리뷰 쓰기</span>
             )}
           </div>
         )}
         <div className={styles.responsiveCongestion}>
           <span>계곡 혼잡도</span>
-          <div
-            style={
-              schedule.waterPlaceTraffic >= 15
-                ? { backgroundColor: '#FA7F64' }
-                : schedule.waterPlaceTraffic >= 10
-                ? { backgroundColor: '#FFD874' }
-                : schedule.waterPlaceTraffic >= 5
-                ? { backgroundColor: '#8EBBFF' }
-                : { backgroundColor: '#E0E0E0' }
-            }
-          ></div>
+          <Congestion traffic={schedule.waterPlaceTraffic} />
         </div>
         <div className={styles.rescueList}>
-          <div className={styles.rescueItem}>
-            <span>
-              <TbChartDonut4
-                size={
-                  innerWidth <= 400
-                    ? '25px'
-                    : innerWidth <= 520
-                    ? '30px'
-                    : '40px'
-                }
-                color="#66A5FC"
-              />
-            </span>
-            <span>
-              {schedule.rescueSupplies.lifeRingNum === -1
-                ? '-'
-                : schedule.rescueSupplies.lifeRingNum}
-            </span>
-          </div>
-          <div className={styles.rescueItem}>
-            <span>
-              <TbJumpRope
-                size={
-                  innerWidth <= 400
-                    ? '25px'
-                    : innerWidth <= 520
-                    ? '30px'
-                    : '40px'
-                }
-                color="#66A5FC"
-              />
-            </span>
-            <span>
-              {schedule.rescueSupplies.rescueRopeNum === -1
-                ? '-'
-                : schedule.rescueSupplies.rescueRopeNum}
-            </span>
-          </div>
-          <div className={styles.rescueItem}>
-            <span>
-              <MdEmojiPeople
-                size={
-                  innerWidth <= 400
-                    ? '25px'
-                    : innerWidth <= 520
-                    ? '30px'
-                    : '40px'
-                }
-                color="#66A5FC"
-              />
-            </span>
-            <span>
-              {schedule.rescueSupplies.lifeBoatNum === -1
-                ? '-'
-                : schedule.rescueSupplies.lifeBoatNum}
-            </span>
-          </div>
-          <div className={styles.rescueItem}>
-            <span>
-              <FaVest
-                size={
-                  innerWidth <= 400
-                    ? '25px'
-                    : innerWidth <= 520
-                    ? '30px'
-                    : '40px'
-                }
-                color="#66A5FC"
-              />
-            </span>
-            <span>
-              {schedule.rescueSupplies.lifeJacketNum === -1
-                ? '-'
-                : schedule.rescueSupplies.lifeJacketNum}
-            </span>
-          </div>
-          <div className={styles.rescueItem}>
-            <span>
-              <MdHomeRepairService
-                size={
-                  innerWidth <= 400
-                    ? '25px'
-                    : innerWidth <= 520
-                    ? '30px'
-                    : '40px'
-                }
-                color="#66A5FC"
-              />
-            </span>
-            <span>
-              {schedule.rescueSupplies.portableStandNum === -1
-                ? '-'
-                : schedule.rescueSupplies.portableStandNum}
-            </span>
-          </div>
-          <div className={styles.rescueItem}>
-            <span>
-              <LuUtilityPole
-                size={
-                  innerWidth <= 400
-                    ? '25px'
-                    : innerWidth <= 520
-                    ? '30px'
-                    : '40px'
-                }
-                color="#66A5FC"
-              />
-            </span>
-            <span>
-              {schedule.rescueSupplies.rescueRodNum === -1
-                ? '-'
-                : schedule.rescueSupplies.rescueRodNum}
-            </span>
-          </div>
+          <RescueTable rescueSupplies={schedule.rescueSupplies} />
         </div>
         {scheduleBtn === '지난 일정' && (
           <div className={styles.preCongestion}>
             <span>계곡 혼잡도</span>
-            <div
-              style={
-                schedule.waterPlaceTraffic >= 15
-                  ? { backgroundColor: '#FA7F64' }
-                  : schedule.waterPlaceTraffic >= 10
-                  ? { backgroundColor: '#FFD874' }
-                  : schedule.waterPlaceTraffic >= 5
-                  ? { backgroundColor: '#8EBBFF' }
-                  : { backgroundColor: '#E0E0E0' }
-              }
-            ></div>
+            <Congestion traffic={schedule.waterPlaceTraffic} />
           </div>
         )}
       </div>
+      {writeReviewModal && (
+        <WriteReviewModal
+          setWriteReviewView={setWriteReviewModal}
+          valleyInfo={{
+            id: schedule.tripScheduleId,
+            title: schedule.waterPlaceName,
+            addr: schedule.waterPlaceAddr,
+            tripDate: schedule.tripDate,
+            people: schedule.tripPartySize,
+            img: schedule.waterPlaceImg,
+          }}
+        />
+      )}
     </div>
   )
 }

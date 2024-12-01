@@ -94,56 +94,6 @@
   }
 }
 
-.schedule {
-  margin-top: 6em;
-}
-
-.scheduleControl {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.categoryWrap {
-  display: flex;
-
-  .category {
-    font-weight: bold;
-    color: #a5a5a5;
-    cursor: pointer;
-    font-size: 1.2rem;
-    padding: 0 1.2em;
-  }
-
-  .category:first-child {
-    padding-left: 0;
-    border-right: 1px solid #b3b3b3;
-  }
-
-  .active {
-    color: black;
-  }
-}
-
-.scheduleList {
-  margin-bottom: 10em;
-}
-
-.deleteButton {
-  background-color: $primary;
-  color: white;
-  cursor: pointer;
-  padding: 0.4em 1em;
-  border-radius: 8px;
-  margin-right: 0.5em;
-}
-
-.deleteIcon {
-  display: none;
-  margin-right: 0.5em;
-  cursor: pointer;
-}
-
 @media screen and (max-width: 1040px) {
   .myPage {
     > h1 {
@@ -158,10 +108,6 @@
 
   .myReview {
     margin-top: 3em;
-  }
-
-  .schedule {
-    margin-top: 4em;
   }
 }
 
@@ -207,13 +153,5 @@
 
   .userEmail {
     padding-left: 1em;
-  }
-
-  .deleteButton {
-    display: none;
-  }
-
-  .deleteIcon {
-    display: block;
   }
 }
