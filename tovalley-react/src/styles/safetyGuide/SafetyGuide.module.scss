@@ -1,3 +1,5 @@
+@import '@styles/variables.scss';
+
 .safetyGuidePage {
   min-width: 360px;
   margin-top: 120px;
@@ -15,15 +17,22 @@
   width: 100%;
 }
 
-.category span {
-  border: 1.5px solid #66a5fc;
-  color: #66a5fc;
-  font-weight: bold;
-  padding: 0.6em 1.2em;
-  border-radius: 30px;
-  font-size: 1.2rem;
-  margin-right: 0.8em;
-  cursor: pointer;
+.category {
+  span {
+    border: 1.5px solid $primary;
+    color: $primary;
+    font-weight: bold;
+    padding: 0.6em 1.2em;
+    border-radius: 30px;
+    font-size: 1.2rem;
+    margin-right: 0.8em;
+    cursor: pointer;
+
+    &.clicked {
+      background-color: $primary;
+      color: white;
+    }
+  }
 }
 
 .guideContainer {
@@ -33,63 +42,68 @@
 .detailCategory {
   margin-bottom: 1.5em;
   display: flex;
-}
 
-.detailCategory div {
-  padding: 0 1em;
-}
+  > div {
+    padding: 0 1em;
 
-.detailCategory div:not(:last-of-type) {
-  border-right: 1px solid #b9b9b9;
-}
+    &:not(:last-of-type) {
+      border-right: 1px solid #b9b9b9;
+    }
 
-.detailCategory span {
-  font-size: 1.2rem;
-  font-weight: bold;
-  cursor: pointer;
-  color: #9a9a9a;
+    > span {
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      color: #9a9a9a;
+
+      &.clicked {
+        color: black;
+      }
+    }
+  }
 }
 
 .guide {
-  border: 1.5px solid #66a5fc;
+  border: 1.5px solid $primary;
   padding: 0.5em 2em 1em 1.5em;
   border-radius: 10px;
+
+  > p {
+    margin: 1.1em 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    color: #4b4b4b;
+    text-align: justify;
+
+    > span {
+      &:first-child {
+        font-size: 1.8rem;
+        font-weight: 400;
+        color: $primary;
+        margin-right: 0.5em;
+        min-width: 35px;
+        text-align: right;
+      }
+    }
+  }
+
+  > div {
+    margin: -0.5em 0 0 3em;
+
+    span {
+      font-size: 1.1rem;
+      display: block;
+      margin: 0.5em 0;
+      color: #4b4b4b;
+      text-align: justify;
+    }
+  }
 }
 
-.guide > p {
-  margin: 1.1em 0;
-  font-size: 1.2rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  color: #4b4b4b;
-  text-align: justify;
-}
-
-.guide p > span:first-child {
-  font-size: 1.8rem;
-  font-weight: 400;
-  color: #66a5fc;
-  margin-right: 0.5em;
-  min-width: 35px;
-  text-align: right;
-}
-
-.guide > div {
-  margin: -0.5em 0 0 3em;
-}
-
-.guide > div span {
-  font-size: 1.1rem;
-  display: block;
-  margin: 0.5em 0;
-  color: #4b4b4b;
-  text-align: justify;
-}
-
-/* 사고 행동 요령 */
 .behaviorTips {
-  border: 1.5px solid #66a5fc;
+  border: 1.5px solid $primary;
   padding: 2em;
   border-radius: 10px;
   margin-top: 2.5em;
@@ -104,59 +118,64 @@
 .iconsList {
   display: flex;
   margin-top: 1em;
-}
 
-.iconsList > div {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 0 1.5em;
-  cursor: pointer;
-  width: calc(100% / 3);
-}
+  > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 1.5em;
+    cursor: pointer;
+    width: calc(100% / 3);
 
-.iconsList > div > span {
-  color: #a0a0a0;
-  display: block;
-}
+    > span {
+      color: #a0a0a0;
+      display: block;
 
-.iconsList > div > span:first-child {
-  width: 180px;
-  height: 180px;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #a0a0a0;
-  border-radius: 100%;
-  justify-content: center;
-  align-items: center;
-  font-size: 70px;
-  margin-bottom: 0.3em;
-}
+      &:first-child {
+        width: 180px;
+        height: 180px;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid #a0a0a0;
+        border-radius: 100%;
+        justify-content: center;
+        align-items: center;
+        font-size: 70px;
+        margin-bottom: 0.3em;
+      }
 
-.iconsList > div > span:last-child {
-  font-weight: bold;
-  margin-bottom: 0.5em;
+      &:last-child {
+        font-weight: bold;
+        margin-bottom: 0.5em;
+      }
+
+      &.clicked {
+        color: $primary;
+        border-color: $primary;
+      }
+    }
+  }
 }
 
 .behaviorTipsContent {
   margin-top: 2em;
   padding: 0 2em;
-}
 
-.behaviorTipsContent > p {
-  font-weight: 600;
-  font-size: 1.2rem;
-  color: #4b4b4b;
-  line-height: 1.7em;
-  display: flex;
-  margin: 0;
-  margin-top: 0.5em;
-  text-align: justify;
-}
+  > p {
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: #4b4b4b;
+    line-height: 1.7em;
+    display: flex;
+    margin: 0;
+    margin-top: 0.5em;
+    text-align: justify;
 
-.behaviorTipsContent > p > p {
-  margin: 0;
-  margin-left: 0.5em;
+    > p {
+      margin: 0;
+      margin-left: 0.5em;
+    }
+  }
 }
 
 .source {
@@ -165,12 +184,16 @@
 }
 
 @media screen and (max-width: 910px) {
-  .detailCategory span {
-    font-size: 1rem;
+  .detailCategory {
+    span {
+      font-size: 1rem;
+    }
   }
 
-  .guide > p {
-    font-size: 1rem;
+  .guide {
+    > p {
+      font-size: 1rem;
+    }
   }
 }
 
@@ -179,8 +202,10 @@
     padding: 0 7%;
   }
 
-  .category span {
-    font-size: 1rem;
+  .category {
+    span {
+      font-size: 1rem;
+    }
   }
 
   .guideContainer {
@@ -189,37 +214,53 @@
 
   .detailCategory {
     margin-bottom: 1em;
+
+    > div {
+      padding: 0 0.6em;
+
+      > span {
+        font-size: 0.9rem;
+      }
+    }
   }
 
-  .detailCategory div {
-    padding: 0 0.6em;
+  .guide {
+    p {
+      > span {
+        &:first-child {
+          font-size: 1.5rem;
+          min-width: 28px;
+        }
+      }
+    }
+
+    > div {
+      span {
+        font-size: 0.8rem;
+      }
+    }
   }
 
-  .detailCategory span {
-    font-size: 0.9rem;
+  .iconsList {
+    > div {
+      > span {
+        &:first-child {
+          width: 130px;
+          height: 130px;
+          font-size: 55px;
+        }
+
+        &:last-child {
+          font-size: 0.7rem;
+        }
+      }
+    }
   }
 
-  .guide p > span:first-child {
-    font-size: 1.5rem;
-    min-width: 28px;
-  }
-
-  .guide > div span {
-    font-size: 0.8rem;
-  }
-
-  .iconsList > div > span:first-child {
-    width: 130px;
-    height: 130px;
-    font-size: 55px;
-  }
-
-  .iconsList > div > span:last-child {
-    font-size: 0.7rem;
-  }
-
-  .behaviorTipsContent > p {
-    font-size: 1rem;
+  .behaviorTipsContent {
+    > p {
+      font-size: 1rem;
+    }
   }
 }
 
@@ -232,42 +273,54 @@
     margin: 4em 0;
   }
 
-  .category span {
-    font-size: 0.9rem;
+  .category {
+    span {
+      font-size: 0.9rem;
+    }
   }
 
-  .detailCategory span {
-    font-size: 0.8rem;
+  .detailCategory {
+    span {
+      font-size: 0.8rem;
+    }
+
+    div {
+      padding: 0 0.4em;
+    }
   }
 
-  .detailCategory div {
-    padding: 0 0.4em;
-  }
-
-  .guide > p {
-    font-size: 0.9rem;
+  .guide {
+    > p {
+      font-size: 0.9rem;
+    }
   }
 
   .behaviorTips {
     padding: 1.5em 0.5em;
   }
 
-  .iconsList > div {
-    margin: 0 1em;
+  .iconsList {
+    > div {
+      margin: 0 1em;
+
+      > span {
+        &:first-child {
+          width: 110px;
+          height: 110px;
+          font-size: 45px;
+        }
+
+        &:last-child {
+          font-size: 0.6rem;
+        }
+      }
+    }
   }
 
-  .iconsList > div > span:first-child {
-    width: 110px;
-    height: 110px;
-    font-size: 45px;
-  }
-
-  .iconsList > div > span:last-child {
-    font-size: 0.6rem;
-  }
-
-  .behaviorTipsContent > p {
-    font-size: 0.9rem;
+  .behaviorTipsContent {
+    > p {
+      font-size: 0.9rem;
+    }
   }
 }
 
@@ -279,10 +332,10 @@
   .source {
     margin-top: 0.8em;
     padding-left: 0.5em;
-  }
 
-  .source span {
-    font-size: 0.7rem;
+    span {
+      font-size: 0.7rem;
+    }
   }
 }
 
@@ -293,27 +346,37 @@
 
   .detailCategory {
     margin-bottom: 0.8em;
+
+    > div {
+      &:not(:last-of-type) {
+        border-right: none;
+      }
+
+      > span {
+        font-size: 0.7rem;
+      }
+    }
   }
 
-  .detailCategory div:not(:last-of-type) {
-    border-right: none;
+  .guide {
+    p {
+      > span {
+        &:first-child {
+          font-size: 1.3rem;
+          min-width: 25px;
+        }
+      }
+    }
+
+    > p {
+      font-size: 0.8rem;
+    }
   }
 
-  .detailCategory span {
-    font-size: 0.7rem;
-  }
-
-  .guide p > span:first-child {
-    font-size: 1.3rem;
-    min-width: 25px;
-  }
-
-  .guide > p {
-    font-size: 0.8rem;
-  }
-
-  .iconsList > div {
-    margin: 0 0.6em;
+  .iconsList {
+    > div {
+      margin: 0 0.6em;
+    }
   }
 }
 
@@ -322,26 +385,28 @@
     margin: 2em 0;
   }
 
-  .iconsList > div > span:first-child {
-    width: 90px;
-    height: 90px;
-    font-size: 40px;
-  }
+  .iconsList {
+    > div {
+      > span {
+        &:first-child {
+          width: 90px;
+          height: 90px;
+          font-size: 40px;
+        }
 
-  .iconsList > div > span:last-child {
-    font-size: 0.6rem;
-  }
-
-  .iconsList > div > span:last-child {
-    font-size: 0.5rem;
+        &:last-child {
+          font-size: 0.5rem;
+        }
+      }
+    }
   }
 
   .behaviorTipsContent {
     margin-top: 1.5em;
-  }
 
-  .behaviorTipsContent > p {
-    font-size: 0.8rem;
+    > p {
+      font-size: 0.8rem;
+    }
   }
 }
 
@@ -352,66 +417,80 @@
 
   .detailCategory {
     margin-bottom: 0.6em;
+
+    > div {
+      padding: 0 0.2em;
+
+      > span {
+        font-size: 0.6rem;
+      }
+    }
   }
 
-  .detailCategory div {
-    padding: 0 0.2em;
+  .category {
+    span {
+      font-size: 0.8rem;
+    }
   }
 
-  .category span {
-    font-size: 0.8rem;
-  }
-
-  .detailCategory span {
-    font-size: 0.6rem;
-  }
-
-  .guide > p {
-    font-size: 0.7rem;
+  .guide {
+    > p {
+      font-size: 0.7rem;
+    }
   }
 
   .behaviorTips {
     padding: 1em 0.5em 1.5em 0.5em;
   }
 
-  .iconsList > div {
-    margin: 0 0.4em;
+  .iconsList {
+    > div {
+      margin: 0 0.4em;
+
+      > span {
+        &:first-child {
+          width: 85px;
+          height: 85px;
+          font-size: 35px;
+        }
+
+        &:last-child {
+          font-size: 0.48rem;
+        }
+      }
+    }
   }
 
-  .iconsList > div > span:first-child {
-    width: 85px;
-    height: 85px;
-    font-size: 35px;
-  }
-
-  .iconsList > div > span:last-child {
-    font-size: 0.48rem;
-  }
-
-  .behaviorTipsContent > p {
-    font-size: 0.7rem;
+  .behaviorTipsContent {
+    > p {
+      font-size: 0.7rem;
+    }
   }
 
   .source {
     margin-top: 0.5em;
     padding-left: 0.3em;
-  }
 
-  .source span {
-    font-size: 0.6rem;
+    span {
+      font-size: 0.6rem;
+    }
   }
 }
 
 @media screen and (max-width: 380px) {
-  .detailCategory div {
-    padding: 0 0.3em;
+  .detailCategory {
+    > div {
+      padding: 0 0.3em;
+
+      > span {
+        font-size: 0.55rem;
+      }
+    }
   }
 
-  .detailCategory span {
-    font-size: 0.55rem;
-  }
-
-  .iconsList > div {
-    margin: 0 0.2em;
+  .iconsList {
+    > div {
+      margin: 0 0.2em;
+    }
   }
 }

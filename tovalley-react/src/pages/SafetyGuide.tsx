@@ -8,6 +8,7 @@ import {
 } from 'react-icons/fa6'
 import { FaSwimmer } from 'react-icons/fa'
 import { GiWaterSplash } from 'react-icons/gi'
+import cn from 'classnames'
 
 const SafetyGuide = () => {
   const [category, setCategory] = useState('물놀이 안전수칙')
@@ -39,27 +40,17 @@ const SafetyGuide = () => {
           <div className={styles.category}>
             <span
               onClick={() => setCategory('물놀이 안전수칙')}
-              style={
-                category === '물놀이 안전수칙'
-                  ? {
-                      backgroundColor: '#66a5fc',
-                      color: 'white',
-                    }
-                  : {}
-              }
+              className={cn({
+                [styles.clicked]: category === '물놀이 안전수칙',
+              })}
             >
               물놀이 안전수칙
             </span>
             <span
               onClick={() => setCategory('물놀이 사고 행동요령')}
-              style={
-                category === '물놀이 사고 행동요령'
-                  ? {
-                      backgroundColor: '#66a5fc',
-                      color: 'white',
-                    }
-                  : {}
-              }
+              className={cn({
+                [styles.clicked]: category === '물놀이 사고 행동요령',
+              })}
             >
               물놀이 사고 행동요령
             </span>
@@ -72,9 +63,9 @@ const SafetyGuide = () => {
                     <div key={item}>
                       <span
                         onClick={() => setDetailCategory(item)}
-                        style={
-                          detailCategory === item ? { color: 'black' } : {}
-                        }
+                        className={cn({
+                          [styles.clicked]: detailCategory === item,
+                        })}
                       >
                         {item}
                       </span>
@@ -296,11 +287,9 @@ const SafetyGuide = () => {
                         }}
                       >
                         <span
-                          style={
-                            tipCategory === item
-                              ? { color: '#66a5fc', borderColor: '#66a5fc' }
-                              : {}
-                          }
+                          className={cn({
+                            [styles.clicked]: tipCategory === item,
+                          })}
                         >
                           {index === 0 ? (
                             <FaPlantWilt />
@@ -311,9 +300,9 @@ const SafetyGuide = () => {
                           )}
                         </span>
                         <span
-                          style={
-                            tipCategory === item ? { color: '#66a5fc' } : {}
-                          }
+                          className={cn({
+                            [styles.clicked]: tipCategory === item,
+                          })}
                         >
                           {item}
                         </span>
@@ -331,11 +320,9 @@ const SafetyGuide = () => {
                         }}
                       >
                         <span
-                          style={
-                            tipCategory === item
-                              ? { color: '#66a5fc', borderColor: '#66a5fc' }
-                              : {}
-                          }
+                          className={cn({
+                            [styles.clicked]: tipCategory === item,
+                          })}
                         >
                           {index === 0 ? (
                             <GiWaterSplash />
@@ -346,9 +333,9 @@ const SafetyGuide = () => {
                           )}
                         </span>
                         <span
-                          style={
-                            tipCategory === item ? { color: '#66a5fc' } : {}
-                          }
+                          className={cn({
+                            [styles.clicked]: tipCategory === item,
+                          })}
                         >
                           {item}
                         </span>
