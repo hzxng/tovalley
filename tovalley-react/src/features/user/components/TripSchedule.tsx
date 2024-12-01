@@ -1,7 +1,8 @@
 import React, { FC, useState } from 'react'
-import TripScheduleItem from './TripScheduleItem'
-import axiosInstance from '../../axios_interceptor'
 import useDidMountEffect from '@hooks/useDidMountEffect'
+import { PreSchedule, Schedule } from 'types/user'
+import axiosInstance from '@utils/axios_interceptor'
+import TripScheduleItem from './TripScheduleItem'
 
 type preSchedule = {
   content: {
@@ -118,8 +119,8 @@ interface Props {
     }
     hasReview: boolean // 리뷰 작성 여부(앞으로의 일정은 리뷰를 작성할 수 없음)
   }[]
-  setUpCommingSchedule: React.Dispatch<React.SetStateAction<schedule>>
-  setPreSchedule: React.Dispatch<React.SetStateAction<preSchedule>>
+  setUpCommingSchedule: React.Dispatch<React.SetStateAction<Schedule[] | null>>
+  setPreSchedule: React.Dispatch<React.SetStateAction<PreSchedule | null>>
   deleteBtn: boolean
   preSchedule: preSchedule
   setDeleteBtn: React.Dispatch<React.SetStateAction<boolean>>

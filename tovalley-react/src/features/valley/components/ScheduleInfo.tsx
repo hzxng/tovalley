@@ -38,16 +38,16 @@ const ScheduleInfo = ({
     }
 
     console.log(data)
-    // axiosInstance
-    //   .post('/api/auth/trip-schedules', data)
-    //   .then((res) => {
-    //     console.log(res)
-    //     setPeopleCnt({ tripPlanToWaterPlace: res.data.data })
-    //     setScheduleInfo(false)
-    //     setAddScheduleBtn(false)
-    //     setClickedDate(undefined)
-    //   })
-    //   .catch((err) => console.log(err))
+    axiosInstance
+      .post('/api/auth/trip-schedules', data)
+      .then((res) => {
+        console.log(res)
+        setPeopleCnt({ tripPlanToWaterPlace: res.data.data })
+        setScheduleInfo(false)
+        setAddScheduleBtn(false)
+        setClickedDate(undefined)
+      })
+      .catch((err) => console.log(err))
   }
 
   const handlePeopleCnt = (type: string) => {

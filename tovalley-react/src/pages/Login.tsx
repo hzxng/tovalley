@@ -96,7 +96,7 @@ const Login = () => {
               placeholder="비밀번호"
               value={login.password}
               onChange={(e) => handleChange(e, 'password')}
-              onKeyDown={enterEvent}
+              onKeyDown={(e) => enterEvent(e)}
             />
             {login.passwordConfirm && (
               <span className={styles.passwordAlert}>

@@ -1,0 +1,219 @@
+@import '@styles/variables.scss';
+
+.myPageContainer {
+  min-width: 360px;
+}
+
+.body {
+  padding: 0 12%;
+  margin-top: 12em;
+}
+
+.myPage {
+  > h1 {
+    font-size: 1.8rem;
+    margin-left: 1em;
+  }
+}
+
+.userInfo {
+  display: flex;
+  height: 27em;
+}
+
+.userBasicInfo {
+  border: 1px solid $primary;
+  width: 100%;
+  margin-right: 2.5em;
+  border-radius: 10px;
+  box-shadow: 0px 2px 2px rgb(210, 210, 210);
+  padding: 1em 1.5em 0.5em 1.5em;
+  box-sizing: border-box;
+
+  > span {
+    color: $primary;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-left: 0.5em;
+  }
+}
+
+.userEmail {
+  border-top: 1px solid #d4d4d4;
+  padding: 1em;
+  display: flex;
+  align-items: center;
+  padding-left: 2.5em;
+
+  > span {
+    &:first-child {
+      color: $primary;
+      font-size: 1.1rem;
+      min-width: 50px;
+      margin-right: 3em;
+    }
+  }
+}
+
+.myReview {
+  width: 100%;
+}
+
+.postItem {
+  border: 1px solid #bcbcbc;
+  border-radius: 5px;
+  padding: 1em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: 0.5em;
+
+  p {
+    margin: 0;
+    font-weight: 600;
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  span {
+    font-size: 0.9rem;
+    color: #8f8f8f;
+  }
+}
+
+.reviewContainer {
+  height: 24em;
+  overflow-y: scroll;
+  margin-top: 1rem;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.schedule {
+  margin-top: 6em;
+}
+
+.scheduleControl {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.categoryWrap {
+  display: flex;
+
+  .category {
+    font-weight: bold;
+    color: #a5a5a5;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0 1.2em;
+  }
+
+  .category:first-child {
+    padding-left: 0;
+    border-right: 1px solid #b3b3b3;
+  }
+
+  .active {
+    color: black;
+  }
+}
+
+.scheduleList {
+  margin-bottom: 10em;
+}
+
+.deleteButton {
+  background-color: $primary;
+  color: white;
+  cursor: pointer;
+  padding: 0.4em 1em;
+  border-radius: 8px;
+  margin-right: 0.5em;
+}
+
+.deleteIcon {
+  display: none;
+  margin-right: 0.5em;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 1040px) {
+  .myPage {
+    > h1 {
+      font-size: 1.4rem;
+    }
+  }
+
+  .userInfo {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .myReview {
+    margin-top: 3em;
+  }
+
+  .schedule {
+    margin-top: 4em;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .body {
+    margin-top: 2em;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .userEmail {
+    > span {
+      &:first-child {
+        margin-right: 1em;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 460px) {
+  .myReview {
+    > h4 {
+      font-size: 1.2rem;
+    }
+  }
+
+  .reviewContent {
+    flex-direction: column;
+
+    img {
+      border-radius: 0;
+      width: 100%;
+      height: 130px;
+      object-fit: cover;
+    }
+  }
+
+  .reviewInfo {
+    border: 1px solid #bcbcbc;
+    border-top: none;
+    box-sizing: border-box;
+  }
+
+  .userEmail {
+    padding-left: 1em;
+  }
+
+  .deleteButton {
+    display: none;
+  }
+
+  .deleteIcon {
+    display: block;
+  }
+}

@@ -1,0 +1,95 @@
+@import '@styles/variables.scss';
+
+.userNickname {
+  border-top: 1px solid #d4d4d4;
+  padding: 1em;
+  display: flex;
+  align-items: center;
+  padding-left: 2.5em;
+  justify-content: space-between;
+}
+
+.nicknameInput {
+  display: flex;
+  align-items: center;
+  width: 60%;
+
+  > span {
+    &:first-child {
+      color: $primary;
+      font-size: 1.1rem;
+      min-width: 50px;
+      margin-right: 3em;
+    }
+
+    &:last-child {
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin-right: 1.8em;
+    }
+  }
+
+  > input {
+    border: none;
+    font-size: 1.1rem;
+    font-weight: bold;
+    box-sizing: border-box;
+    width: 100%;
+
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+.nicknameBtn {
+  min-width: 130px;
+  margin-left: 0.5em;
+
+  > span {
+    background-color: #e6e6e6;
+    color: #828282;
+    padding: 0.3em 0.8em;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    margin-right: 0.5em;
+    min-width: fit-content;
+  }
+}
+
+.marginZero {
+  margin-left: 0;
+}
+
+@media screen and (max-width: 600px) {
+  .userNickname {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nicknameBtn {
+    margin-top: 0.8em;
+    margin-left: 0;
+  }
+
+  .nicknameInput {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .nicknameInput {
+    > span {
+      &:first-child {
+        margin-right: 1em;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 460px) {
+  .userNickname {
+    padding-left: 1em;
+  }
+}

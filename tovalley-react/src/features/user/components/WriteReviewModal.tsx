@@ -1,51 +1,51 @@
-import React, { FC, useEffect, useState } from "react";
-import styles from "../../css/user/WriteReview.module.css";
-import { BsCameraFill } from "react-icons/bs";
+import React, { FC, useEffect, useState } from 'react'
+import styles from '@styles/user/WriteReviewModal.module.scss'
+import { BsCameraFill } from 'react-icons/bs'
 import {
   FaRegFaceGrinSquint,
   FaRegFaceSmile,
   FaRegFaceFrown,
-} from "react-icons/fa6";
-import { MdClose } from "react-icons/md";
-import { MdOutlineStar } from "react-icons/md";
-import axiosInstance from "../../axios_interceptor";
-import { IoIosCloseCircle } from "react-icons/io";
-import ConfirmModal from "../common/ConfirmModal";
+} from 'react-icons/fa6'
+import { MdClose } from 'react-icons/md'
+import { MdOutlineStar } from 'react-icons/md'
+import { IoIosCloseCircle } from 'react-icons/io'
+import axiosInstance from '@utils/axios_interceptor'
+import ConfirmModal from '@component/ConfirmModal'
 
 interface Props {
-  setWriteReviewView: React.Dispatch<React.SetStateAction<boolean>>;
+  setWriteReviewView: React.Dispatch<React.SetStateAction<boolean>>
   valleyInfo: {
-    id: number;
-    title: string;
-    addr: string;
-    tripDate: string;
-    people: number;
-    img: string | null;
-  };
+    id: number
+    title: string
+    addr: string
+    tripDate: string
+    people: number
+    img: string | null
+  }
 }
 
-const WriteReview: FC<Props> = ({ setWriteReviewView, valleyInfo }) => {
+const WriteReviewModal: FC<Props> = ({ setWriteReviewView, valleyInfo }) => {
   useEffect(() => {
     document.body.style.cssText = `
               position: fixed; 
               top: -${window.scrollY}px;
               overflow-y: scroll;
-              width: 100%;`;
+              width: 100%;`
     return () => {
-      const scrollY = document.body.style.top;
-      document.body.style.cssText = "";
-      window.scrollTo(0, parseInt(scrollY || "0", 10) * -1);
-    };
-  }, []);
+      const scrollY = document.body.style.top
+      document.body.style.cssText = ''
+      window.scrollTo(0, parseInt(scrollY || '0', 10) * -1)
+    }
+  }, [])
 
-  const qualityBtn = ["깨끗해요", "괜찮아요", "더러워요"];
+  const qualityBtn = ['깨끗해요', '괜찮아요', '더러워요']
   const [review, setReview] = useState({
-    quality: "",
-    content: "",
-  });
-  const [uploadImg, setUploadImg] = useState<String[]>([]);
-  const [imgFiles, setImgFiles] = useState<File[]>([]);
-  const [confirm, setConfirm] = useState({ view: false, content: "" });
+    quality: '',
+    content: '',
+  })
+  const [uploadImg, setUploadImg] = useState<String[]>([])
+  const [imgFiles, setImgFiles] = useState<File[]>([])
+  const [confirm, setConfirm] = useState({ view: false, content: '' })
 
   const [star, setStar] = useState({
     one: false,
@@ -53,99 +53,99 @@ const WriteReview: FC<Props> = ({ setWriteReviewView, valleyInfo }) => {
     three: false,
     four: false,
     five: false,
-  });
+  })
 
-  const [innerWidth, setInnerWidth] = useState(window.innerWidth);
+  const [innerWidth, setInnerWidth] = useState(window.innerWidth)
 
   useEffect(() => {
     const resizeListener = () => {
-      setInnerWidth(window.innerWidth);
-    };
-    window.addEventListener("resize", resizeListener);
-  });
+      setInnerWidth(window.innerWidth)
+    }
+    window.addEventListener('resize', resizeListener)
+  })
 
   const handleWriteReview = (e: any) => {
-    e.preventDefault();
-    const formData = new FormData();
+    e.preventDefault()
+    const formData = new FormData()
 
     const quality =
-      review.quality === "깨끗해요"
-        ? "CLEAN"
-        : review.quality === "괜찮아요"
-        ? "FINE"
-        : "DIRTY";
+      review.quality === '깨끗해요'
+        ? 'CLEAN'
+        : review.quality === '괜찮아요'
+        ? 'FINE'
+        : 'DIRTY'
 
-    let rating;
-    if (star.five) rating = 5;
-    else if (star.four) rating = 4;
-    else if (star.three) rating = 3;
-    else if (star.two) rating = 2;
-    else rating = 1;
+    let rating
+    if (star.five) rating = 5
+    else if (star.four) rating = 4
+    else if (star.three) rating = 3
+    else if (star.two) rating = 2
+    else rating = 1
 
-    formData.append("tripScheduleId", `${valleyInfo.id}`);
-    formData.append("waterQuality", quality);
-    formData.append("rating", `${rating}`);
-    formData.append("content", review.content);
+    formData.append('tripScheduleId', `${valleyInfo.id}`)
+    formData.append('waterQuality', quality)
+    formData.append('rating', `${rating}`)
+    formData.append('content', review.content)
     if (imgFiles.length !== 0) {
       for (let i = 0; i < imgFiles.length; i++) {
-        formData.append("reviewImages", imgFiles[i]);
+        formData.append('reviewImages', imgFiles[i])
       }
     }
 
     if (
-      review.quality !== "" &&
-      review.content !== "" &&
+      review.quality !== '' &&
+      review.content !== '' &&
       (star.one || star.two || star.three || star.four || star.five)
     ) {
       axiosInstance
-        .post("/api/auth/reviews", formData)
+        .post('/api/auth/reviews', formData)
         .then((res) => {
-          console.log(res);
+          console.log(res)
           res.status === 201 &&
             setConfirm({
               view: true,
-              content: "리뷰가 정상적으로 등록되었습니다.",
-            });
+              content: '리뷰가 정상적으로 등록되었습니다.',
+            })
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.log(err))
     } else {
-      setConfirm({ view: true, content: "항목을 모두 입력해주세요." });
+      setConfirm({ view: true, content: '항목을 모두 입력해주세요.' })
     }
-  };
+  }
 
   const saveImgFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      const files = e.target.files;
+      const files = e.target.files
 
-      if (!files[0]) return;
+      if (!files[0]) return
 
-      let imgUrlList = [...uploadImg];
-      let imgList = [...imgFiles];
+      let imgUrlList = [...uploadImg]
+      let imgList = [...imgFiles]
 
       for (let i = 0; i < files.length; i++) {
-        const currentImageUrl = URL.createObjectURL(files[i]);
-        imgUrlList.push(currentImageUrl);
-        imgList.push(files[i]);
+        const currentImageUrl = URL.createObjectURL(files[i])
+        imgUrlList.push(currentImageUrl)
+        imgList.push(files[i])
       }
 
       if (imgUrlList.length > 5) {
-        imgUrlList = imgUrlList.slice(0, 5);
-        imgList = imgList.slice(0, 5);
+        imgUrlList = imgUrlList.slice(0, 5)
+        imgList = imgList.slice(0, 5)
       }
 
-      setUploadImg(imgUrlList);
-      setImgFiles(imgList);
+      setUploadImg(imgUrlList)
+      setImgFiles(imgList)
 
       if (uploadImg.length + files.length > 5) {
-        return alert("최대 5개 사진만 첨부할 수 있습니다.");
+        return alert('최대 5개 사진만 첨부할 수 있습니다.')
       }
     }
-  };
+  }
 
   const handleDeleteImage = (id: number) => {
-    setUploadImg(uploadImg.filter((_, index) => index !== id));
-    setImgFiles(imgFiles.filter((_, index) => index !== id));
-  };
+    setUploadImg(uploadImg.filter((_, index) => index !== id))
+    setImgFiles(imgFiles.filter((_, index) => index !== id))
+  }
 
   return (
     <div className={styles.modalContainer}>
@@ -170,10 +170,10 @@ const WriteReview: FC<Props> = ({ setWriteReviewView, valleyInfo }) => {
               // }
               src={
                 valleyInfo.id === 48
-                  ? process.env.PUBLIC_URL + "/img/dummy/계곡이미지5.jpg"
+                  ? process.env.PUBLIC_URL + '/img/dummy/계곡이미지5.jpg'
                   : valleyInfo.id === 44
-                  ? process.env.PUBLIC_URL + "/img/dummy/계곡이미지6.jpg"
-                  : process.env.PUBLIC_URL + "/img/dummy/계곡이미지7.jpg"
+                  ? process.env.PUBLIC_URL + '/img/dummy/계곡이미지6.jpg'
+                  : process.env.PUBLIC_URL + '/img/dummy/계곡이미지7.jpg'
               }
               alt="계곡 이미지"
               width="120px"
@@ -250,39 +250,39 @@ const WriteReview: FC<Props> = ({ setWriteReviewView, valleyInfo }) => {
                     key={index}
                     onClick={() => setReview({ ...review, quality: item })}
                     style={
-                      review.quality === item ? { borderColor: "#66A5FC" } : {}
+                      review.quality === item ? { borderColor: '#66A5FC' } : {}
                     }
                   >
                     <span
                       style={
                         review.quality === item
-                          ? { color: "#66A5FC" }
-                          : { color: "#5E5E5E" }
+                          ? { color: '#66A5FC' }
+                          : { color: '#5E5E5E' }
                       }
                     >
                       {index === 0 ? (
                         <FaRegFaceGrinSquint
-                          size={innerWidth <= 600 ? "13px" : ""}
+                          size={innerWidth <= 600 ? '13px' : ''}
                         />
                       ) : index === 1 ? (
                         <FaRegFaceSmile
-                          size={innerWidth <= 600 ? "13px" : ""}
+                          size={innerWidth <= 600 ? '13px' : ''}
                         />
                       ) : (
                         <FaRegFaceFrown
-                          size={innerWidth <= 600 ? "13px" : ""}
+                          size={innerWidth <= 600 ? '13px' : ''}
                         />
                       )}
                     </span>
                     <span
                       style={
-                        review.quality === item ? { color: "#66A5FC" } : {}
+                        review.quality === item ? { color: '#66A5FC' } : {}
                       }
                     >
                       {item}
                     </span>
                   </div>
-                );
+                )
               })}
             </div>
           </div>
@@ -294,29 +294,29 @@ const WriteReview: FC<Props> = ({ setWriteReviewView, valleyInfo }) => {
           <button>등록</button>
         </div>
       </form>
-      {confirm.view && confirm.content === "항목을 모두 입력해주세요." && (
+      {confirm.view && confirm.content === '항목을 모두 입력해주세요.' && (
         <ConfirmModal content={confirm.content} handleModal={setConfirm} />
       )}
       {confirm.view &&
-        confirm.content === "리뷰가 정상적으로 등록되었습니다." && (
+        confirm.content === '리뷰가 정상적으로 등록되었습니다.' && (
           <ConfirmModal content={confirm.content} />
         )}
     </div>
-  );
-};
+  )
+}
 
 interface StarProps {
-  num: string;
-  item: boolean;
+  num: string
+  item: boolean
   setStar: React.Dispatch<
     React.SetStateAction<{
-      one: boolean;
-      two: boolean;
-      three: boolean;
-      four: boolean;
-      five: boolean;
+      one: boolean
+      two: boolean
+      three: boolean
+      four: boolean
+      five: boolean
     }>
-  >;
+  >
 }
 
 const StarItem: FC<StarProps> = ({ num, item, setStar }) => {
@@ -324,7 +324,7 @@ const StarItem: FC<StarProps> = ({ num, item, setStar }) => {
     <span
       onClick={() => {
         if (item === false) {
-          num === "one"
+          num === 'one'
             ? setStar({
                 one: true,
                 two: false,
@@ -332,7 +332,7 @@ const StarItem: FC<StarProps> = ({ num, item, setStar }) => {
                 four: false,
                 five: false,
               })
-            : num === "two"
+            : num === 'two'
             ? setStar({
                 one: true,
                 two: true,
@@ -340,7 +340,7 @@ const StarItem: FC<StarProps> = ({ num, item, setStar }) => {
                 four: false,
                 five: false,
               })
-            : num === "three"
+            : num === 'three'
             ? setStar({
                 one: true,
                 two: true,
@@ -348,7 +348,7 @@ const StarItem: FC<StarProps> = ({ num, item, setStar }) => {
                 four: false,
                 five: false,
               })
-            : num === "four"
+            : num === 'four'
             ? setStar({
                 one: true,
                 two: true,
@@ -362,9 +362,9 @@ const StarItem: FC<StarProps> = ({ num, item, setStar }) => {
                 three: true,
                 four: true,
                 five: true,
-              });
+              })
         } else {
-          num === "one"
+          num === 'one'
             ? setStar({
                 one: false,
                 two: false,
@@ -372,7 +372,7 @@ const StarItem: FC<StarProps> = ({ num, item, setStar }) => {
                 four: false,
                 five: false,
               })
-            : num === "two"
+            : num === 'two'
             ? setStar({
                 one: true,
                 two: false,
@@ -380,7 +380,7 @@ const StarItem: FC<StarProps> = ({ num, item, setStar }) => {
                 four: false,
                 five: false,
               })
-            : num === "three"
+            : num === 'three'
             ? setStar({
                 one: true,
                 two: true,
@@ -388,7 +388,7 @@ const StarItem: FC<StarProps> = ({ num, item, setStar }) => {
                 four: false,
                 five: false,
               })
-            : num === "four"
+            : num === 'four'
             ? setStar({
                 one: true,
                 two: true,
@@ -402,7 +402,7 @@ const StarItem: FC<StarProps> = ({ num, item, setStar }) => {
                 three: true,
                 four: true,
                 five: false,
-              });
+              })
         }
       }}
     >
@@ -412,7 +412,7 @@ const StarItem: FC<StarProps> = ({ num, item, setStar }) => {
         <MdOutlineStar color="#B5B5B5" size="40px" />
       )}
     </span>
-  );
-};
+  )
+}
 
-export default WriteReview;
+export default WriteReviewModal
