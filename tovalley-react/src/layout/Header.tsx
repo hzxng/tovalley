@@ -17,6 +17,7 @@ import axiosInstance from 'axios_interceptor'
 import { setNotification } from 'store/notification/notificationSlice'
 import { setNotificationView } from 'store/notification/notificationViewSlice'
 import { enterChatRoom } from 'store/chat/chatRoomIdSlice'
+import cn from 'classnames'
 
 const cookies = new Cookies()
 const localhost = process.env.REACT_APP_HOST
@@ -134,21 +135,33 @@ const Header = () => {
     }
   }
 
+  const moveToHome = () => {
+    navigation('/')
+  }
+
+  const moveToMyPage = () => {
+    dispatch(view(false))
+    navigation('/mypage')
+  }
+
+  const moveToSignUp = () => {
+    navigation('/signup')
+  }
+
+  const moveToLogin = () => {
+    navigation('/login')
+  }
+
   return (
     <div className={styles.header}>
       <div className={styles.headerWrapper}>
         <div className={styles.headertop}>
           <div className={styles.hamburger}>
             <span onClick={() => setNavClick(!navClick)}>
-              <RxHamburgerMenu size="25px" color="#787878" />
+              <RxHamburgerMenu />
             </span>
           </div>
-          <div
-            className={styles.logo}
-            onClick={() => {
-              navigation('/')
-            }}
-          >
+          <div className={styles.logo} onClick={moveToHome}>
             <img
               src={process.env.PUBLIC_URL + '/img/투계곡-logo.png'}
               alt="tovalley logo"
@@ -178,44 +191,23 @@ const Header = () => {
               >
                 <IoChatbubblesSharp />
               </div>
-              <span
-                className={styles.myPage}
-                onClick={() => {
-                  dispatch(view(false))
-                  navigation('/mypage')
-                }}
-              >
+              <span className={styles.myPage} onClick={moveToMyPage}>
                 마이페이지
               </span>
               <span className={styles.logout} onClick={handleLogout}>
                 로그아웃
               </span>
-              <span
-                className={styles.myPageIcon}
-                onClick={() => navigation('/mypage')}
-              >
-                <BiUser size="22px" color="#787878" />
+              <span className={styles.myPageIcon} onClick={moveToMyPage}>
+                <BiUser />
               </span>
               <span className={styles.logOutIcon} onClick={handleLogout}>
-                <FiLogOut size="22px" color="#787878" />
+                <FiLogOut />
               </span>
             </div>
           ) : (
             <div className={styles.signup}>
-              <span
-                onClick={() => {
-                  navigation('/signup')
-                }}
-              >
-                회원가입
-              </span>
-              <span
-                onClick={() => {
-                  navigation('/login')
-                }}
-              >
-                로그인
-              </span>
+              <span onClick={moveToSignUp}>회원가입</span>
+              <span onClick={moveToLogin}>로그인</span>
             </div>
           )}
         </div>
@@ -226,11 +218,9 @@ const Header = () => {
               dispatch(enterChatRoom(null))
               navigation('/valleylist')
             }}
-            className={
-              location.pathname === '/valleylist'
-                ? styles.navMenuClicked
-                : styles.navMenu
-            }
+            className={cn(styles.navMenu, {
+              [styles.clicked]: location.pathname === '/valleylist',
+            })}
           >
             전국 물놀이 장소
           </span>
@@ -240,11 +230,9 @@ const Header = () => {
               dispatch(enterChatRoom(null))
               navigation('/lost-item')
             }}
-            className={
-              location.pathname === '/lost-item'
-                ? styles.navMenuClicked
-                : styles.navMenu
-            }
+            className={cn(styles.navMenu, {
+              [styles.clicked]: location.pathname === '/lost-item',
+            })}
           >
             분실물 찾기
           </span>
@@ -254,33 +242,22 @@ const Header = () => {
               dispatch(enterChatRoom(null))
               navigation('/safety-guide')
             }}
-            className={
-              location.pathname === '/safety-guide'
-                ? styles.navMenuClicked
-                : styles.navMenu
-            }
+            className={cn(styles.navMenu, {
+              [styles.clicked]: location.pathname === '/safety-guide',
+            })}
           >
             안전 가이드
           </span>
         </div>
       </div>
-      <div
-        className={styles.mobileNav}
-        style={
-          navClick
-            ? { transform: 'translateY(5px)', transition: 'all 0.3s' }
-            : { transform: 'translateY(-35px)', transition: 'all 0.3s' }
-        }
-      >
+      <div className={cn(styles.mobileNav, { [styles.clicked]: navClick })}>
         <span
           onClick={() => {
             navigation('/valleylist')
           }}
-          className={
-            location.pathname === '/valleylist'
-              ? styles.mobileNavMenuClicked
-              : styles.mobileNavMenu
-          }
+          className={cn(styles.mobileNavMenu, {
+            [styles.clicked]: location.pathname === '/valleylist',
+          })}
         >
           전국 계곡
         </span>
@@ -288,11 +265,9 @@ const Header = () => {
           onClick={() => {
             navigation('/safety-guide')
           }}
-          className={
-            location.pathname === '/safety-guide'
-              ? styles.mobileNavMenuClicked
-              : styles.mobileNavMenu
-          }
+          className={cn(styles.mobileNavMenu, {
+            [styles.clicked]: location.pathname === '/safety-guide',
+          })}
         >
           안전 가이드
         </span>

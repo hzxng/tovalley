@@ -1,3 +1,5 @@
+@import '@styles/variables.scss';
+
 .header {
   box-sizing: border-box;
   position: fixed;
@@ -24,6 +26,11 @@
 .hamburger {
   display: none;
   cursor: pointer;
+
+  > span {
+    font-size: 25px;
+    color: #787878;
+  }
 }
 
 .logo {
@@ -36,23 +43,23 @@
 }
 
 .alarm {
-  color: #66a5fc;
+  color: $primary;
   font-size: 1.3rem;
   position: relative;
   margin-right: 1em;
   cursor: pointer;
   padding-top: 0.3em;
-}
 
-.alarm > span {
-  color: rgb(219, 62, 62);
-  position: absolute;
-  top: -8px;
-  right: -4px;
+  > span {
+    color: rgb(219, 62, 62);
+    position: absolute;
+    top: -8px;
+    right: -4px;
+  }
 }
 
 .chatIcon {
-  color: #66a5fc;
+  color: $primary;
   font-size: 1.5rem;
   cursor: pointer;
   margin-right: 0.8em;
@@ -70,27 +77,31 @@
 
 .myPage {
   margin-right: 1em;
-  border: 1px solid #66a5fc;
-  color: #66a5fc;
+  border: 1px solid $primary;
+  color: $primary;
 }
 
 .myPageIcon,
 .logOutIcon {
   display: none;
+  font-size: 22px;
+  color: #787878;
 }
 
-.signup span {
-  border: 1px solid #dadada;
-  padding: 0.8em 1.5em;
-  border-radius: 30px;
-  font-size: 0.8rem;
-  cursor: pointer;
-  margin-right: 1em;
-}
+.signup {
+  > span {
+    border: 1px solid #dadada;
+    padding: 0.8em 1.5em;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    margin-right: 1em;
 
-.signup > span:last-child {
-  border: 1px solid #66a5fc;
-  color: #66a5fc;
+    &:last-child {
+      border: 1px solid $primary;
+      color: $primary;
+    }
+  }
 }
 
 .nav,
@@ -104,6 +115,13 @@
   position: relative;
   z-index: 5;
   display: none;
+  transform: translateY(-35px);
+  transition: all 0.3s;
+
+  &.clicked {
+    transform: translateY(5px);
+    transition: all 0.3s;
+  }
 }
 
 .navMenu {
@@ -113,17 +131,11 @@
   margin-right: 5em;
   font-size: 1.1em;
   font-weight: bold;
-}
 
-.navMenuClicked {
-  cursor: pointer;
-  display: block;
-  padding: 1.5em 0 0.8em 0;
-  margin-right: 5em;
-  border-bottom: 3px solid #66a5fc;
-  color: #66a5fc;
-  font-weight: bold;
-  font-size: 1.1em;
+  &.clicked {
+    border-bottom: 3px solid $primary;
+    color: $primary;
+  }
 }
 
 .mobileNavMenu {
@@ -133,16 +145,10 @@
   margin-right: 3em;
   font-size: 0.9em;
   font-weight: bold;
-}
 
-.mobileNavMenuClicked {
-  cursor: pointer;
-  display: block;
-  padding: 0.8em 0;
-  margin-right: 3em;
-  color: #66a5fc;
-  font-weight: bold;
-  font-size: 0.9em;
+  &.clicked {
+    color: $primary;
+  }
 }
 
 @media screen and (max-width: 500px) {
@@ -164,36 +170,40 @@
     justify-content: flex-end;
   }
 
-  .signup span {
-    border: 1px solid #dadada;
-    padding: 0.8em 1.2em;
-    border-radius: 30px;
-    font-size: 0.6rem;
-    cursor: pointer;
+  .signup {
+    > span {
+      border: 1px solid #dadada;
+      padding: 0.8em 1.2em;
+      border-radius: 30px;
+      font-size: 0.6rem;
+      cursor: pointer;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
   }
 
-  .signup span:last-child {
-    margin-right: 0;
-  }
-
-  .headertop > div {
-    width: calc(100% / 3);
+  .headertop {
+    > div {
+      width: calc(100% / 3);
+    }
   }
 
   .login {
     display: flex;
     justify-content: flex-end;
+
+    span {
+      border: none;
+      padding: 0;
+      border-radius: 0;
+    }
   }
 
   .myPage,
   .logout {
     display: none;
-  }
-
-  .login span {
-    border: none;
-    padding: 0;
-    border-radius: 0;
   }
 
   .myPageIcon,
@@ -212,17 +222,25 @@
 }
 
 @media screen and (max-width: 470px) {
-  .logo img {
-    width: 100px;
+  .logo {
+    img {
+      width: 100px;
+    }
   }
 
-  .signup span {
-    padding: 0.4em 1em;
+  .signup {
+    > span {
+      padding: 0.4em 1em;
+    }
   }
 }
 
 @media screen and (max-width: 430px) {
-  .signup span:first-child {
-    display: none;
+  .signup {
+    > span {
+      &:first-child {
+        display: none;
+      }
+    }
   }
 }
