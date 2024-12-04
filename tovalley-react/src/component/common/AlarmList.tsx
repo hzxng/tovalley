@@ -29,8 +29,10 @@ const AlarmList = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (notificationView) setSlide('start')
-    else setSlide('end')
+    if (notificationView) {
+      dispatch(view(false))
+      setSlide('start')
+    } else setSlide('end')
   }, [notificationView])
 
   useEffect(() => {

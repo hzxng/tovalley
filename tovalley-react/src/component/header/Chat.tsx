@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { enterChatRoom } from '../../store/chat/chatRoomIdSlice'
 import { setChatRoomName } from '../../store/chat/chatRoomNameSlice'
 import { elapsedTime } from '@utils/elapsedTime'
+import { setNotificationView } from '@store/notification/notificationViewSlice'
 
 const Chat = () => {
   const chatView = useSelector((state: RootState) => state.view.value)
@@ -50,6 +51,7 @@ const Chat = () => {
   useEffect(() => {
     if (chatView) {
       setAppear('start')
+      dispatch(setNotificationView(false))
     } else {
       setAppear('end')
     }

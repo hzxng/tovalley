@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import styles from '@styles/header/Header.module.scss'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Cookies } from 'react-cookie'
@@ -10,14 +10,16 @@ import { IoChatbubblesSharp } from 'react-icons/io5'
 import SockJS from 'sockjs-client'
 import { Client } from '@stomp/stompjs'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from 'store/store'
-import { view } from 'store/chat/chatViewSlice'
-import { newClient } from 'store/client/clientSlice'
-import axiosInstance from 'axios_interceptor'
-import { setNotification } from 'store/notification/notificationSlice'
-import { setNotificationView } from 'store/notification/notificationViewSlice'
-import { enterChatRoom } from 'store/chat/chatRoomIdSlice'
 import cn from 'classnames'
+import { setSubscription } from '@store/chat/subscriptionSlice'
+import axiosInstance from '@utils/axios_interceptor'
+import { RootState } from '@store/store'
+import { newClient } from '@store/client/clientSlice'
+import { setNotification } from '@store/notification/notificationSlice'
+import { view } from '@store/chat/chatViewSlice'
+import { setNotificationView } from '@store/notification/notificationViewSlice'
+import { enterChatRoom } from '@store/chat/chatRoomIdSlice'
+import { navList } from '@features/header/utils/nav'
 
 const cookies = new Cookies()
 const localhost = process.env.REACT_APP_HOST
@@ -39,37 +41,11 @@ const Header = () => {
   const chatRoomId = useSelector((state: RootState) => state.chatRoomId.value)
   const [newAlarm, setNewAlarm] = useState(false)
   const [socket, setSocket] = useState<WebSocket>()
-  const clientSelector = useSelector((state: RootState) => state.client.value)
   const subscription = useSelector(
     (state: RootState) => state.subscription.value
   )
 
-  useEffect(() => {
-    const loginStatus = cookies.get('ISLOGIN')
-    if (loginStatus === true) {
-      setLogin(true)
-      if (!client) {
-        console.log('connectSocket')
-        connectSocket()
-      } // 웹 소켓이 연결되어 있다면 연결 요청 x
-    } else {
-      setLogin(false)
-    }
-  }, [login, client])
-
-  useEffect(() => {
-    if (notificationView) dispatch(view(false))
-  }, [notificationView])
-
-  useEffect(() => {
-    if (notification && notification.notificationType === 'CHAT') {
-      setNewAlarm(true)
-    } else if (chatRoomId || notificationView) {
-      setNewAlarm(false)
-    }
-  }, [notification, chatRoomId, notificationView])
-
-  const connectSocket = () => {
+  const connectSocket = useCallback(() => {
     const newSocket = new SockJS(`${localhost}/stomp/chat`) // 서버와 웹소켓 연결
     setSocket(newSocket)
 
@@ -109,29 +85,46 @@ const Header = () => {
 
       getMemberId()
     }
-  }
+  }, [dispatch])
+
+  useEffect(() => {
+    const loginStatus = cookies.get('ISLOGIN')
+    if (loginStatus === true) {
+      setLogin(true)
+      if (!client) {
+        console.log('connectSocket')
+        connectSocket()
+      } // 웹 소켓이 연결되어 있다면 연결 요청 x
+    } else {
+      setLogin(false)
+    }
+  }, [login, client, connectSocket])
+
+  useEffect(() => {
+    if (notification?.notificationType === 'CHAT') setNewAlarm(true)
+    else if (chatRoomId || notificationView) setNewAlarm(false)
+  }, [notification, chatRoomId, notificationView])
 
   const handleLogout = () => {
     dispatch(view(false))
     axiosInstance
       .delete(`/api/logout`)
       .then((res) => {
-        console.log(res)
         if (res.status === 200) {
-          if (client) socket?.close()
-          const loginStatus = cookies.get('ISLOGIN')
-          console.log('loginStatus : ', loginStatus)
-          !loginStatus && setLogin(false)
-          navigation('/')
+          if (client) {
+            socket?.close()
+            window.location.replace('/')
+          }
         }
       })
       .catch((err) => console.log(err))
   }
 
   const outChatting = () => {
-    if (clientSelector?.connected && subscription) {
+    if (client?.connected && subscription) {
       console.log('구독해제!!')
-      clientSelector.unsubscribe(subscription.id)
+      client.unsubscribe(subscription.id)
+      dispatch(setSubscription(null))
     }
   }
 
@@ -144,12 +137,19 @@ const Header = () => {
     navigation('/mypage')
   }
 
-  const moveToSignUp = () => {
-    navigation('/signup')
+  const moveToPage = (url: string) => {
+    navigation(url)
   }
 
-  const moveToLogin = () => {
-    navigation('/login')
+  const handleClickAlarm = () => {
+    dispatch(setNotificationView(!notificationView))
+    dispatch(enterChatRoom(null))
+  }
+
+  const handleClickChat = () => {
+    outChatting()
+    dispatch(view(!chatView))
+    dispatch(enterChatRoom(null))
   }
 
   return (
@@ -171,24 +171,12 @@ const Header = () => {
           {login ? (
             <div className={styles.login}>
               <div className={styles.alarm}>
-                <div
-                  onClick={() => {
-                    dispatch(setNotificationView(!notificationView))
-                    dispatch(enterChatRoom(null))
-                  }}
-                >
+                <div onClick={handleClickAlarm}>
                   <FaRegBell />
                 </div>
                 {newAlarm && <span>•</span>}
               </div>
-              <div
-                className={styles.chatIcon}
-                onClick={() => {
-                  outChatting()
-                  dispatch(view(!chatView))
-                  dispatch(enterChatRoom(null))
-                }}
-              >
+              <div className={styles.chatIcon} onClick={handleClickChat}>
                 <IoChatbubblesSharp />
               </div>
               <span className={styles.myPage} onClick={moveToMyPage}>
@@ -206,71 +194,39 @@ const Header = () => {
             </div>
           ) : (
             <div className={styles.signup}>
-              <span onClick={moveToSignUp}>회원가입</span>
-              <span onClick={moveToLogin}>로그인</span>
+              <span onClick={() => moveToPage('/signup')}>회원가입</span>
+              <span onClick={() => moveToPage('/login')}>로그인</span>
             </div>
           )}
         </div>
         <div className={styles.nav}>
-          <span
-            onClick={() => {
-              dispatch(view(false))
-              dispatch(enterChatRoom(null))
-              navigation('/valleylist')
-            }}
-            className={cn(styles.navMenu, {
-              [styles.clicked]: location.pathname === '/valleylist',
-            })}
-          >
-            전국 물놀이 장소
-          </span>
-          <span
-            onClick={() => {
-              dispatch(view(false))
-              dispatch(enterChatRoom(null))
-              navigation('/lost-item')
-            }}
-            className={cn(styles.navMenu, {
-              [styles.clicked]: location.pathname === '/lost-item',
-            })}
-          >
-            분실물 찾기
-          </span>
-          <span
-            onClick={() => {
-              dispatch(view(false))
-              dispatch(enterChatRoom(null))
-              navigation('/safety-guide')
-            }}
-            className={cn(styles.navMenu, {
-              [styles.clicked]: location.pathname === '/safety-guide',
-            })}
-          >
-            안전 가이드
-          </span>
+          {navList.map(({ name, url }) => (
+            <span
+              onClick={() => {
+                moveToPage(url)
+              }}
+              className={cn(styles.navMenu, {
+                [styles.clicked]: location.pathname === url,
+              })}
+            >
+              {name}
+            </span>
+          ))}
         </div>
       </div>
       <div className={cn(styles.mobileNav, { [styles.clicked]: navClick })}>
-        <span
-          onClick={() => {
-            navigation('/valleylist')
-          }}
-          className={cn(styles.mobileNavMenu, {
-            [styles.clicked]: location.pathname === '/valleylist',
-          })}
-        >
-          전국 계곡
-        </span>
-        <span
-          onClick={() => {
-            navigation('/safety-guide')
-          }}
-          className={cn(styles.mobileNavMenu, {
-            [styles.clicked]: location.pathname === '/safety-guide',
-          })}
-        >
-          안전 가이드
-        </span>
+        {navList.map(({ name, url }) => (
+          <span
+            onClick={() => {
+              moveToPage(url)
+            }}
+            className={cn(styles.mobileNavMenu, {
+              [styles.clicked]: location.pathname === url,
+            })}
+          >
+            {name}
+          </span>
+        ))}
       </div>
     </div>
   )
