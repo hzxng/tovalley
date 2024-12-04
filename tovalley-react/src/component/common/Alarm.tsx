@@ -19,7 +19,7 @@ const Alarm = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    console.log(notification)
+    // console.log(notification)
     const fadeTimer = setTimeout(() => {
       setFade(false)
     }, 2700)

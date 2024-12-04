@@ -1,16 +1,16 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import styles from '../../css/header/ChatComponent.module.css'
-import axiosInstance from '../../axios_interceptor'
-import { MessageListType, MessageType } from '../../typings/db'
+import styles from '@styles/chat/ChatRoom.module.scss'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../../store/store'
 import { DateTime } from 'luxon'
-import { setSubscription } from '../../store/chat/subscriptionSlice'
 import { MdImage } from 'react-icons/md'
 import { IoIosArrowDown } from 'react-icons/io'
 import { useSaveImg } from '@hooks/useSaveImg'
+import { MessageListType, MessageType } from 'types/chat'
+import { RootState } from '@store/store'
+import axiosInstance from '@utils/axios_interceptor'
+import { setSubscription } from '@store/chat/subscriptionSlice'
 
-const ChatComponent = () => {
+const ChatRoom = () => {
   const [messageList, setMessageList] = useState<MessageListType>()
   const [newMessageList, setNewMessageList] = useState<MessageListType>()
   const [message, setMessage] = useState<MessageType>()
@@ -488,4 +488,4 @@ const ChatComponent = () => {
   )
 }
 
-export default ChatComponent
+export default ChatRoom

@@ -19,7 +19,7 @@ const Home = () => {
     axios
       .get(`${localhost}/api/main-page`)
       .then((res) => {
-        console.log(res)
+        // console.log(res)
         setMain(res.data.data)
       })
       .catch((err) => console.log(err))
