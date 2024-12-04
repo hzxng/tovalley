@@ -1,12 +1,8 @@
 import { Route, Routes } from 'react-router-dom'
 import './App.css'
-import SocialLoginException from './pages/SocialLoginException'
 import Alarm from './component/common/Alarm'
-import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from './store/store'
 import AlarmList from './component/common/AlarmList'
-import { setNotificationView } from './store/notification/notificationViewSlice'
 import Chat from './component/header/Chat'
 import Home from '@pages/Home'
 import Layout from 'layout/Layout'
@@ -20,21 +16,17 @@ import LostItemList from '@pages/LostItemList'
 import LostItemPost from '@pages/LostItemPost'
 import LostItemUpdate from '@pages/LostItemUpdate'
 import LostItemWrite from '@pages/LostItemWrite'
+import SocialLoginException from '@pages/SocialLoginException'
+import { useSelector } from 'react-redux'
 
 function App() {
   const notification = useSelector(
     (state: RootState) => state.notification.value
   )
-  const chatView = useSelector((state: RootState) => state.view.value)
-  const dispatch = useDispatch()
-
-  useEffect(() => {
-    if (chatView) dispatch(setNotificationView(false))
-  }, [chatView])
 
   return (
     <div>
-      {notification && notification.notificationType === 'CHAT' && <Alarm />}
+      {notification?.notificationType === 'CHAT' && <Alarm />}
       <AlarmList />
       <Chat />
       <Layout>

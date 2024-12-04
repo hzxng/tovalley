@@ -1,21 +1,21 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { Client } from "@stomp/stompjs";
+import { createSlice } from '@reduxjs/toolkit'
+import { Client } from '@stomp/stompjs'
 
 interface ClientType {
-  value: Client | null;
+  value: Client | null
 }
 
-const initialState: ClientType = { value: null };
+const initialState: ClientType = { value: null }
 
 const clientSlice = createSlice({
-  name: "client",
+  name: 'client',
   initialState,
   reducers: {
     newClient(state, action) {
-      state.value = action.payload;
+      state.value = action.payload
     },
   },
-});
+})
 
-export default clientSlice;
-export const { newClient } = clientSlice.actions;
+export default clientSlice.reducer
+export const { newClient } = clientSlice.actions
