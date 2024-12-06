@@ -1,6 +1,18 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-const useObserver = (getData: () => Promise<void>, isPageEnd: boolean) => {
+const useObserver = ({
+  getData,
+  isPageEnd,
+  value,
+  setReqMsg,
+  setNewMessageView,
+}: {
+  getData?: (value?: string) => Promise<void>
+  isPageEnd?: boolean
+  value?: string
+  setReqMsg?: (value: React.SetStateAction<boolean>) => void
+  setNewMessageView?: (value: React.SetStateAction<boolean>) => void
+}) => {
   const target = useRef<HTMLDivElement>(null)
 
   const [page, setPage] = useState(0)
@@ -12,11 +24,19 @@ const useObserver = (getData: () => Promise<void>, isPageEnd: boolean) => {
     ) => {
       if (entry.isIntersecting) {
         observer.unobserve(entry.target)
-        setPage((prev) => prev + 1)
-        await getData()
+
+        if (setReqMsg && setNewMessageView) {
+          setReqMsg(false)
+          setNewMessageView(false)
+        } else {
+          setPage((prev) => prev + 1)
+          value
+            ? getData && (await getData(value))
+            : getData && (await getData())
+        }
       }
     },
-    [getData]
+    [getData, value, setReqMsg, setNewMessageView]
   )
 
   useEffect(() => {

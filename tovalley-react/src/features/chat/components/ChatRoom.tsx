@@ -1,7 +1,6 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import styles from '@styles/chat/ChatRoom.module.scss'
 import { useDispatch, useSelector } from 'react-redux'
-import { DateTime } from 'luxon'
 import { MdImage } from 'react-icons/md'
 import { IoIosArrowDown } from 'react-icons/io'
 import { useSaveImg } from '@hooks/useSaveImg'
@@ -9,236 +8,141 @@ import { MessageListType, MessageType } from 'types/chat'
 import { RootState } from '@store/store'
 import axiosInstance from '@utils/axios_interceptor'
 import { setSubscription } from '@store/chat/subscriptionSlice'
+import useObserver from '@hooks/useObserver'
+import SpeechBubble from './SpeechBubble'
 
 const ChatRoom = () => {
-  const [messageList, setMessageList] = useState<MessageListType>()
-  const [newMessageList, setNewMessageList] = useState<MessageListType>()
-  const [message, setMessage] = useState<MessageType>()
-  const [chatMessageList, setChatMessageList] = useState<MessageType[]>([])
+  const [prevMessage, setPrevMessage] = useState<MessageListType>()
+  const [newMessage, setNewMessage] = useState<MessageType>()
+  const [newMessageList, setNewMessageList] = useState<MessageType[]>([])
   const [content, setContent] = useState('') // 보낼 메시지
-  const clientSelector = useSelector((state: RootState) => state.client.value)
-  const chatRoomId = useSelector((state: RootState) => state.chatRoomId.value)
-  const notification = useSelector(
-    (state: RootState) => state.notification.value
-  )
-  const [notificationDate, setNotificationDate] = useState<Date>()
-  const target = useRef<HTMLDivElement>(null)
+  const [newMessageView, setNewMessageView] = useState(false)
   const [isPageEnd, setIsPageEnd] = useState<boolean>(false)
-  const messageEndRef = useRef<HTMLDivElement>(null)
   const [reqMsg, setReqMsg] = useState(false)
+
+  const client = useSelector((state: RootState) => state.client.value)
+  const chatRoomId = useSelector((state: RootState) => state.chatRoomId.value)
+
   const dispatch = useDispatch()
   const { uploadImg, imgFiles, saveImgFile, handleDeleteImage } = useSaveImg()
-  const [newMessageView, setNewMessageView] = useState(false)
+  const endRef = useRef<HTMLDivElement>(null)
+  const { target: messageEndRef } = useObserver({
+    setReqMsg,
+    setNewMessageView,
+  })
 
   useEffect(() => {
     const requestMessageList = async () => {
       const response = await axiosInstance.get(
         `/api/auth/chat/messages/${chatRoomId}` // 채팅 메시지 목록 조회
       )
-      console.log(response)
-      setMessageList(response.data)
+      setPrevMessage(response.data.data)
 
-      if (clientSelector?.connected) {
+      if (client?.connected) {
         console.log('채팅방 구독 시작!!')
-        const subscribe = clientSelector.subscribe(
+        const subscribe = client.subscribe(
           `/sub/chat/room/${chatRoomId}`,
           (msg) => {
             // 특정 채팅방 구독
-            console.log(JSON.parse(msg.body))
-            setMessage(JSON.parse(msg.body))
+            // console.log(JSON.parse(msg.body))
+            setNewMessage(JSON.parse(msg.body))
+            setNewMessageList((prev) => {
+              return [...prev, JSON.parse(msg.body)]
+            })
           }
         )
         dispatch(setSubscription(subscribe))
       }
     }
 
-    if (clientSelector) requestMessageList()
-
-    return () => {
-      // if (clientSelector?.connected && subscription) {
-      //   console.log("구독해제!!");
-      //   subscription.unsubscribe();
-      //   //clientSelector.deactivate(); // 컴포넌트 unmount 시 웹소켓 연결 비활성화
-      // }
-    }
-  }, [])
+    if (client) requestMessageList()
+  }, [client, chatRoomId, dispatch])
 
   useEffect(() => {
-    if (!reqMsg) messageEndRef.current?.scrollIntoView()
-  }, [messageList, message])
+    endRef.current?.scrollIntoView()
+  }, [prevMessage])
 
   useEffect(() => {
-    target.current?.scrollIntoView()
-  }, [newMessageList])
-
-  useEffect(() => {
-    if (message?.senderId === messageList?.data.memberId) {
+    if (newMessage?.senderId === prevMessage?.memberId) {
       messageEndRef.current?.scrollIntoView()
       setNewMessageView(false)
     }
 
-    if (reqMsg && message?.senderId !== messageList?.data.memberId)
+    if (reqMsg && newMessage?.senderId !== prevMessage?.memberId)
       setNewMessageView(true)
+  }, [newMessage, messageEndRef, prevMessage?.memberId, reqMsg])
 
-    if (message) {
-      setChatMessageList([...chatMessageList, message])
-    }
-  }, [message])
+  const getMessageList = useCallback(
+    async (id?: string) => {
+      setReqMsg(true)
+      let config
 
-  const getMessageList = async (id?: string) => {
-    setReqMsg(true)
-    let config
-
-    if (id) {
-      config = {
-        params: {
-          cursor: id,
-        },
-      }
-    } else {
-      config = undefined
-    }
-
-    const res = await axiosInstance.get(
-      `/api/auth/chat/messages/${chatRoomId}`,
-      config // 채팅 메시지 목록 조회
-    )
-    console.log(res)
-    setNewMessageList(res.data)
-    if (res.data.data.chatMessages.last) {
-      setIsPageEnd(true)
-    }
-  }
-
-  useEffect(() => {
-    if (newMessageList && messageList)
-      setMessageList({
-        data: {
-          memberId: newMessageList.data.memberId,
-          chatRoomId: newMessageList.data.chatRoomId,
-          chatMessages: {
-            content: [
-              ...newMessageList.data.chatMessages.content,
-              ...messageList.data.chatMessages.content,
-            ],
-            pageable: {
-              sort: {
-                empty: newMessageList.data.chatMessages.pageable.sort.empty,
-                sorted: newMessageList.data.chatMessages.pageable.sort.sorted,
-                unsorted:
-                  newMessageList.data.chatMessages.pageable.sort.unsorted,
-              },
-              offset: newMessageList.data.chatMessages.pageable.offset,
-              pageNumber: newMessageList.data.chatMessages.pageable.pageNumber,
-              pageSize: newMessageList.data.chatMessages.pageable.pageSize,
-              paged: newMessageList.data.chatMessages.pageable.paged,
-              unpaged: newMessageList.data.chatMessages.pageable.unpaged,
-            },
-            first: newMessageList.data.chatMessages.first,
-            last: newMessageList.data.chatMessages.last,
-            size: newMessageList.data.chatMessages.size,
-            number: newMessageList.data.chatMessages.number,
-            sort: {
-              empty: newMessageList.data.chatMessages.sort.empty,
-              sorted: newMessageList.data.chatMessages.sort.sorted,
-              unsorted: newMessageList.data.chatMessages.sort.unsorted,
-            },
-            numberOfElements: newMessageList.data.chatMessages.numberOfElements,
-            empty: newMessageList.data.chatMessages.empty,
+      if (id) {
+        config = {
+          params: {
+            cursor: id,
           },
-        },
+        }
+      } else {
+        config = undefined
+      }
+
+      const res = await axiosInstance.get(
+        `/api/auth/chat/messages/${chatRoomId}`,
+        config // 채팅 메시지 목록 조회
+      )
+
+      setPrevMessage((prev) => {
+        return {
+          ...prev!,
+          chatMessages: {
+            ...res.data.data.chatMessages,
+            content: [
+              ...res.data.data.chatMessages.content,
+              ...prev!.chatMessages.content,
+            ],
+          },
+        }
       })
-  }, [newMessageList])
 
-  const handleObserver = useCallback(
-    async (
-      [entry]: IntersectionObserverEntry[],
-      observer: IntersectionObserver
-    ) => {
-      if (entry.isIntersecting) {
-        observer.unobserve(entry.target)
-        if (messageList && messageList?.data.chatMessages.content.length > 0)
-          await getMessageList(
-            messageList.data.chatMessages.content[0].chatMessageId
-          )
+      if (res.data.data.chatMessages.last) {
+        setIsPageEnd(true)
       }
     },
-    [messageList]
+    [chatRoomId]
   )
 
-  const handleEndObserver = useCallback(
-    async (
-      [entry]: IntersectionObserverEntry[],
-      observer: IntersectionObserver
-    ) => {
-      if (entry.isIntersecting) {
-        observer.unobserve(entry.target)
-        setReqMsg(false)
-        setNewMessageView(false)
-      }
-    },
-    [messageList]
-  )
-
-  useEffect(() => {
-    if (!target.current) return
-
-    const option = {
-      root: null,
-      rootMargin: '0px',
-      threshold: 0,
-    }
-
-    const observer = new IntersectionObserver(handleObserver, option)
-
-    target.current && observer.observe(target.current)
-
-    return () => observer && observer.disconnect()
-  }, [handleObserver, isPageEnd])
-
-  useEffect(() => {
-    if (!messageEndRef.current) return
-
-    const option = {
-      root: null,
-      rootMargin: '0px',
-      threshold: 0,
-    }
-
-    const observer = new IntersectionObserver(handleEndObserver, option)
-
-    messageEndRef.current && observer.observe(messageEndRef.current)
-
-    return () => observer && observer.disconnect()
-  }, [handleEndObserver])
+  const { target } = useObserver({
+    getData: getMessageList,
+    isPageEnd,
+    value: prevMessage?.chatMessages.content[0].chatMessageId,
+  })
 
   const sendMessage = () => {
-    if (clientSelector?.connected && content !== '') {
+    if (client?.connected && content !== '') {
       const chatMessage = {
         chatRoomId: chatRoomId,
         content,
       }
-      clientSelector.publish({
+      client.publish({
         destination: '/pub/chat/message',
         body: JSON.stringify(chatMessage),
       }) // 메시지 전송
       setContent('')
-    } else if (content === '') {
-      console.error('채팅 메시지가 비었습니다.')
-    } else {
+    } else if (!client?.connected) {
       console.error('웹소켓 연결이 활성화되지 않았습니다.')
+      alert('잠시 후 다시 시도해주세요.')
     }
   }
 
   const sendImageMessage = () => {
-    if (clientSelector?.connected) {
+    if (client?.connected) {
       const formData = new FormData()
       formData.append('image', imgFiles[0])
 
       axiosInstance
         .post('/api/auth/chat/images/upload', formData)
         .then((res) => {
-          console.log(res)
           const chatMessage = {
             chatRoomId: chatRoomId,
             content: '',
@@ -246,7 +150,7 @@ const ChatRoom = () => {
             imageName: res.data.data.storeFileName,
             imageUrl: res.data.data.storeFileUrl,
           }
-          clientSelector.publish({
+          client.publish({
             destination: '/pub/chat/message',
             body: JSON.stringify(chatMessage),
           }) // 메시지 전송
@@ -258,17 +162,6 @@ const ChatRoom = () => {
     }
   }
 
-  useEffect(() => {
-    if (notification) {
-      const dateString = notification.createdDate
-      const luxonDateTime = DateTime.fromISO(dateString, {
-        zone: 'Asia/Seoul',
-      })
-      const date = luxonDateTime.toJSDate()
-      setNotificationDate(date)
-    }
-  }, [notification])
-
   const confirmNewMessage = () => {
     setNewMessageView(false)
     messageEndRef.current?.scrollIntoView()
@@ -278,154 +171,44 @@ const ChatRoom = () => {
     setNewMessageView(false)
   }, [uploadImg])
 
+  const handleSendMessage = () => {
+    if (imgFiles.length !== 0) {
+      sendImageMessage()
+    } else sendMessage()
+  }
+
   return (
     <div className={styles.chatComponent}>
       <div className={styles.messageList}>
         <div>
-          {messageList?.data.chatMessages.content.map((message, index) => {
-            const date = new Date(message.createdAt)
+          {prevMessage?.chatMessages.content.map((message, index) => {
             return (
-              <div key={message.chatMessageId} className={styles.speechBubble}>
-                {message.myMsg ? (
-                  <div style={{ justifyContent: 'right' }}>
-                    <div style={{ textAlign: 'right' }}>
-                      {notificationDate &&
-                      notification?.notificationType === 'READ_COUNT_UPDATE' &&
-                      notificationDate > date
-                        ? ''
-                        : message.readCount !== 0 && (
-                            <span className={styles.readCount}>
-                              {message.readCount}
-                            </span>
-                          )}
-                      <span className={styles.sendTime}>
-                        {`${date.getHours()}`.padStart(2, '0')}:
-                        {`${date.getMinutes()}`.padStart(2, '0')}
-                      </span>
-                    </div>
-                    <div className={styles.mySpeechBubble}>
-                      {message.chatType === 'IMAGE' ? (
-                        <img
-                          className={styles.chatImage}
-                          src={message.imageUrl ? message.imageUrl : ''}
-                          alt="chatImage"
-                        />
-                      ) : (
-                        message.content
-                      )}
-                    </div>
-                  </div>
-                ) : (
-                  <div style={{ justifyContent: 'left' }}>
-                    <div className={styles.opponentSpeechBubble}>
-                      {message.chatType === 'IMAGE' ? (
-                        <img
-                          className={styles.chatImage}
-                          src={message.imageUrl ? message.imageUrl : ''}
-                          alt="chatImage"
-                        />
-                      ) : (
-                        message.content
-                      )}
-                    </div>
-                    <div>
-                      {message.readCount !== 0 && !chatRoomId && (
-                        <span className={styles.readCount}>
-                          {message.readCount}
-                        </span>
-                      )}
-                      <span className={styles.sendTime}>
-                        {`${date.getHours()}`.padStart(2, '0')}:
-                        {`${date.getMinutes()}`.padStart(2, '0')}
-                      </span>
-                    </div>
-                  </div>
-                )}
-                {!isPageEnd && index === 0 && (
-                  <div
-                    ref={target}
-                    style={{ width: '100%', height: '0.1px' }}
-                  />
-                )}
-              </div>
+              <SpeechBubble
+                message={message}
+                isMyMsg={message.myMsg}
+                isPrev={true}
+                isPageEnd={isPageEnd}
+                index={index}
+                target={target}
+                endRef={endRef}
+              />
             )
           })}
         </div>
-        {chatMessageList.map((el) => {
-          const dateString = el.createdAt
-          const luxonDateTime = DateTime.fromISO(dateString, {
-            zone: 'Asia/Seoul',
-          })
-          const date = luxonDateTime.toJSDate()
+        {newMessageList.map((el) => {
           return (
-            <div key={el.createdAt} className={styles.speechBubble}>
-              {el?.senderId === messageList?.data.memberId ? (
-                <div style={{ justifyContent: 'right' }}>
-                  <div style={{ textAlign: 'right' }}>
-                    {el?.readCount !== 0 && (
-                      <span className={styles.readCount}>
-                        {notificationDate &&
-                        notification?.notificationType ===
-                          'READ_COUNT_UPDATE' &&
-                        notificationDate > date
-                          ? ''
-                          : el?.readCount}
-                      </span>
-                    )}
-                    <span className={styles.sendTime}>
-                      {`${date.getHours()}`.padStart(2, '0')}:
-                      {`${date.getMinutes()}`.padStart(2, '0')}
-                    </span>
-                  </div>
-                  <div className={styles.mySpeechBubble}>
-                    {el?.chatType === 'IMAGE' ? (
-                      <img
-                        className={styles.chatImage}
-                        src={el.imageUrl ? el.imageUrl : ''}
-                        alt="chatImage"
-                      />
-                    ) : (
-                      el?.content
-                    )}
-                  </div>
-                </div>
-              ) : (
-                <div style={{ justifyContent: 'left' }}>
-                  <div className={styles.opponentSpeechBubble}>
-                    {el?.chatType === 'IMAGE' ? (
-                      <img
-                        className={styles.chatImage}
-                        src={el.imageUrl ? el.imageUrl : ''}
-                        alt="chatImage"
-                      />
-                    ) : (
-                      el?.content
-                    )}
-                  </div>
-                  <div>
-                    {el?.readCount !== 0 && (
-                      <span className={styles.readCount}>{el?.readCount}</span>
-                    )}
-                    <span className={styles.sendTime}>
-                      {`${date.getHours()}`.padStart(2, '0')}:
-                      {`${date.getMinutes()}`.padStart(2, '0')}
-                    </span>
-                  </div>
-                </div>
-              )}
-            </div>
+            <SpeechBubble
+              message={el}
+              isMyMsg={el?.senderId === prevMessage?.memberId}
+            />
           )
         })}
-        <div ref={messageEndRef} style={{ width: '100%', height: '10px' }} />
+        <div ref={messageEndRef} className={styles.ref} />
       </div>
       {newMessageView && (
         <div className={styles.newMessageContainer}>
           <div className={styles.newMessage} onClick={confirmNewMessage}>
-            <p>
-              {message?.content === ''
-                ? '사진을 보냈습니다.'
-                : message?.content}
-            </p>
+            <p>{newMessage?.content ?? '사진을 보냈습니다.'}</p>
             <span>
               <IoIosArrowDown />
             </span>
@@ -473,15 +256,7 @@ const ChatRoom = () => {
               <MdImage />
             </label>
           </span>
-          <button
-            onClick={() => {
-              if (imgFiles.length !== 0) {
-                sendImageMessage()
-              } else sendMessage()
-            }}
-          >
-            전송
-          </button>
+          <button onClick={handleSendMessage}>전송</button>
         </div>
       </div>
     </div>

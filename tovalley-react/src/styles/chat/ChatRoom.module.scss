@@ -1,3 +1,5 @@
+@import '@styles/variables.scss';
+
 .chatComponent {
   width: 100%;
   height: 100%;
@@ -10,85 +12,67 @@
 
 .messageList {
   overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
-.messageList::-webkit-scrollbar {
-  display: none;
-}
-
-.speechBubble {
-  padding: 0 1.2em;
-  margin-bottom: 0.5em;
-}
-
-.speechBubble > div {
-  display: flex;
-  align-items: flex-end;
-}
-
-.mySpeechBubble,
-.opponentSpeechBubble {
-  padding: 0.8em 1em;
-  font-size: 0.9rem;
-  border-radius: 10px;
-  max-width: 300px;
-}
-
-.readCount {
-  color: #66a5fc;
-  font-size: 0.8rem;
-  font-weight: 600;
-  display: block;
-}
-
-.sendTime {
-  color: #b0b0b0;
-  font-size: 0.8rem;
-}
-
-.mySpeechBubble {
-  background-color: #d6e6fd;
-  margin-left: 0.6em;
-}
-
-.opponentSpeechBubble {
-  border: 1px solid #d7d7d7;
-  margin-right: 0.6em;
-}
-
-.sendMessage > div {
-  width: 90%;
-  display: flex;
-  margin: 0 auto;
-  margin-top: 0.5em;
-  align-items: center;
-}
-
-.sendMessage input {
+.ref {
   width: 100%;
-  box-sizing: border-box;
-  background-color: #f2f2f2;
-  border: none;
-  border-radius: 30px;
-  font-size: 0.9rem;
-  padding: 0.8em 1.4em;
-  margin-right: 1em;
+  height: 10px;
 }
 
-input::placeholder {
-  color: #939393;
+.sendMessage {
+  > div {
+    width: 90%;
+    display: flex;
+    margin: 0 auto;
+    margin-top: 0.5em;
+    align-items: center;
+  }
+
+  input {
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #f2f2f2;
+    border: none;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    padding: 0.8em 1.4em;
+    margin-right: 1em;
+
+    &:focus {
+      outline: none;
+    }
+
+    &::placeholder {
+      color: #939393;
+    }
+  }
+
+  button {
+    background-color: transparent;
+    border: none;
+    width: fit-content;
+    cursor: pointer;
+    white-space: nowrap;
+    color: $primary;
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
 }
 
 .imageIcon {
-  color: #66a5fc;
+  color: $primary;
   cursor: pointer;
   display: block;
   margin-right: 0.5em;
   font-size: 1.2rem;
-}
 
-.imageIcon > label {
-  cursor: pointer;
+  > label {
+    cursor: pointer;
+  }
 }
 
 .imgInput[type='file'] {
@@ -110,31 +94,20 @@ input::placeholder {
   margin-right: 1.5em;
   border: 1px solid #b5b5b5;
   border-radius: 10px;
-}
 
-.imageContainer > div {
-  width: 170px;
-  height: 130px;
-  overflow: hidden;
-}
+  > div {
+    width: 170px;
+    height: 130px;
+    overflow: hidden;
 
-.imageContainer > div > img {
-  margin: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 9px;
-}
-
-.sendMessage button {
-  background-color: transparent;
-  border: none;
-  width: fit-content;
-  cursor: pointer;
-  white-space: nowrap;
-  color: #66a5fc;
-  font-weight: 700;
-  font-size: 0.9rem;
+    > img {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 9px;
+    }
+  }
 }
 
 .chatImage {
@@ -158,20 +131,20 @@ input::placeholder {
   background-color: rgba(242, 242, 242, 0.645);
   border-radius: 5px;
   cursor: pointer;
-}
 
-.newMessage p {
-  margin: 0;
-  padding: 0.8em;
-  font-size: 0.8rem;
-  color: #6d6d6d;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+  p {
+    margin: 0;
+    padding: 0.8em;
+    font-size: 0.8rem;
+    color: #6d6d6d;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
-.newMessage span {
-  display: block;
-  margin-right: 0.5em;
-  color: #888888;
+  span {
+    display: block;
+    margin-right: 0.5em;
+    color: #888888;
+  }
 }

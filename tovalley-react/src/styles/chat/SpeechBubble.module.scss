@@ -1,0 +1,54 @@
+@import '@styles/variables.scss';
+
+.bubbleContainer {
+  padding: 0 1.2em;
+  margin-bottom: 0.5em;
+}
+
+.speechBubble {
+  display: flex;
+  align-items: flex-end;
+  justify-content: right;
+
+  &.reply {
+    justify-content: left;
+  }
+}
+
+.alignRight {
+  text-align: right;
+}
+
+.bubbleContent {
+  padding: 0.8em 1em;
+  font-size: 0.9rem;
+  border-radius: 10px;
+  max-width: 300px;
+
+  &.mine {
+    background-color: #d6e6fd;
+    margin-left: 0.6em;
+  }
+
+  &.reply {
+    border: 1px solid #d7d7d7;
+    margin-right: 0.6em;
+  }
+}
+
+.readCount {
+  color: $primary;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: block;
+}
+
+.sendTime {
+  color: #b0b0b0;
+  font-size: 0.8rem;
+}
+
+.ref {
+  width: 100%;
+  height: 0.1px;
+}
