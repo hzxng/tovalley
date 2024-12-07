@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import styles from '@styles/chat/AlarmList.module.scss'
 import { MdClose } from 'react-icons/md'
 import { useDispatch, useSelector } from 'react-redux'
@@ -9,87 +9,40 @@ import { RootState } from '@store/store'
 import { view } from '@store/chat/chatViewSlice'
 import { enterChatRoom } from '@store/chat/chatRoomIdSlice'
 import axiosInstance from '@utils/axios_interceptor'
+import Drawer from './Drawer'
+import cn from 'classnames'
+import useObserver from '@hooks/useObserver'
 
 const cookies = new Cookies()
 
 const AlarmList = () => {
   const [alarmList, setAlarmList] = useState<AlarmListType[]>([])
-  const [newAlarmList, setNewAlarmList] = useState<AlarmListType[]>([])
-  const [slide, setSlide] = useState('')
-  const [bgForeground, setBgForeground] = useState(false)
   const notificationView = useSelector(
     (state: RootState) => state.notificationView.value
   )
-  const target = useRef<HTMLDivElement>(null)
   const [isPageEnd, setIsPageEnd] = useState<boolean>(false)
   const notification = useSelector(
     (state: RootState) => state.notification.value
   )
   const [loading, setLoading] = useState(false)
   const dispatch = useDispatch()
+  const loginStatus = cookies.get('ISLOGIN')
 
   useEffect(() => {
-    if (notificationView) {
-      dispatch(view(false))
-      setSlide('start')
-    } else setSlide('end')
-  }, [notificationView])
-
-  useEffect(() => {
-    if (slide === 'end') {
-      const fadeTimer = setTimeout(() => {
-        setBgForeground(true)
-      }, 500)
-      return () => {
-        clearTimeout(fadeTimer)
+    const requestAlarmList = async () => {
+      try {
+        const res = await axiosInstance.get('/api/auth/notifications')
+        setAlarmList(res.data.data.content)
+        if (res.data.data.content.length < 5 || res.data.data.last) {
+          setIsPageEnd(true)
+        }
+      } catch (err) {
+        console.log(err)
       }
-    } else {
-      setBgForeground(false)
     }
-  }, [slide])
 
-  const getAlarmList = useCallback(
-    async (id?: number) => {
-      const loginStatus = cookies.get('ISLOGIN')
-      let config
-
-      if (id) {
-        config = {
-          params: {
-            cursorId: id,
-          },
-        }
-      } else {
-        config = undefined
-      }
-
-      if (loginStatus && notificationView) {
-        try {
-          setLoading(true)
-          const res = await axiosInstance.get('/api/auth/notifications', config)
-          console.log(res)
-          setNewAlarmList(res.data.data.content)
-          if (res.data.data.content.length < 5 || res.data.data.last) {
-            setIsPageEnd(true)
-          }
-          setLoading(false)
-        } catch (err) {
-          console.log(err)
-        }
-      } else {
-        setAlarmList([])
-      }
-    },
-    [notificationView]
-  )
-
-  useEffect(() => {
-    getAlarmList()
-  }, [notificationView, getAlarmList])
-
-  useEffect(() => {
-    if (notificationView) setAlarmList([...alarmList, ...newAlarmList])
-  }, [newAlarmList])
+    if (loginStatus && notificationView) requestAlarmList()
+  }, [loginStatus, notificationView])
 
   useEffect(() => {
     if (
@@ -98,48 +51,55 @@ const AlarmList = () => {
       !loading &&
       notification.notificationType === 'CHAT'
     )
-      setAlarmList([
-        {
-          chatNotificationId: alarmList[0].chatNotificationId + 1,
-          chatRoomId: notification.chatRoomId,
-          senderNick: notification.senderNick,
-          createdDate: notification.createdDate,
-          content: notification.content,
-          hasRead: false,
+      setAlarmList((prev) => {
+        return [
+          {
+            chatNotificationId: alarmList ? prev[0].chatNotificationId + 1 : 1,
+            chatRoomId: notification.chatRoomId,
+            senderNick: notification.senderNick,
+            createdDate: notification.createdDate,
+            content: notification.content,
+            hasRead: false,
+          },
+          ...prev,
+        ]
+      })
+  }, [notification, notificationView, loading, alarmList])
+
+  const getAlarmList = useCallback(async (value?: number | string) => {
+    let config
+
+    if (value) {
+      config = {
+        params: {
+          cursorId: value,
         },
-        ...alarmList,
-      ])
-  }, [notification])
-
-  const handleObserver = useCallback(
-    async (
-      [entry]: IntersectionObserverEntry[],
-      observer: IntersectionObserver
-    ) => {
-      if (entry.isIntersecting) {
-        observer.unobserve(entry.target)
-        if (alarmList.length > 0)
-          await getAlarmList(alarmList[alarmList.length - 1].chatNotificationId)
       }
-    },
-    [getAlarmList, alarmList]
-  )
-
-  useEffect(() => {
-    if (!target.current) return
-
-    const option = {
-      root: null,
-      rootMargin: '0px',
-      threshold: 0,
+    } else {
+      config = undefined
     }
 
-    const observer = new IntersectionObserver(handleObserver, option)
+    try {
+      setLoading(true)
+      const res = await axiosInstance.get('/api/auth/notifications', config)
+      setAlarmList((prev) => {
+        return [...prev, ...res.data.data.content]
+      })
+      if (res.data.data.content.length < 5 || res.data.data.last) {
+        setIsPageEnd(true)
+      }
+      setLoading(false)
+    } catch (err) {
+      console.log(err)
+    }
+  }, [])
 
-    target.current && observer.observe(target.current)
-
-    return () => observer && observer.disconnect()
-  }, [handleObserver, isPageEnd])
+  const { target } = useObserver({
+    getData: getAlarmList,
+    value: alarmList.length
+      ? alarmList[alarmList.length - 1].chatNotificationId
+      : undefined,
+  })
 
   const deleteAlarm = (id: number) => {
     console.log(alarmList)
@@ -147,7 +107,6 @@ const AlarmList = () => {
       return alarm.chatNotificationId !== id
     })
     setAlarmList(deleteAlarmList)
-    console.log(alarmList)
     axiosInstance.delete(`/api/auth/notifications/${id}`).then((res) => {
       console.log(res)
     })
@@ -166,57 +125,49 @@ const AlarmList = () => {
   }
 
   return (
-    <div
-      className={`${styles.alarmListContainer} ${
-        bgForeground ? '' : styles.zIndex
-      } `}
+    <Drawer
+      classNames={{
+        container: styles.alarmListContainer,
+        wrapper: styles.alarmListWrap,
+      }}
+      size={340}
+      isView={notificationView}
+      isAlarm
     >
-      <div
-        className={`${styles.alarmListWrap} ${
-          slide === 'start'
-            ? styles.startSlideAnimation
-            : slide === 'end'
-            ? styles.endSlideAnimation
-            : ''
-        }`}
-      >
-        <span className={styles.allDelete} onClick={deleteAllAlarm}>
-          모두 지우기
-        </span>
-        {alarmList?.map((alarm) => (
-          <div
-            key={alarm.chatNotificationId}
-            className={styles.alarmComponent}
-            onClick={() => startChat(alarm.chatRoomId)}
+      <span className={styles.allDelete} onClick={deleteAllAlarm}>
+        모두 지우기
+      </span>
+      {alarmList?.map((alarm) => (
+        <div
+          key={alarm.chatNotificationId}
+          className={styles.alarmComponent}
+          onClick={() => startChat(alarm.chatRoomId)}
+        >
+          <span
+            className={styles.closeBtn}
+            onClick={() => deleteAlarm(alarm.chatNotificationId)}
           >
-            <span
-              className={styles.closeBtn}
-              onClick={() => deleteAlarm(alarm.chatNotificationId)}
-            >
-              <MdClose />
+            <MdClose />
+          </span>
+          <h4 className={cn(styles.nick, { [styles.hasRead]: alarm.hasRead })}>
+            {alarm.senderNick}
+          </h4>
+          <p
+            className={cn(styles.alarmContent, {
+              [styles.hasRead]: alarm.hasRead,
+            })}
+          >
+            {alarm.content ?? '사진을 보냈습니다.'}
+          </p>
+          {alarm.createdDate && (
+            <span className={styles.alarmTime}>
+              {elapsedTime(alarm.createdDate)}
             </span>
-            <h4 className={alarm.hasRead ? styles.hasRead : ''}>
-              {alarm.senderNick}
-            </h4>
-            <p
-              className={`${styles.alarmContent} ${
-                alarm.hasRead ? styles.hasRead : ''
-              }`}
-            >
-              {alarm.content === '' ? '사진을 보냈습니다.' : alarm.content}
-            </p>
-            {alarm.createdDate && (
-              <span className={styles.alarmTime}>
-                {elapsedTime(alarm.createdDate)}
-              </span>
-            )}
-          </div>
-        ))}
-        {!isPageEnd && (
-          <div ref={target} style={{ width: '100%', height: '5px' }} />
-        )}
-      </div>
-    </div>
+          )}
+        </div>
+      ))}
+      {!isPageEnd && <div ref={target} className={styles.ref} />}
+    </Drawer>
   )
 }
 

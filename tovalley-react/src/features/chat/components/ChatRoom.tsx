@@ -25,11 +25,13 @@ const ChatRoom = () => {
 
   const dispatch = useDispatch()
   const { uploadImg, imgFiles, saveImgFile, handleDeleteImage } = useSaveImg()
+
+  const observeFunc = () => {
+    setReqMsg(false)
+    setNewMessageView(false)
+  }
   const endRef = useRef<HTMLDivElement>(null)
-  const { target: messageEndRef } = useObserver({
-    setReqMsg,
-    setNewMessageView,
-  })
+  const { target: messageEndRef } = useObserver({ observeFunc })
 
   useEffect(() => {
     const requestMessageList = async () => {
@@ -74,7 +76,7 @@ const ChatRoom = () => {
   }, [newMessage, messageEndRef, prevMessage?.memberId, reqMsg])
 
   const getMessageList = useCallback(
-    async (id?: string) => {
+    async (id?: string | number) => {
       setReqMsg(true)
       let config
 
@@ -185,6 +187,7 @@ const ChatRoom = () => {
           {prevMessage?.chatMessages.content.map((message, index) => {
             return (
               <SpeechBubble
+                key={`${index}-${message.createdAt}`}
                 message={message}
                 isMyMsg={message.myMsg}
                 isPrev={true}

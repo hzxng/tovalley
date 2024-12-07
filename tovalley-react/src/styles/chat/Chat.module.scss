@@ -9,10 +9,6 @@
   bottom: 0;
 }
 
-.zIndex {
-  z-index: 20;
-}
-
 .chatWrap {
   width: 420px;
   box-sizing: border-box;
@@ -39,19 +35,6 @@
       transform: translateX(0);
     }
   } */
-
-.startSlideAnimation {
-  transform: translateX(-420px);
-  transition: all 0.5s;
-  /* animation: slide 0.5s ease-in-out 0s 1 normal forwards; */
-  /* animation: name duration timing-function delay iteration-count direction fill-mode; */
-}
-
-.endSlideAnimation {
-  transform: translateX(420px);
-  transition: all 1s;
-  /* animation: slide 0.5s ease-in-out 0s 1 reverse forwards; */
-}
 
 .header {
   display: flex;

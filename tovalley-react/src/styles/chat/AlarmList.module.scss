@@ -7,10 +7,6 @@
   bottom: 0;
 }
 
-.zIndex {
-  z-index: 20;
-}
-
 .alarmListWrap {
   width: 340px;
   box-sizing: border-box;
@@ -21,20 +17,10 @@
   right: -340px;
   overflow-y: scroll;
   padding-top: 25px;
-}
 
-.startSlideAnimation {
-  transform: translateX(-340px);
-  transition: all 0.4s;
-}
-
-.endSlideAnimation {
-  transform: translateX(340px);
-  transition: all 1s;
-}
-
-.alarmListWrap::-webkit-scrollbar {
-  display: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .allDelete {
@@ -63,6 +49,11 @@
   cursor: pointer;
 }
 
+.nick {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
 .closeBtn {
   position: absolute;
   top: 1em;
@@ -70,11 +61,6 @@
   color: #a9a9a9;
   font-size: 0.9rem;
   cursor: pointer;
-}
-
-.alarmComponent h4 {
-  margin: 0;
-  font-size: 0.9rem;
 }
 
 .hasRead {
@@ -91,4 +77,9 @@
   display: flex;
   justify-content: right;
   color: #a9a9a9;
+}
+
+.ref {
+  width: 100%;
+  height: 5px;
 }
