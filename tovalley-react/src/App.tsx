@@ -1,8 +1,6 @@
 import { Route, Routes } from 'react-router-dom'
 import './App.css'
-import Alarm from './component/common/Alarm'
 import { RootState } from './store/store'
-import AlarmList from './component/common/AlarmList'
 import Home from '@pages/Home'
 import Layout from 'layout/Layout'
 import Login from '@pages/Login'
@@ -18,6 +16,8 @@ import LostItemWrite from '@pages/LostItemWrite'
 import SocialLoginException from '@pages/SocialLoginException'
 import { useSelector } from 'react-redux'
 import Chat from '@features/chat/components/Chat'
+import Alarm from '@features/chat/components/Alarm'
+import AlarmList from '@features/chat/components/AlarmList'
 
 function App() {
   const notification = useSelector(

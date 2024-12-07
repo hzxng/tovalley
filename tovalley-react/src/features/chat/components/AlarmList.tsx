@@ -1,14 +1,14 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import axiosInstance from '../../axios_interceptor'
-import { AlarmListType } from '../../typings/db'
-import styles from '../../css/common/AlarmList.module.css'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import styles from '@styles/chat/AlarmList.module.scss'
 import { MdClose } from 'react-icons/md'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../../store/store'
 import { Cookies } from 'react-cookie'
-import { view } from '../../store/chat/chatViewSlice'
-import { enterChatRoom } from '../../store/chat/chatRoomIdSlice'
 import { elapsedTime } from '@utils/elapsedTime'
+import { AlarmListType } from 'types/chat'
+import { RootState } from '@store/store'
+import { view } from '@store/chat/chatViewSlice'
+import { enterChatRoom } from '@store/chat/chatRoomIdSlice'
+import axiosInstance from '@utils/axios_interceptor'
 
 const cookies = new Cookies()
 

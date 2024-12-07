@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
-import styles from '../../css/common/Alarm.module.css'
+import { useEffect, useState } from 'react'
+import styles from '@styles/chat/Alarm.module.scss'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../../store/store'
-import { setNotification } from '../../store/notification/notificationSlice'
-import { view } from '../../store/chat/chatViewSlice'
-import { enterChatRoom } from '../../store/chat/chatRoomIdSlice'
 import { elapsedTime } from '@utils/elapsedTime'
+import { RootState } from '@store/store'
+import { setNotification } from '@store/notification/notificationSlice'
+import { view } from '@store/chat/chatViewSlice'
+import { enterChatRoom } from '@store/chat/chatRoomIdSlice'
 
 const Alarm = () => {
   const notification = useSelector(
