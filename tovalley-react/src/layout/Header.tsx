@@ -74,7 +74,6 @@ const Header = () => {
           stompClient.subscribe(
             `/sub/notification/${res.data.data}`, // 알림 토픽 구독
             (notify) => {
-              console.log(JSON.parse(notify.body))
               dispatch(setNotification(JSON.parse(notify.body)))
             }
           )
@@ -122,7 +121,7 @@ const Header = () => {
 
   const outChatting = () => {
     if (client?.connected && subscription) {
-      console.log('구독해제!!')
+      // console.log('구독해제!!')
       client.unsubscribe(subscription.id)
       dispatch(setSubscription(null))
     }

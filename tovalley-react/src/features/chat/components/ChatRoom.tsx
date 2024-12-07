@@ -39,7 +39,7 @@ const ChatRoom = () => {
       setPrevMessage(response.data.data)
 
       if (client?.connected) {
-        console.log('채팅방 구독 시작!!')
+        // console.log('채팅방 구독 시작!!')
         const subscribe = client.subscribe(
           `/sub/chat/room/${chatRoomId}`,
           (msg) => {
@@ -63,13 +63,14 @@ const ChatRoom = () => {
   }, [prevMessage])
 
   useEffect(() => {
-    if (newMessage?.senderId === prevMessage?.memberId) {
+    if (newMessage && newMessage.senderId === prevMessage?.memberId) {
       messageEndRef.current?.scrollIntoView()
       setNewMessageView(false)
     }
 
-    if (reqMsg && newMessage?.senderId !== prevMessage?.memberId)
+    if (reqMsg && newMessage && newMessage.senderId !== prevMessage?.memberId) {
       setNewMessageView(true)
+    }
   }, [newMessage, messageEndRef, prevMessage?.memberId, reqMsg])
 
   const getMessageList = useCallback(
@@ -198,6 +199,7 @@ const ChatRoom = () => {
         {newMessageList.map((el) => {
           return (
             <SpeechBubble
+              key={el.createdAt}
               message={el}
               isMyMsg={el?.senderId === prevMessage?.memberId}
             />
