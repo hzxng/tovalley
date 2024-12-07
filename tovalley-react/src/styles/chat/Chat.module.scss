@@ -1,3 +1,5 @@
+@import '@styles/variables.scss';
+
 .chatContainer {
   z-index: -10;
   position: fixed;
@@ -5,10 +7,6 @@
   left: 0;
   right: 0;
   bottom: 0;
-}
-
-.zIndex {
-  z-index: 20;
 }
 
 .chatWrap {
@@ -21,62 +19,49 @@
   padding: 1.7em 0;
   box-shadow: -8px 0 10px rgba(213, 213, 213, 0.185);
   border-radius: 20px 0 0 20px;
+
+  h4 {
+    color: $primary;
+    padding: 0 1.2em;
+    margin: 0 0 0.6em;
+  }
 }
 
 /* @keyframes slide {
-  from {
-    transform: translateX(420px);
-  }
-  to {
-    transform: translateX(0);
-  }
-} */
-
-.startSlideAnimation {
-  transform: translateX(-420px);
-  transition: all 0.5s;
-  /* animation: slide 0.5s ease-in-out 0s 1 normal forwards; */
-  /* animation: name duration timing-function delay iteration-count direction fill-mode; */
-}
-
-.endSlideAnimation {
-  transform: translateX(420px);
-  transition: all 1s;
-  /* animation: slide 0.5s ease-in-out 0s 1 reverse forwards; */
-}
+    from {
+      transform: translateX(420px);
+    }
+    to {
+      transform: translateX(0);
+    }
+  } */
 
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 1.2em;
-}
 
-.header h1 {
-  margin: 0 0 0.5em 0;
-  font-size: 1.2rem;
-}
+  > h1 {
+    margin: 0 0 0.5em 0;
+    font-size: 1.2rem;
+  }
 
-.header span {
-  color: #cecece;
-  font-size: 1.4rem;
-  cursor: pointer;
-}
-
-.chatWrap h4 {
-  color: #66a5fc;
-  padding: 0 1.2em;
-  margin: 0 0 0.6em;
+  > span {
+    color: #cecece;
+    font-size: 1.4rem;
+    cursor: pointer;
+  }
 }
 
 .chatList {
   border-top: 1px solid #ececec;
   height: 450px;
   overflow-y: scroll;
-}
 
-.chatList::-webkit-scrollbar {
-  display: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .chatItem {
@@ -89,6 +74,11 @@
 .chatTitle {
   display: flex;
   justify-content: space-between;
+
+  > span {
+    color: #bebebe;
+    font-size: 0.9rem;
+  }
 }
 
 .userInfo {
@@ -104,20 +94,15 @@
   display: flex;
   justify-content: center;
   margin-right: 0.5em;
-}
 
-.profileImg img {
-  width: 100%;
-  object-fit: cover;
+  img {
+    width: 100%;
+    object-fit: cover;
+  }
 }
 
 .nickName {
   font-weight: 800;
-}
-
-.chatTitle > span {
-  color: #bebebe;
-  font-size: 0.9rem;
 }
 
 .chatContent {

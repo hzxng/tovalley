@@ -14,6 +14,15 @@
   padding: 0.8em 1em;
   box-sizing: border-box;
   cursor: pointer;
+
+  h4 {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+}
+
+.none {
+  display: none;
 }
 
 .closeBtn {
@@ -24,11 +33,6 @@
   font-size: 0.9rem;
   cursor: pointer;
   z-index: 31;
-}
-
-.alarmComponent h4 {
-  margin: 0;
-  font-size: 0.9rem;
 }
 
 .alarmContent {

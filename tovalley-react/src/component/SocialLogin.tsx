@@ -29,13 +29,13 @@ const SocialLogin = ({ type, size }: { type: string; size: number }) => {
           src={process.env.PUBLIC_URL + '/img/login/naver-logo.png'}
           alt="naver logo"
           width={`${size}px`}
-          onClick={() => Login(GOOGLE_AUTH_URL)}
+          onClick={() => Login(NAVER_AUTH_URL)}
         />
         <img
           src={process.env.PUBLIC_URL + '/img/login/google-logo.png'}
           alt="google logo"
           width={`${size}px`}
-          onClick={() => Login(NAVER_AUTH_URL)}
+          onClick={() => Login(GOOGLE_AUTH_URL)}
         />
       </div>
     </div>

@@ -40,7 +40,7 @@ const MyPage = () => {
     }
   }
 
-  const { target, page } = useObserver(getMyPost, isPageEnd)
+  const { target, page } = useObserver({ getData: getMyPost, isPageEnd })
 
   useEffect(() => {
     axiosInstance

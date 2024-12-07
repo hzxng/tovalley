@@ -52,7 +52,7 @@ const Header = () => {
     const stompClient = new Client({
       webSocketFactory: () => newSocket,
       debug: (str) => {
-        console.log(str)
+        // console.log(str)
       },
       reconnectDelay: 1000,
       // 웹 소켓이 끊어졌을 때 얼마나 빨리 연결을 시도할 지 설정.
@@ -64,17 +64,16 @@ const Header = () => {
     // 활성화가 성공하면 onConnect가 실행 됨
 
     stompClient.onConnect = () => {
-      console.log('connected!!')
+      // console.log('connected!!')
       dispatch(newClient(stompClient))
 
       const getMemberId = async () => {
         try {
           const res = await axiosInstance.get('/api/auth/members/me')
-          console.log(res)
+          // console.log(res)
           stompClient.subscribe(
             `/sub/notification/${res.data.data}`, // 알림 토픽 구독
             (notify) => {
-              console.log(JSON.parse(notify.body))
               dispatch(setNotification(JSON.parse(notify.body)))
             }
           )
@@ -92,13 +91,13 @@ const Header = () => {
     if (loginStatus === true) {
       setLogin(true)
       if (!client) {
-        console.log('connectSocket')
+        // console.log('connectSocket')
         connectSocket()
       } // 웹 소켓이 연결되어 있다면 연결 요청 x
     } else {
       setLogin(false)
     }
-  }, [login, client, connectSocket])
+  }, [client, connectSocket])
 
   useEffect(() => {
     if (notification?.notificationType === 'CHAT') setNewAlarm(true)
@@ -122,7 +121,7 @@ const Header = () => {
 
   const outChatting = () => {
     if (client?.connected && subscription) {
-      console.log('구독해제!!')
+      // console.log('구독해제!!')
       client.unsubscribe(subscription.id)
       dispatch(setSubscription(null))
     }
@@ -202,6 +201,7 @@ const Header = () => {
         <div className={styles.nav}>
           {navList.map(({ name, url }) => (
             <span
+              key={name}
               onClick={() => {
                 moveToPage(url)
               }}
@@ -217,6 +217,7 @@ const Header = () => {
       <div className={cn(styles.mobileNav, { [styles.clicked]: navClick })}>
         {navList.map(({ name, url }) => (
           <span
+            key={name}
             onClick={() => {
               moveToPage(url)
             }}

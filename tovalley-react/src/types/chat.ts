@@ -61,35 +61,33 @@ export interface MessageType {
 }
 
 export interface MessageListType {
-  data: {
-    memberId: number
-    chatRoomId: number
-    chatMessages: {
-      content: ChatMessage[]
-      pageable: {
-        sort: {
-          empty: boolean
-          sorted: boolean
-          unsorted: boolean
-        }
-        offset: number
-        pageNumber: number
-        pageSize: number
-        paged: boolean
-        unpaged: boolean
-      }
-      first: boolean
-      last: boolean
-      size: number
-      number: number
+  memberId: number
+  chatRoomId: number
+  chatMessages: {
+    content: ChatMessage[]
+    pageable: {
       sort: {
         empty: boolean
         sorted: boolean
         unsorted: boolean
       }
-      numberOfElements: number
-      empty: boolean
+      offset: number
+      pageNumber: number
+      pageSize: number
+      paged: boolean
+      unpaged: boolean
     }
+    first: boolean
+    last: boolean
+    size: number
+    number: number
+    sort: {
+      empty: boolean
+      sorted: boolean
+      unsorted: boolean
+    }
+    numberOfElements: number
+    empty: boolean
   }
 }
 
