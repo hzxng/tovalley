@@ -9,7 +9,6 @@
 
 <ul>
    <li>프로젝트 기간: 2023.09 ~ 2024.03</li>
-   <li>웹사이트 방문: <a href="https://tovalley.site/">바로가기</a></li>
    <li>데모 영상: <a href="https://www.youtube.com/watch?v=qlYggbJ5q3I">링크</a></li>
 </ul>
 
@@ -23,9 +22,13 @@
 - **Kafka**: 실시간 채팅 메시지의 비동기 처리 및 분선 저장을 담당합니다.
 
 ### 개발 환경
-- 프로그래밍 언어: Java 11
+- 프로그래밍 언어
+   - BE: Java 11
+   - FE: TypeScript
 - 빌드 툴: Gradle
-- 프레임워크: SpringBoot 2.7.14
+- 프레임워크
+   - BE: SpringBoot 2.7.14
+   - FE: React 18
 
 ### 기술 스택
 
@@ -36,7 +39,9 @@
   <span><img src="https://img.shields.io/badge/JPA-007396?style=flat-square&logo=java&logoColor=white"/></span>
   <span><img src="https://img.shields.io/badge/QueryDSL-007396?style=flat-square&logo=java&logoColor=white"/></span>
   <span><img src="https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=black"/></span>
+   <span><img src="https://img.shields.io/badge/Redux-764ABC?style=flat-square&logo=redux&logoColor=white"/></span>
   <span><img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white"/></span>
+   <span><img src="https://img.shields.io/badge/SCSS-CC6699?style=flat-square&logo=scss&logoColor=white"/></span>
   <span><img src="https://img.shields.io/badge/CSS Module-000000?style=flat-square&logo=css3&logoColor=white"/></span>
   <span><img src="https://img.shields.io/badge/Styled--Component-DB7093?style=flat-square&logo=styled-components&logoColor=white"/></span>
 </div>
