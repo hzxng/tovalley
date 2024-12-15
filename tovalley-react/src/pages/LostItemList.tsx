@@ -4,15 +4,13 @@ import { LuPencil } from 'react-icons/lu'
 import { IoCloseOutline } from 'react-icons/io5'
 import styles from '@styles/lostItem/LostItemList.module.scss'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
 import { Cookies } from 'react-cookie'
 import cn from 'classnames'
 import { LostList, PlaceName } from 'types/lost-found'
 import LostItemPostItem from '@features/lostItem/components/LostItemPostItem'
 import Search from '@features/lostItem/components/Search'
 import ValleyModal from '@features/lostItem/components/ValleyModal'
-
-const localhost = process.env.REACT_APP_HOST
+import { Axios } from '@utils/axios_interceptor'
 
 const LostItemList = () => {
   const lostItemCategory = ['전체', '물건 찾아요', '주인 찾아요']
@@ -50,8 +48,7 @@ const LostItemList = () => {
       params = { ...params, category: 'FOUND' }
     }
 
-    axios
-      .get(`${localhost}/api/lostItem?${waterPlaceIdList}`, { params })
+    Axios.get(`/api/lostItem?${waterPlaceIdList}`, { params })
       .then((res) => {
         console.log(res)
         setLostList(res.data.data.content)

@@ -1,14 +1,12 @@
 import React, { useState } from 'react'
 import styles from '@styles/user/SignupPage.module.scss'
-import axios from 'axios'
 import SocialLogin from '@component/SocialLogin'
 import SignupInput from '@features/user/components/SignupInput'
 import cn from 'classnames'
 import SubmitCode from '@features/user/components/SubmitCode'
 import { FaRegCircleCheck } from 'react-icons/fa6'
 import ConfirmModal from '@component/ConfirmModal'
-
-const localhost = process.env.REACT_APP_HOST
+import { Axios } from '@utils/axios_interceptor'
 
 const Signup = () => {
   const [inputInfo, setInputInfo] = useState({
@@ -58,8 +56,7 @@ const Signup = () => {
       nickname: inputInfo.nickName,
     }
 
-    axios
-      .post(`${localhost}/api/members/check-nickname`, data)
+    Axios.post('/api/members/check-nickname', data)
       .then((res) => {
         console.log(res)
         if (res.status === 200) {
@@ -164,8 +161,7 @@ const Signup = () => {
       available.available &&
       emailDuplication.status
     ) {
-      axios
-        .post(`${localhost}/api/members`, data)
+      Axios.post('/api/members', data)
         .then((res) => {
           console.log(res)
           if (res.status === 201) {

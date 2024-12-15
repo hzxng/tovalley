@@ -1,12 +1,10 @@
 import { useState } from 'react'
 import styles from '@styles/home/PopularValley.module.scss'
-import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { NationalPopularWaterPlaces } from 'types/main'
 import useCarousel from '@hooks/useCarousel'
 import Category from '@component/Category'
-
-const localhost = process.env.REACT_APP_HOST
+import { Axios } from '@utils/axios_interceptor'
 
 const PopularValley = ({ place }: { place: NationalPopularWaterPlaces[] }) => {
   const [popularValley, setPopularValley] =
@@ -28,12 +26,9 @@ const PopularValley = ({ place }: { place: NationalPopularWaterPlaces[] }) => {
 
   const getPopluarValley = async (cond: string) => {
     try {
-      const { data } = await axios.get(
-        `${localhost}/api/main-page/popular-water-places`,
-        {
-          params: { cond },
-        }
-      )
+      const { data } = await Axios.get('/api/main-page/popular-water-places', {
+        params: { cond },
+      })
       setPopularValley(data.data)
     } catch (error) {
       console.error(error)

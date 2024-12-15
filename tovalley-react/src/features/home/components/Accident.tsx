@@ -1,14 +1,12 @@
 import styles from '@styles/home/Accident.module.scss'
 import { MdNavigateNext, MdNavigateBefore } from 'react-icons/md'
 import { useRef, useState } from 'react'
-import axios from 'axios'
 import { AccidentCountDto } from 'types/main'
 import { province } from '../utils/regions'
 import AccidentTable from '@component/AccidentTable'
 import AccidentChart from './AccidentChart'
 import cn from 'classnames'
-
-const localhost = process.env.REACT_APP_HOST
+import { Axios } from '@utils/axios_interceptor'
 
 const Accident = ({ accident }: { accident: AccidentCountDto }) => {
   const [regionAccident, setRegionAccident] =
@@ -31,7 +29,7 @@ const Accident = ({ accident }: { accident: AccidentCountDto }) => {
 
   const getRegionAccident = async (region: { ko: string; en: string }) => {
     try {
-      const { data } = await axios.get(`${localhost}/api/main-page/accidents`, {
+      const { data } = await Axios.get('/api/main-page/accidents', {
         params: {
           province: region.en,
         },

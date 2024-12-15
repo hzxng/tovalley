@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import styles from '@styles/lostItem/ValleyModal.module.scss'
 import { MdClose } from 'react-icons/md'
-import axios from 'axios'
 import { PlaceName } from 'types/lost-found'
 import Modal from '@component/Modal'
 import WaterPlaceName from './WaterPlaceName'
-
-const localhost = process.env.REACT_APP_HOST
+import { Axios } from '@utils/axios_interceptor'
 
 const ValleyModal = ({
   closeModal,
@@ -46,7 +44,7 @@ const ValleyModal = ({
   useEffect(() => {
     const getWaterPlaceList = async () => {
       try {
-        const res = await axios.get(`${localhost}/api/water-place`)
+        const res = await Axios.get('/api/water-place')
         setWaterPlaceList(res.data.data)
       } catch (err) {
         console.log(err)
