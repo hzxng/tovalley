@@ -1,40 +1,51 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 const useCarousel = ({
-  transition,
-  count,
+  duration,
+  interval,
   length,
 }: {
-  transition: string
-  count: number
+  duration: number
+  interval: number
   length: number
 }) => {
-  const [num, setNum] = useState(0)
-  const [carouselTransition, setCarouselTransition] = useState(transition)
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [carouselTransition, setCarouselTransition] = useState(
+    `transform ${duration}ms ease-in-out`
+  )
 
-  function handleOriginSlide(index: number) {
-    setTimeout(() => {
-      setNum(index)
-      setCarouselTransition('')
-    }, 500)
-  }
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  const resetSlidePosition = useCallback(
+    (index: number) => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+      timeoutRef.current = setTimeout(() => {
+        setCarouselTransition('')
+        setCurrentIndex(index)
+      }, duration)
+    },
+    [duration]
+  )
 
   useEffect(() => {
+    if (length <= 1) return
+
     const timer = setInterval(() => {
-      //   setNum((num) => num + 1)
-      setCarouselTransition(transition)
-    }, count)
+      // setCurrentIndex((prevIndex) => prevIndex + 1)
+      setCarouselTransition(`transform ${duration}ms ease-in-out`)
+    }, interval)
 
     return () => {
       clearInterval(timer)
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
     }
-  }, [count, transition])
+  }, [interval, duration, length])
 
   useEffect(() => {
-    if (num === length) handleOriginSlide(0)
-  }, [num, length])
+    if (currentIndex === length) resetSlidePosition(0)
+  }, [currentIndex, length, resetSlidePosition])
 
-  return { num, carouselTransition }
+  return { currentIndex, carouselTransition }
 }
 
 export default useCarousel

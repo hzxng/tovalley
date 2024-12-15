@@ -75,13 +75,13 @@ const WeatherDetail = ({
           </div>
         </div>
         <div className={styles.weatherAddList}>
-          {detailMenu.map((item, index) => {
+          {detailMenu.map(({ type, content, unit }, index) => {
             return (
-              <div className={styles.weatherAdd} key={`${index}-${item}`}>
-                <span>{item.type}</span>
+              <div className={styles.weatherAdd} key={index}>
+                <span>{type}</span>
                 <div>
-                  <span>{item.content}</span>
-                  <span>{item.unit}</span>
+                  <span>{content}</span>
+                  <span>{unit}</span>
                 </div>
               </div>
             )

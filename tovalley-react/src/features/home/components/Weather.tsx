@@ -6,6 +6,7 @@ import WeatherDate from './WeatherDate'
 import RegionComponent from './RegionComponent'
 import Report from './Report'
 import WeatherDetail from './WeatherDetail'
+import { getPublicUrl } from '@utils/getPublicUrl'
 
 const Weather = ({
   nationalWeather,
@@ -14,39 +15,36 @@ const Weather = ({
   nationalWeather: NationalWeather[]
   alert: WeatherAlert
 }) => {
-  const [weatherDate, setWeatherDate] = useState<NationalWeather>(
-    nationalWeather[0]
-  )
-  const [regionClicked, setRegionClicked] = useState<DailyNationalWeather>(
-    nationalWeather[0].dailyNationalWeather[1]
-  )
+  const [weatherDate, setWeatherDate] = useState<NationalWeather | null>(null)
+  const [regionClicked, setRegionClicked] =
+    useState<DailyNationalWeather | null>(null)
 
   useEffect(() => {
-    setRegionClicked(weatherDate.dailyNationalWeather[1])
-  }, [weatherDate])
+    if (nationalWeather.length > 0) {
+      setWeatherDate(nationalWeather[0])
+      setRegionClicked(nationalWeather[0].dailyNationalWeather[2])
+    }
+  }, [nationalWeather])
+
+  const handleWeatherDateChange = (newWeatherDate: NationalWeather) => {
+    setWeatherDate(newWeatherDate)
+    setRegionClicked(newWeatherDate.dailyNationalWeather[3])
+  }
+
+  if (!weatherDate || !regionClicked) return <div>error</div>
 
   return (
     <div className={styles.weather}>
       <h4>전국날씨</h4>
-      <div className={styles.dayContainer}>
-        {nationalWeather.map((item, index) => {
-          return (
-            <WeatherDate
-              key={index}
-              item={item}
-              weatherDate={weatherDate}
-              setWeatherDate={setWeatherDate}
-            />
-          )
-        })}
-      </div>
+      <WeatherDate
+        nationalWeather={nationalWeather}
+        weatherDate={weatherDate}
+        setWeatherDate={handleWeatherDateChange}
+      />
       <div className={styles.weatherInfo}>
         <div className={styles.weatherMap}>
           <div className={styles.weatherMapContainer}>
-            <img
-              src={process.env.PUBLIC_URL + '/img/map_img.png'}
-              alt="지도 이미지"
-            ></img>
+            <img src={getPublicUrl('/img/map_img.png')} alt="지도 이미지"></img>
             {regions.map((item, index) => {
               return (
                 <RegionComponent

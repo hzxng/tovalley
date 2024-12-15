@@ -7,18 +7,17 @@ import { WeatherAlert, WeatherAlerts, WeatherPreAlerts } from 'types/main'
 
 const Report = ({ alert }: { alert: WeatherAlert }) => {
   // const alert = data.weatherAlert
-  const [alertActive, setAlertActive] = useState<boolean>(true)
+  const [alertActive, setAlertActive] = useState(true)
 
-  let currAlertList: WeatherAlerts[] = alert.weatherAlerts
-  let currPreAlertList: WeatherPreAlerts[] = alert.weatherPreAlerts
-
-  if (alert.weatherAlerts.length > 1) {
-    currAlertList = [...alert.weatherAlerts, alert.weatherAlerts[0]]
+  const getProcessedAlertList = (
+    alerts: WeatherAlerts[] | WeatherPreAlerts[]
+  ) => {
+    return alerts.length > 1 ? [...alerts, alerts[0]] : alerts
   }
 
-  if (alert.weatherPreAlerts.length > 1) {
-    currPreAlertList = [...alert.weatherPreAlerts, alert.weatherPreAlerts[0]]
-  }
+  const alerts = alertActive ? alert.weatherAlerts : alert.weatherPreAlerts
+  const processedAlertList = getProcessedAlertList(alerts)
+  const weatherAlertsLength = alerts.length
 
   return (
     <div className={styles.report}>
@@ -30,10 +29,8 @@ const Report = ({ alert }: { alert: WeatherAlert }) => {
         />
       </div>
       <ReportContainer
-        weatherAlert={
-          alertActive ? alert.weatherAlerts : alert.weatherPreAlerts
-        }
-        currAlertList={alertActive ? currAlertList : currPreAlertList}
+        weatherAlertsLength={weatherAlertsLength}
+        processedAlertList={processedAlertList}
       />
     </div>
   )

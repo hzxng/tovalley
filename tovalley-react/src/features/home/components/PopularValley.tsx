@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import styles from '@styles/home/PopularValley.module.scss'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
@@ -14,44 +14,30 @@ const PopularValley = ({ place }: { place: NationalPopularWaterPlaces[] }) => {
   const [clicked, setClicked] = useState<string>('평점')
 
   const navigation = useNavigate()
-  const { num, carouselTransition } = useCarousel({
-    transition: 'transform 500ms ease-in-out',
-    count: 2500,
+  const { currentIndex, carouselTransition } = useCarousel({
+    duration: 500,
+    interval: 2500,
     length: popularValley.length,
   })
 
-  const [currList, setCurrList] = useState<NationalPopularWaterPlaces[]>([
-    popularValley[popularValley.length - 1],
-    ...popularValley,
-    popularValley[0],
-  ])
+  const getProcessedPopularList = () => {
+    if (popularValley.length === 0) return []
+    const extraItems = popularValley.slice(0, 4)
+    return [...popularValley, ...extraItems]
+  }
 
-  useEffect(() => {
-    if (popularValley.length !== 0) {
-      setCurrList([
-        ...popularValley,
-        popularValley[0],
-        popularValley[1],
-        popularValley[2],
-        popularValley[3],
-      ])
+  const getPopluarValley = async (cond: string) => {
+    try {
+      const { data } = await axios.get(
+        `${localhost}/api/main-page/popular-water-places`,
+        {
+          params: { cond },
+        }
+      )
+      setPopularValley(data.data)
+    } catch (error) {
+      console.error(error)
     }
-  }, [popularValley])
-
-  const getPopluarValley = (cond: string) => {
-    const config = {
-      params: {
-        cond,
-      },
-    }
-
-    axios
-      .get(`${localhost}/api/main-page/popular-water-places`, config)
-      .then((res) => {
-        // console.log(res)
-        setPopularValley(res.data.data)
-      })
-      .catch((err) => console.log(err))
   }
 
   const MobilePopularValley = () => {
@@ -88,21 +74,18 @@ const PopularValley = ({ place }: { place: NationalPopularWaterPlaces[] }) => {
     <div className={styles.popularValley}>
       <h4>전국 인기 물놀이 장소</h4>
       <div className={styles.category}>
-        <Category
-          category={{ ko: '평점', en: 'RATING' }}
-          clicked={clicked}
-          setClicked={setClicked}
-          getData={getPopluarValley}
-        />
-        <Category
-          category={{ ko: '리뷰', en: 'REVIEW' }}
-          clicked={clicked}
-          setClicked={setClicked}
-          getData={getPopluarValley}
-        />
+        {['평점', '리뷰'].map((ko, idx) => (
+          <Category
+            key={idx}
+            category={{ ko, en: ko === '평점' ? 'RATING' : 'REVIEW' }}
+            clicked={clicked}
+            setClicked={setClicked}
+            getData={getPopluarValley}
+          />
+        ))}
       </div>
       <div className={styles.popularList}>
-        {currList.map((item, index) => {
+        {getProcessedPopularList().map((item, index) => {
           return (
             <div
               key={index}
@@ -112,16 +95,17 @@ const PopularValley = ({ place }: { place: NationalPopularWaterPlaces[] }) => {
               }}
               style={{
                 transition: `${carouselTransition}`,
-                transform: `translateX(-${num}00%)`,
+                transform: `translateX(-${currentIndex}00%)`,
               }}
             >
-              <span>{index + 1 <= 8 ? index + 1 : (index + 1) % 8}</span>
+              <span>
+                {(index + 1) % popularValley.length || popularValley.length}
+              </span>
               <div className={styles.valleyItemImg}>
                 <img
                   src={
-                    !item.waterPlaceImageUrl
-                      ? process.env.PUBLIC_URL + '/img/default-image.png'
-                      : item.waterPlaceImageUrl
+                    item.waterPlaceImageUrl ??
+                    process.env.PUBLIC_URL + '/img/default-image.png'
                   }
                   alt="계곡 이미지"
                   width="100%"

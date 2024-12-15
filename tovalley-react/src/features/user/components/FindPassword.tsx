@@ -1,90 +1,101 @@
 import { useState } from 'react'
 import FindInfoForm from './FindInfoForm'
-import axios from 'axios'
 import useTimer, { MINUTES_IN_MS } from '@hooks/useTimer'
 import SubmitCode from './SubmitCode'
 import Input from '@component/Input'
 import styles from '@styles/user/FindPassword.module.scss'
+import { Axios } from '@utils/axios_interceptor'
 
-const localhost = process.env.REACT_APP_HOST
+interface FindPasswordProps {
+  email: string
+  setEmail: React.Dispatch<React.SetStateAction<string>>
+  setPwResetModal: React.Dispatch<React.SetStateAction<boolean>>
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>
+}
 
 const FindPassword = ({
   email,
   setEmail,
   setPwResetModal,
   setLoading,
-}: {
-  email: string
-  setEmail: React.Dispatch<React.SetStateAction<string>>
-  setPwResetModal: React.Dispatch<React.SetStateAction<boolean>>
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>
-}) => {
-  const [inputText, setInputText] = useState('')
+}: FindPasswordProps) => {
+  const [verifyCode, setVerifyCode] = useState('')
   const [isSubmit, setIsSubmit] = useState(false)
   const { setTimeLeft } = useTimer()
 
-  const handleEmailInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value)
   }
 
-  const authEmail = () => {
-    const data = {
-      email,
-    }
+  const requestAuthEmail = async () => {
+    if (!email) return
 
-    setLoading(true)
+    try {
+      setLoading(true)
+      const response = await Axios.post('/api/email-code', { email })
 
-    axios
-      .post(`${localhost}/api/email-code`, data)
-      .then((res) => {
-        console.log(res)
+      if (response.status === 200) {
         setLoading(false)
         setIsSubmit(true)
         setTimeLeft(MINUTES_IN_MS)
-      })
-      .catch((err) => {
-        console.log(err)
-        setLoading(false)
-        if (err.response.status === 400) {
-          if (err.response.data.msg === '유효성검사 실패') {
-            alert('이메일 형식을 맞춰주세요.')
-          } else if (err.response.data.msg === '이메일 수신함을 확인하세요') {
-            setIsSubmit(true)
-            alert(err.response.data.msg)
-          } else {
-            setTimeLeft(0)
-          }
-        }
-      })
+      }
+    } catch (error: any) {
+      setLoading(false)
+      handleEmailError(error)
+    }
   }
 
-  const authCode = () => {
-    const config = {
-      params: {
-        email,
-        verifyCode: inputText,
-      },
+  const handleEmailError = (error: any) => {
+    if (error.response?.status === 400) {
+      const errorMessage = error.response.data?.msg || '이메일 인증 요청 실패'
+      if (errorMessage === '유효성검사 실패') {
+        alert('올바른 이메일 형식을 입력하세요.')
+      } else if (errorMessage === '이메일 수신함을 확인하세요') {
+        setIsSubmit(true)
+        alert(errorMessage)
+      }
+    } else {
+      setTimeLeft(0)
+      alert('이메일 인증 요청 중 오류가 발생했습니다. 다시 시도해주세요.')
     }
+  }
 
-    setLoading(true)
+  const verifyAuthCode = async () => {
+    if (!verifyCode) return
 
-    axios
-      .get(`${localhost}/api/email-code`, config)
-      .then((res) => {
+    try {
+      setLoading(true)
+      const config = {
+        params: {
+          email,
+          verifyCode,
+        },
+      }
+      const response = await Axios.get('/api/email-code', config)
+
+      if (response.status === 200) {
         setLoading(false)
-        res.status === 200 && setPwResetModal(true)
-      })
-      .catch((err) => {
-        setLoading(false)
-        setInputText('')
-        if (err.response.status === 400) {
-          if (err.response.data.msg === '이메일 인증에 실패했습니다') {
-            alert(err.response.data.msg)
-          } else {
-            alert('잠시 후 다시 시도해주세요.')
-          }
-        }
-      })
+        alert('인증에 성공했습니다.')
+        setPwResetModal(true)
+      }
+    } catch (error: any) {
+      setLoading(false)
+      setVerifyCode('')
+      handleCodeError(error)
+    }
+  }
+
+  const handleCodeError = (error: any) => {
+    if (error.response?.status === 400) {
+      const errorMessage = error.response.data?.msg || '인증 코드 확인 실패'
+      if (errorMessage === '이메일 인증에 실패했습니다') {
+        alert(errorMessage)
+      } else {
+        alert('잠시 후 다시 시도해주세요.')
+      }
+    } else {
+      alert('인증 코드 확인 중 오류가 발생했습니다. 다시 시도해주세요.')
+    }
   }
 
   return (
@@ -97,13 +108,13 @@ const FindPassword = ({
           type="email"
           placeholder="이메일"
           value={email}
-          onChange={(e) => handleEmailInput(e)}
+          onChange={(e) => handleEmailChange(e)}
         />
-        <button onClick={() => email && authEmail()}>비밀번호 찾기</button>
+        <button onClick={requestAuthEmail}>비밀번호 찾기</button>
       </FindInfoForm>
       {isSubmit && (
         <div className={styles.confirmCode}>
-          <SubmitCode authCode={authCode} email={email} />
+          <SubmitCode authCode={verifyAuthCode} email={email} />
         </div>
       )}
     </>
