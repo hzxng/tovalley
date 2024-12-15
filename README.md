@@ -41,9 +41,9 @@
   <span><img src="https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=black"/></span>
    <span><img src="https://img.shields.io/badge/Redux-764ABC?style=flat-square&logo=redux&logoColor=white"/></span>
   <span><img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white"/></span>
-   <span><img src="https://img.shields.io/badge/SCSS-CC6699?style=flat-square&logo=scss&logoColor=white"/></span>
+   <span><img src="https://img.shields.io/badge/SCSS-CC6699?style=flat-square&logo=sass&logoColor=white"/></span>
   <span><img src="https://img.shields.io/badge/CSS Module-000000?style=flat-square&logo=css3&logoColor=white"/></span>
-  <span><img src="https://img.shields.io/badge/Styled--Component-DB7093?style=flat-square&logo=styled-components&logoColor=white"/></span>
+  <span><img src="https://img.shields.io/badge/Styled--Components-DB7093?style=flat-square&logo=styled-components&logoColor=white"/></span>
 </div>
 
 **데이터베이스 및 캐싱**
@@ -108,6 +108,7 @@
 
 ### 🏠 홈페이지
 - 전국 날씨 지도, 특보 정보, 물놀이 사고 발생 수 그래프, 인기 물놀이 장소 목록 등의 정보 제공
+- 캐러셀 커스텀 훅 구현([자세히 보기](https://velog.io/@hajeong/React-%EC%BA%90%EB%9F%AC%EC%85%80-%EC%BB%A4%EC%8A%A4%ED%85%80-%ED%9B%85-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0)), Chart.js를 사용한 그래프 구현
 
 <details>
 <summary>홈페이지 GIF 보기</summary>
@@ -118,6 +119,7 @@
 
 ### 🏊 물놀이 장소 상세 정보
 - 물놀이 장소, 주변 의료시설의 위치, 날씨 정보, 수질 정보, 혼잡도 정보 및 사용자 리뷰 제공
+- Google Maps API 사용, Styled-Components와 Date 객체를 활용한 캘린더 구현
 
 <details>
 <summary>물놀이 장소 상세 정보 페이지 GIF 보기</summary>
@@ -138,11 +140,16 @@
 </details>
 
 ### 💬 실시간 채팅 및 알림
-- WebSocket, STOMP, Kafka, MongoDB, Redis, MySQL를 사용한 실시간 채팅 및 알림 기능을 제공
+- WebSocket을 사용한 실시간 채팅 및 알림 기능 제공
+- STOMP, Kafka, MongoDB, Redis, MySQL 
   - **Kafka**: 메시지 브로커로 사용하여 채팅 및 알림 기능의 성능을 개선
   - **MongoDB**: 채팅 메시지 저장, 유연한 데이터 저장 및 빠른 데이터 조회
   - **Redis**: 채팅방 입장 상태와 같이 빈번하게 조회되는 데이터의 캐싱을 위해 사용
   - **MySQL**: 채팅방 목록이나 채팅 알림 정보와 함께 사용자 정보를 한 번에 조회하기 위해 사용
+- Stomp.js, SockJS
+  - **Stomp.js**: 메시지 브로커와 통신을 위한 STOMP 프로토콜 클라이언트
+  - **SockJS**: WebSocket이 지원되지 않는 환경에서 실시간 통신을 제공
+  - **Redux**: 웹소켓 client와 채팅 알림에 전역 상태관리를 위해 사용
 
 <details>
 <summary>실시간 채팅 GIF 보기</summary>
@@ -178,17 +185,6 @@
 
 ## 📈**성능 최적화 및 트러블 슈팅**
 프로젝트 진행 과정에서 발생한 성능 최적화 및 트러블 슈팅 사례를 공유합니다.<br/>
-### 채팅 및 알림 기능 성능 개선 ([자세히 보기](https://yenjjun187.tistory.com/1003))
-- **String** : 시간대 변환 후 저장 -> **LocalDateTime**: 저장 후 시간대 변환
-- **Kafka 사용**
-  - 채팅 및 알림 토픽 각각을 **2개의 파티션**으로 분할하고 **2개의 컨슈머** 할당
-    - **fetch.min.bytes**와 **fetch.max.wait.ms** 설정 최적화
-    - TPS: **144.7** -> **638.4** (**약 341.2% 성능 개선**)
-
-### 채팅 메시지 순서 불일치 문제 해결
-- 원인: 채팅 토픽의 **파티션 분할**로 인한 메시지 순서 불일치 문제
-- 해결: **키 기반 파티셔닝** 도입(채팅방 ID를 키로하여 동일 채팅방의 메시지를 같은 파티션으로 전송되도록 구현)
-
 ### 웹소켓 통신 과정에서 사용자 토큰 검증
 - 원인: http-only 쿠키에 저장된 사용자 토큰 검증 필요
 - 해결: **HttpHandshakeInterceptor**와 **웹소켓 세션**을 통한 사용자 토큰 검증 및 정보 관리
@@ -197,8 +193,21 @@
 - 원인: 오프셋 기반 실시간 채팅 메시지 목록 조회 -> 중복 데이터 조회
 - 해결: **커서(채팅 메시지 ID) 기반 페이지네이션** 방식 적용
 
+### 채팅 전송 시 커서 이동 문제
+- 원인: useEffect 의존성 배열 문제 -> ref.current를 사용하기 때문에 DOM 요소 변경 가능성 존재
+- 해결: 하단 엘리먼트에 연결한 **ref**를 **의존성 배열**에 추가
+
+### 캐러셀 메모리 누수 관리
+- 원인: setTimeout으로 생성한 타이머 방치
+- 해결: 타이머를 **ref**로 관리하여 새로운 타이머 생성 시와 컴포넌트 **언마운트** 시 타이머 해제
+
 ## 👍기술적 의사 결정
 ### 채팅 기능 3개의 데이터베이스 선택 및 사용 이유 ([자세히 보기](https://yenjjun187.tistory.com/996))
 - **MongoDB**: 채팅 메시지의 데이터 구조 변화의 유연성, 빠른 데이터 조회
 - **Redis**: 채팅방 입장 상태의 빈번한 데이터 조회
 - **MySQL**: 채팅방 및 채팅 알림 조회 시 사용자 정보도 함께 조회 가능
+### 프론트엔드 기술 스택 선택 및 리팩토링 ([자세히 보기](https://velog.io/@hajeong/To%EA%B3%84%EA%B3%A1-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%EB%A6%AC%ED%8C%A9%ED%86%A0%EB%A7%81))
+- **React**: SSR이 필요하지 않으며 간단한 배포 가능
+- **SCSS**: 효율적이고 재사용 가능한 스타일을 작성
+- **Chart.js**: 가볍고 성능이 좋아 커스텀이 크게 필요하지 않은 그래프에서 효율적
+
