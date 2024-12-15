@@ -18,8 +18,29 @@ const FindInfoModal = ({
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const isEmail = () => {
-    return findInfo === '아이디'
+  const renderContent = () => {
+    if (pwResetModal) {
+      return (
+        <PasswordReset
+          email={email}
+          closeModal={closeModal}
+          setLoading={setLoading}
+        />
+      )
+    }
+
+    if (findInfo === '아이디') {
+      return <FindEmail setLoading={setLoading} />
+    }
+
+    return (
+      <FindPassword
+        email={email}
+        setEmail={setEmail}
+        setPwResetModal={setPwResetModal}
+        setLoading={setLoading}
+      />
+    )
   }
 
   return (
@@ -28,24 +49,7 @@ const FindInfoModal = ({
         <span className={styles.modalClose} onClick={closeModal}>
           <MdOutlineClose color="#B8B8B8" size="30px" />
         </span>
-        {!pwResetModal ? (
-          isEmail() ? (
-            <FindEmail setLoading={setLoading} />
-          ) : (
-            <FindPassword
-              email={email}
-              setEmail={setEmail}
-              setPwResetModal={setPwResetModal}
-              setLoading={setLoading}
-            />
-          )
-        ) : (
-          <PasswordReset
-            email={email}
-            closeModal={closeModal}
-            setLoading={setLoading}
-          />
-        )}
+        {renderContent()}
         {loading && <FindModalLoading />}
       </div>
     </Modal>

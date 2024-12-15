@@ -13,45 +13,33 @@ const localhost = process.env.REACT_APP_HOST
 const Accident = ({ accident }: { accident: AccidentCountDto }) => {
   const [regionAccident, setRegionAccident] =
     useState<AccidentCountDto>(accident)
+  const [clicked, setClicked] = useState(accident.province)
+  const [isNext, setIsNext] = useState(false)
 
-  const [clicked, setClicked] = useState<string>(accident.province)
-  const [next, setNext] = useState<boolean>(false)
-
-  const scroll = useRef<HTMLDivElement>(null)
-  const scrollPrev = useRef<HTMLDivElement>(null)
-
-  const onMove = () => {
-    scroll.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
-  }
-  const onMovePrev = () => {
-    scrollPrev.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+  const scrollRefs = {
+    prev: useRef<HTMLDivElement>(null),
+    next: useRef<HTMLDivElement>(null),
   }
 
-  const handleNext = () => {
-    setNext(true)
-    onMove()
+  const handleScroll = (direction: 'prev' | 'next') => {
+    scrollRefs[direction].current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'end',
+    })
+    setIsNext(direction === 'next')
   }
 
-  const handlePrev = () => {
-    setNext(false)
-    onMovePrev()
-  }
-
-  const getRegionAccident = (region: { ko: string; en: string }) => {
-    const config = {
-      params: {
-        province: region.en,
-      },
+  const getRegionAccident = async (region: { ko: string; en: string }) => {
+    try {
+      const { data } = await axios.get(`${localhost}/api/main-page/accidents`, {
+        params: {
+          province: region.en,
+        },
+      })
+      setRegionAccident(data.data)
+    } catch (err) {
+      console.error(err)
     }
-    axios
-      .get(`${localhost}/api/main-page/accidents`, config)
-      .then((res) => {
-        // console.log(res)
-        setRegionAccident(res.data.data)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
   }
 
   return (
@@ -63,7 +51,7 @@ const Accident = ({ accident }: { accident: AccidentCountDto }) => {
             return (
               <div key={index}>
                 {index === 0 && (
-                  <span ref={scrollPrev} className={styles.blank}>
+                  <span ref={scrollRefs.prev} className={styles.blank}>
                     ㅤ
                   </span>
                 )}
@@ -77,19 +65,25 @@ const Accident = ({ accident }: { accident: AccidentCountDto }) => {
                   {item.ko}
                 </span>
                 {index === province.length - 1 && (
-                  <span ref={scroll} className={styles.blank}>
+                  <span ref={scrollRefs.next} className={styles.blank}>
                     ㅤ
                   </span>
                 )}
               </div>
             )
           })}
-          {next ? (
-            <span className={styles.regionPrevBtn} onClick={handlePrev}>
+          {isNext ? (
+            <span
+              className={styles.regionPrevBtn}
+              onClick={() => handleScroll('prev')}
+            >
               <MdNavigateBefore size="30px" />
             </span>
           ) : (
-            <span className={styles.regionNextBtn} onClick={handleNext}>
+            <span
+              className={styles.regionNextBtn}
+              onClick={() => handleScroll('next')}
+            >
               <MdNavigateNext size="30px" />
             </span>
           )}

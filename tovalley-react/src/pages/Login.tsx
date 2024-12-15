@@ -11,17 +11,13 @@ import axiosInstance from '@utils/axios_interceptor'
 const cookies = new Cookies()
 
 const Login = () => {
-  const [login, setLogin] = useState<{
-    email: string
-    password: string
-    passwordConfirm: boolean
-  }>({
+  const [login, setLogin] = useState({
     email: '',
     password: '',
     passwordConfirm: false,
   })
 
-  const [findInfo, setFindInfo] = useState<string>('')
+  const [findInfo, setFindInfo] = useState('')
 
   const navigation = useNavigate()
 
@@ -35,10 +31,8 @@ const Login = () => {
   }, [])
 
   const handleLogin = () => {
-    const data = {
-      username: login.email,
-      password: login.password,
-    }
+    const { email, password } = login
+    const data = { username: email, password }
 
     axiosInstance
       .post('/api/login', data)
@@ -50,19 +44,14 @@ const Login = () => {
       })
   }
 
-  const closeModal = () => {
-    setFindInfo('')
-  }
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    type: string
+    field: string
   ) => {
-    if (type === 'email') {
-      setLogin({ ...login, email: e.target.value })
-    } else {
-      setLogin({ ...login, password: e.target.value })
-    }
+    setLogin((prev) => ({
+      ...prev,
+      [field]: e.target.value,
+    }))
   }
 
   const enterEvent = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -77,6 +66,10 @@ const Login = () => {
 
   const moveToSignUp = () => {
     navigation('/signup')
+  }
+
+  const closeModal = () => {
+    setFindInfo('')
   }
 
   return (

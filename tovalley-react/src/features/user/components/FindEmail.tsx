@@ -1,43 +1,43 @@
 import { useState } from 'react'
-import axios from 'axios'
 import FindInfoForm from './FindInfoForm'
 import Input from '@component/Input'
-
-const localhost = process.env.REACT_APP_HOST
+import { Axios } from '@utils/axios_interceptor'
 
 const FindEmail = ({
   setLoading,
 }: {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
-  const [inputText, setInputText] = useState('')
-  const [alert, setAlert] = useState('')
+  const [email, setEmail] = useState('')
+  const [message, setMessage] = useState<string | null>(null)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputText(e.target.value)
+    setEmail(e.target.value)
+    setMessage(null) // 입력 중 메시지 초기화
   }
 
-  const handleFindId = () => {
-    const config = {
-      params: {
-        email: inputText,
-      },
-    }
+  const handleFindEmail = async () => {
+    if (!email) return
 
     setLoading(true)
 
-    axios
-      .get(`${localhost}/api/members/find-id`, config)
-      .then((res) => {
-        setLoading(false)
-        res.status === 200 && setAlert('등록된 이메일입니다.')
-      })
-      .catch((err) => {
-        setLoading(false)
-        if (err.response.status === 400) {
-          setAlert('등록된 이메일이 아닙니다.')
-        }
-      })
+    try {
+      const config = { params: { email } }
+      const response = await Axios.get('/api/members/find-id', config)
+
+      if (response.status === 200) {
+        setMessage('등록된 이메일입니다.')
+      }
+    } catch (error: any) {
+      if (error.response?.status === 400) {
+        setMessage('등록된 이메일이 아닙니다.')
+      } else {
+        console.error('아이디 찾기 요청 중 오류 발생:', error)
+        setMessage('오류가 발생했습니다. 다시 시도해주세요.')
+      }
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -48,11 +48,11 @@ const FindEmail = ({
       <Input
         type="email"
         placeholder="이메일"
-        value={inputText}
+        value={email}
         onChange={(e) => handleChange(e)}
       />
-      <button onClick={() => inputText && handleFindId()}>아이디 찾기</button>
-      <span>{alert && alert}</span>
+      <button onClick={handleFindEmail}>아이디 찾기</button>
+      {message && <span>{message}</span>}
     </FindInfoForm>
   )
 }

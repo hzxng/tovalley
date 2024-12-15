@@ -12,26 +12,26 @@ const ReportComponent = styled.div<ReportProps>`
   background-color: ${({ color }) => color};
 `
 
+const isWeatherAlerts = (
+  alert: WeatherAlerts | WeatherPreAlerts
+): alert is WeatherAlerts => {
+  return (alert as WeatherAlerts).effectiveTime !== undefined
+}
+
 const ReportContainer = ({
-  weatherAlert,
-  currAlertList,
+  weatherAlertsLength,
+  processedAlertList,
 }: {
-  weatherAlert: WeatherAlerts[] | WeatherPreAlerts[]
-  currAlertList: WeatherAlerts[] | WeatherPreAlerts[]
+  weatherAlertsLength: number
+  processedAlertList: (WeatherAlerts | WeatherPreAlerts)[]
 }) => {
-  const { num, carouselTransition } = useCarousel({
-    transition: 'transform 600ms ease-in-out',
-    count: 5000,
-    length: weatherAlert.length,
+  const { currentIndex, carouselTransition } = useCarousel({
+    duration: 600,
+    interval: 5000,
+    length: weatherAlertsLength,
   })
 
-  function isWeatherAlerts(
-    alert: WeatherAlerts | WeatherPreAlerts
-  ): alert is WeatherAlerts {
-    return (alert as WeatherAlerts).effectiveTime !== undefined
-  }
-
-  if (weatherAlert.length === 0) {
+  if (weatherAlertsLength === 0) {
     return (
       <div className={styles.reportList}>
         <div className={styles.defaultAlert}>
@@ -44,20 +44,16 @@ const ReportContainer = ({
 
   return (
     <div className={styles.reportList}>
-      {currAlertList.map((item, index) => {
+      {processedAlertList.map((item, index) => {
         const { Icon, titleColor, contentColor } = ReportType(item.title)
         return (
           <div
             key={index}
             className={styles.reportItem}
-            style={
-              currAlertList.length > 1
-                ? {
-                    transition: `${carouselTransition}`,
-                    transform: `translateX(-${num}00%)`,
-                  }
-                : {}
-            }
+            style={{
+              transition: `${carouselTransition}`,
+              transform: `translateX(-${currentIndex}00%)`,
+            }}
           >
             <div className={styles.reportItemContainer}>
               <ReportComponent

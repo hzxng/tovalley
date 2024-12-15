@@ -5,28 +5,30 @@ import { getDayOfWeek } from '@utils/getDayOfWeek'
 import { dateFormat } from '@utils/dateFormat'
 
 const WeatherDate = ({
-  item,
+  nationalWeather,
   weatherDate,
   setWeatherDate,
 }: {
-  key: number
-  item: NationalWeather
+  nationalWeather: NationalWeather[]
   weatherDate: NationalWeather
-  setWeatherDate: React.Dispatch<React.SetStateAction<NationalWeather>>
+  setWeatherDate: (newWeatherDate: NationalWeather) => void
 }) => {
-  const clickWeatherDate = (el: NationalWeather) => {
-    setWeatherDate(el)
-  }
-
   return (
-    <div
-      onClick={() => clickWeatherDate(item)}
-      className={cn(styles.date, {
-        [styles.dateClicked]: weatherDate === item,
+    <div className={styles.dayContainer}>
+      {nationalWeather.map((item) => {
+        return (
+          <div
+            key={item.weatherDate}
+            onClick={() => setWeatherDate(item)}
+            className={cn(styles.date, {
+              [styles.dateClicked]: weatherDate === item,
+            })}
+          >
+            <span>{getDayOfWeek(item.weatherDate)}</span>
+            <span>{dateFormat(item.weatherDate)}</span>
+          </div>
+        )
       })}
-    >
-      <span>{getDayOfWeek(item.weatherDate)}</span>
-      <span>{dateFormat(item.weatherDate)}</span>
     </div>
   )
 }
