@@ -10,19 +10,21 @@ const Wrapper = styled.div<{ appear: string; size: number }>`
   transition: ${({ appear }) => (appear === 'start' ? `all 0.5s` : `all 1s`)};
 `
 
+interface DrawerProps {
+  children: React.ReactNode
+  classNames: { container: string; wrapper: string }
+  size: number
+  isView: boolean
+  isAlarm?: boolean
+}
+
 const Drawer = ({
   children,
   classNames,
   size,
   isView,
   isAlarm,
-}: {
-  children: React.ReactNode
-  classNames: { container: string; wrapper: string }
-  size: number
-  isView: boolean
-  isAlarm?: boolean
-}) => {
+}: DrawerProps) => {
   const [bgForeground, setBgForeground] = useState(false)
   const [appear, setAppear] = useState('')
   const dispatch = useDispatch()
@@ -45,7 +47,7 @@ const Drawer = ({
   useEffect(() => {
     if (isView) {
       setAppear('start')
-      isAlarm ? dispatch(view(false)) : dispatch(setNotificationView(false))
+      dispatch(isAlarm ? view(false) : setNotificationView(false))
     } else {
       setAppear('end')
     }
@@ -56,16 +58,16 @@ const Drawer = ({
       const fadeTimer = setTimeout(() => {
         setBgForeground(true)
       }, 500)
-      return () => {
-        clearTimeout(fadeTimer)
-      }
-    } else setBgForeground(false)
+      return () => clearTimeout(fadeTimer)
+    } else {
+      setBgForeground(false)
+    }
   }, [appear])
 
   return (
     <div
       className={classNames.container}
-      style={!bgForeground ? { zIndex: 20 } : {}}
+      style={!bgForeground ? { zIndex: 20 } : undefined}
     >
       <Wrapper className={classNames.wrapper} appear={appear} size={size}>
         {children}

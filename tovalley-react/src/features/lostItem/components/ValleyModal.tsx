@@ -44,10 +44,10 @@ const ValleyModal = ({
   useEffect(() => {
     const getWaterPlaceList = async () => {
       try {
-        const res = await Axios.get('/api/water-place')
-        setWaterPlaceList(res.data.data)
-      } catch (err) {
-        console.log(err)
+        const response = await Axios.get('/api/water-place')
+        setWaterPlaceList(response.data.data)
+      } catch (error) {
+        console.error('Failed to fetch water places:', error)
       }
     }
     getWaterPlaceList()
@@ -58,48 +58,38 @@ const ValleyModal = ({
     const CHOSUNG_START = 44032
     const CHOSUNG_BASE = 588
 
-    const chosungIndex = Math.floor(
+    const index = Math.floor(
       (word.charCodeAt(0) - CHOSUNG_START) / CHOSUNG_BASE
     )
 
-    return CHOSUNG_LIST[chosungIndex]
+    return CHOSUNG_LIST[index]
   }
 
   const addSelectedList = (place: PlaceName) => {
-    let include = false
-    selectedList.map((item) => {
-      if (item.waterPlaceId === place.waterPlaceId) {
-        include = true
-      }
-      return null
-    })
-
-    if (!include) {
-      const newList = selectedList.concat(place)
-      setSelectedList(newList)
+    if (
+      !selectedList.some((item) => item.waterPlaceId === place.waterPlaceId)
+    ) {
+      setSelectedList((prev) => [...prev, place])
     }
   }
 
   const deleteSelectItem = (place: PlaceName) => {
-    const newList = selectedList.filter((item) => {
-      return item.waterPlaceId !== place.waterPlaceId
-    })
-    setSelectedList(newList)
+    setSelectedList((prev) =>
+      prev.filter((item) => item.waterPlaceId !== place.waterPlaceId)
+    )
   }
 
-  const clickSelect = () => {
+  const handleSelectPlace = () => {
     if (writePage && selectPlace) {
       setSelectedPlace([selectPlace])
-      closeModal()
     } else {
       setSelectedPlace(selectedList)
-      closeModal()
     }
+    closeModal()
   }
 
-  const handleClickPlaceName = (el: PlaceName) => {
-    if (writePage) setSelectPlace(el)
-    else addSelectedList(el)
+  const handleClickPlaceName = (place: PlaceName) => {
+    writePage ? setSelectPlace(place) : addSelectedList(place)
   }
 
   return (
@@ -114,51 +104,53 @@ const ValleyModal = ({
           />
           <div className={styles.searchBtn}>
             <button onClick={closeModal}>취소</button>
-            <button onClick={clickSelect}>선택</button>
+            <button onClick={handleSelectPlace}>선택</button>
           </div>
         </div>
         <div className={styles.scroll}>
-          <div className={styles.selectedPlace}>
-            {!writePage &&
-              selectedList.map((item) => (
-                <div key={item.waterPlaceId}>
-                  <span onClick={() => deleteSelectItem(item)}>
+          {!writePage && (
+            <div className={styles.selectedPlace}>
+              {selectedList.map((place) => (
+                <div key={place.waterPlaceId}>
+                  <span onClick={() => deleteSelectItem(place)}>
                     <MdClose />
                   </span>
-                  <span>{item.waterPlaceName}</span>
+                  <span>{place.waterPlaceName}</span>
                 </div>
               ))}
-          </div>
+            </div>
+          )}
           <div className={styles.placeNameContainer}>
             {searchText
-              ? waterPlaceList.map((el) => {
-                  if (el.waterPlaceName.includes(searchText)) {
-                    return (
-                      <WaterPlaceName
-                        el={el}
-                        writePage={writePage}
-                        selectPlace={selectPlace}
-                        handleClickPlaceName={handleClickPlaceName}
-                      />
-                    )
-                  } else return null
-                })
+              ? waterPlaceList
+                  .filter((place) => place.waterPlaceName.includes(searchText))
+                  .map((place) => (
+                    <WaterPlaceName
+                      key={place.waterPlaceId}
+                      el={place}
+                      writePage={writePage}
+                      selectPlace={selectPlace}
+                      handleClickPlaceName={handleClickPlaceName}
+                    />
+                  ))
               : CHOSUNG_LIST.map((chosung) => {
                   return (
                     <div key={chosung} className={styles.placeNameBox}>
                       <span className={styles.placeTitle}>{chosung}</span>
-                      {waterPlaceList.map((el) => {
-                        if (getInitialSound(el.waterPlaceName) === chosung)
-                          return (
-                            <WaterPlaceName
-                              el={el}
-                              writePage={writePage}
-                              selectPlace={selectPlace}
-                              handleClickPlaceName={handleClickPlaceName}
-                            />
-                          )
-                        else return null
-                      })}
+                      {waterPlaceList
+                        .filter(
+                          (place) =>
+                            getInitialSound(place.waterPlaceName) === chosung
+                        )
+                        .map((place) => (
+                          <WaterPlaceName
+                            key={place.waterPlaceId}
+                            el={place}
+                            writePage={writePage}
+                            selectPlace={selectPlace}
+                            handleClickPlaceName={handleClickPlaceName}
+                          />
+                        ))}
                     </div>
                   )
                 })}

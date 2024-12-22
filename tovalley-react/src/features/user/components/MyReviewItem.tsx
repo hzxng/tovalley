@@ -18,12 +18,14 @@ const MyReviewItem = ({ item }: { item: ReviewContent }) => {
       </div>
       <div className={styles.reviewContent}>
         {item.reviewImages && (
-          <img src={item.reviewImages} alt="리뷰 이미지" width="130px" />
+          <div className={styles.reviewImages}>
+            <img src={item.reviewImages} alt="리뷰 이미지" width="130px" />
+            <span>{item.reviewImages.length}</span>
+          </div>
         )}
-        {item.reviewImages && <span>{item.reviewImages.length}</span>}
         <div
           className={cn(styles.reviewInfo, {
-            [styles.noneImg]: item.reviewImages === null,
+            [styles.noneImg]: !item.reviewImages,
           })}
         >
           <div className={styles.reviewRating}>

@@ -16,24 +16,28 @@ const LostItemUpdate = () => {
   const { category, id } = useParams()
   const { uploadImg, setUploadImg, imgFiles, saveImgFile, handleDeleteImage } =
     useSaveImg()
-  const [currentCategory, setCurrentCategory] = useState(
-    category === 'LOST' ? '찾아요' : '찾았어요'
+  const [currentCategory, setCurrentCategory] = useState<'LOST' | 'FOUND'>(
+    category === 'LOST' ? 'LOST' : 'FOUND'
   )
-  const clickCategory = (category: string) => {
-    setCurrentCategory(category)
-  }
-  const [write, setWrite] = useState({
-    title: '',
-    content: '',
-  })
+  const [formData, setFormData] = useState({ title: '', content: '' })
   const [modalView, setModalView] = useState(false)
   const [selectedPlace, setSelectedPlace] = useState<PlaceName[]>([])
+  const [modalConfig, setModalConfig] = useState({
+    confirm: { view: false, content: '', action: () => {} },
+    alert: { view: false, content: '' },
+  })
   const [deleteImg, setDeleteImg] = useState<string[]>([])
-  const [confirm, setConfirm] = useState({ view: false, content: '' })
-  const [alert, setAlert] = useState({ view: false, content: '' })
   const navigation = useNavigate()
-  const toBack = () => {
-    navigation(-1)
+
+  const handleCategoryClick = (category: 'LOST' | 'FOUND') =>
+    setCurrentCategory(category)
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => setFormData({ ...formData, [e.target.name]: e.target.value })
+
+  const closeAlert = () => {
+    setModalConfig((prev) => ({ ...prev, alert: { view: false, content: '' } }))
   }
 
   useEffect(() => {
@@ -48,7 +52,7 @@ const LostItemUpdate = () => {
             address: res.data.data.waterPlaceAddress,
           },
         ])
-        setWrite({
+        setFormData({
           title: res.data.data.title,
           content: res.data.data.content,
         })
@@ -57,52 +61,43 @@ const LostItemUpdate = () => {
       .catch((err) => console.log(err))
   }, [id, setUploadImg])
 
-  const closeModal = () => {
-    setModalView(false)
-  }
+  const closeModal = () => setModalView(false)
 
-  const moveToListPage = () => {
-    window.location.replace('/lost-item')
-  }
-
-  const writeLostPost = (e: any) => {
+  const updatePost = (e: any) => {
     e.preventDefault()
-    const formData = new FormData()
 
-    let category
-    if (currentCategory === '찾아요') category = 'LOST'
-    else category = 'FOUND'
-
-    if (!selectedPlace.length || !write.title || !write.content) {
-      setAlert({ view: true, content: '항목을 모두 입력해주세요.' })
-    } else {
-      formData.append('category', category)
-      formData.append('lostFoundBoardId', `${id}`)
-      formData.append('waterPlaceId', `${selectedPlace[0].waterPlaceId}`)
-      formData.append('title', write.title)
-      formData.append('content', write.content)
-      for (let i = 0; i < imgFiles.length; i++) {
-        formData.append('postImage', imgFiles[i])
-      }
-      if (deleteImg.length !== 0) {
-        for (let i = 0; i < deleteImg.length; i++) {
-          formData.append('deleteImage', deleteImg[i])
-        }
-      }
-
-      axiosInstance
-        .patch('/api/auth/lostItem', formData)
-        .then((res) => {
-          console.log(res)
-          res.status === 200 &&
-            setConfirm({
-              view: true,
-              content: '글이 수정되었습니다.',
-            })
-        })
-        .catch((err) => console.log(err))
+    if (!selectedPlace.length || !formData.title || !formData.content) {
+      return setModalConfig((prev) => ({
+        ...prev,
+        alert: { view: true, content: '항목을 모두 입력해주세요.' },
+      }))
     }
+
+    const formDataObj = new FormData()
+    formDataObj.append('category', currentCategory)
+    formDataObj.append('lostFoundBoardId', `${id}`)
+    formDataObj.append('waterPlaceId', `${selectedPlace[0].waterPlaceId}`)
+    formDataObj.append('title', formData.title)
+    formDataObj.append('content', formData.content)
+    imgFiles.forEach((file) => formDataObj.append('postImage', file))
+    deleteImg.forEach((file) => formDataObj.append('deleteImage', file))
+
+    axiosInstance
+      .patch('/api/auth/lostItem', formData)
+      .then((res) => {
+        res.status === 200 &&
+          setModalConfig((prev) => ({
+            ...prev,
+            confirm: {
+              view: true,
+              content: '글이 등록되었습니다.',
+              action: () => navigation('/lost-item'),
+            },
+          }))
+      })
+      .catch((err) => console.log(err))
   }
+
   return (
     <form className={styles.body} encType="multipart/form-data">
       <div className={styles.writeContainer}>
@@ -113,9 +108,12 @@ const LostItemUpdate = () => {
               <span
                 key={item}
                 className={cn(styles.categoryBtn, {
-                  [styles.clickCategory]: currentCategory === item,
+                  [styles.clickCategory]:
+                    currentCategory === (item === '찾아요' ? 'LOST' : 'FOUND'),
                 })}
-                onClick={() => clickCategory(item)}
+                onClick={() =>
+                  handleCategoryClick(item === '찾아요' ? 'LOST' : 'FOUND')
+                }
               >
                 {item}
               </span>
@@ -129,7 +127,7 @@ const LostItemUpdate = () => {
             >
               계곡 선택
             </span>
-            {selectedPlace.length !== 0 && (
+            {selectedPlace.length > 0 && (
               <span className={styles.valleySeleted}>
                 {selectedPlace[0].waterPlaceName}
               </span>
@@ -140,26 +138,28 @@ const LostItemUpdate = () => {
           <div className={styles.category}>
             <h4>주소</h4>
             <span className={styles.categoryBtn}>주소 찾기</span>
-            {selectedPlace.length !== 0 && (
+            {selectedPlace.length > 0 && (
               <span>{selectedPlace[0].address}</span>
             )}
           </div>
         </div>
         <div className={styles.contentWrap}>
           <input
-            value={write.title}
+            name="title"
             placeholder="제목을 입력하세요"
-            onChange={(e) => setWrite({ ...write, title: e.target.value })}
+            value={formData.title}
+            onChange={handleInputChange}
           />
         </div>
         <div className={styles.contentWrap}>
           <textarea
-            value={write.content}
+            name="content"
             placeholder="내용을 입력하세요"
-            onChange={(e) => setWrite({ ...write, content: e.target.value })}
+            value={formData.content}
+            onChange={handleInputChange}
           />
         </div>
-        {uploadImg.length === 0 && (
+        {!uploadImg.length ? (
           <label htmlFor="input-file">
             <input
               className={styles.imgInput}
@@ -173,8 +173,7 @@ const LostItemUpdate = () => {
               <AiFillPicture />
             </div>
           </label>
-        )}
-        {uploadImg.length !== 0 && (
+        ) : (
           <div className={styles.previewImg}>
             {uploadImg.map((image, id) => (
               <div key={id} className={styles.imageContainer}>
@@ -184,8 +183,7 @@ const LostItemUpdate = () => {
                 <span
                   onClick={() => {
                     handleDeleteImage(id)
-                    const deleteUrlList = deleteImg.concat([`${image}`])
-                    setDeleteImg(deleteUrlList)
+                    setDeleteImg((prev) => [...prev, `${image}`])
                   }}
                 >
                   <IoIosCloseCircle color="#F6483D" size="30px" />
@@ -209,13 +207,13 @@ const LostItemUpdate = () => {
         )}
       </div>
       <div className={styles.uploadBtn}>
-        <button onClick={writeLostPost}>
+        <button onClick={updatePost}>
           <span>
             <LuPencil />
           </span>
           수정하기
         </button>
-        <div className={styles.cancleBtn} onClick={toBack}>
+        <div className={styles.cancleBtn} onClick={() => navigation(-1)}>
           취소
         </div>
       </div>
@@ -226,11 +224,17 @@ const LostItemUpdate = () => {
           writePage={true}
         />
       )}
-      {confirm.view && (
-        <ConfirmModal content={confirm.content} CustomFunc={moveToListPage} />
+      {modalConfig.confirm.view && (
+        <ConfirmModal
+          content={modalConfig.confirm.content}
+          CustomFunc={modalConfig.confirm.action}
+        />
       )}
-      {alert.view && (
-        <ConfirmModal content={alert.content} handleModal={setAlert} />
+      {modalConfig.alert.view && (
+        <ConfirmModal
+          content={modalConfig.alert.content}
+          CustomFunc={closeAlert}
+        />
       )}
     </form>
   )

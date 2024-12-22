@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import useDidMountEffect from '@hooks/useDidMountEffect'
 import { Schedule } from 'types/user'
 import axiosInstance from '@utils/axios_interceptor'
 import TripScheduleItem from './TripScheduleItem'
@@ -12,82 +11,59 @@ const TripSchedule = ({ tripSchedules }: { tripSchedules: Schedule[] }) => {
   const [scheduleBtn, setScheduleBtn] = useState('앞으로의 일정')
   const [checkedItems, setCheckedItems] = useState<Schedule[]>([])
 
-  const getPreSchedule = () => {
-    axiosInstance
-      .get('/api/auth/my-page/pre-schedules')
-      .then((res) => {
-        setSchedule(res.data.data.content)
-      })
-      .catch((err) => console.log(err))
-  }
+  const fetchSchedules = async (type: string) => {
+    const url =
+      type === '앞으로의 일정'
+        ? '/api/auth/my-page/upcoming-schedules'
+        : '/api/auth/my-page/pre-schedules'
 
-  const getUpcomingSchedule = () => {
-    axiosInstance
-      .get('/api/auth/my-page/upcoming-schedules')
-      .then((res) => {
-        setSchedule(res.data.data)
-      })
-      .catch((err) => console.log(err))
-  }
-
-  useDidMountEffect(() => {
-    if (scheduleBtn === '앞으로의 일정') getUpcomingSchedule()
-    else getPreSchedule()
-  }, [scheduleBtn])
-
-  const checkedItemHandler = (id: Schedule, isChecked: boolean) => {
-    if (isChecked) {
-      checkedItems.push(id)
-    } else if (!isChecked && checkedItems.indexOf(id) !== -1) {
-      checkedItems.splice(checkedItems.indexOf(id), 1)
-      setCheckedItems(checkedItems)
+    try {
+      const res = await axiosInstance.get(url)
+      setSchedule(
+        type === '앞으로의 일정' ? res.data.data : res.data.data.content
+      )
+    } catch (error) {
+      console.error(error)
     }
   }
 
-  const handleDeleteSchedule = () => {
-    const params = new URLSearchParams()
-    checkedItems.map((item) =>
-      params.append('tripScheduleIds', `${item.tripScheduleId}`)
+  const checkedItemHandler = (schedule: Schedule, isChecked: boolean) => {
+    setCheckedItems((prev) =>
+      isChecked ? [...prev, schedule] : prev.filter((item) => item !== schedule)
     )
+  }
 
-    axiosInstance
-      .delete('/api/auth/trip-schedules', { params: params })
-      .then((res) => {
-        console.log(res)
-        if (scheduleBtn === '앞으로의 일정') {
-          axiosInstance
-            .get('/api/auth/my-page/upcoming-schedules')
-            .then((res) => {
-              console.log(res)
-              setSchedule(res.data.data)
-            })
-            .catch((err) => console.log(err))
-        } else {
-          axiosInstance
-            .get('/api/auth/my-page/pre-schedules')
-            .then((res) => {
-              console.log(res)
-              setSchedule(res.data.data.content)
-            })
-            .catch((err) => console.log(err))
-        }
-      })
+  const handleDeleteSchedule = async () => {
+    try {
+      const params = new URLSearchParams()
+      checkedItems.forEach((item) =>
+        params.append('tripScheduleIds', `${item.tripScheduleId}`)
+      )
+
+      await axiosInstance.delete('/api/auth/trip-schedules', { params })
+
+      fetchSchedules(scheduleBtn)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const handleClickCategory = (category: string) => {
+    setScheduleBtn(category)
+    fetchSchedules(category)
   }
 
   return (
     <div className={styles.schedule}>
       <div className={styles.scheduleControl}>
         <div className={styles.categoryWrap}>
-          <Category
-            name="앞으로의 일정"
-            category={scheduleBtn}
-            setCategory={setScheduleBtn}
-          />
-          <Category
-            name="지난 일정"
-            category={scheduleBtn}
-            setCategory={setScheduleBtn}
-          />
+          {['앞으로의 일정', '지난 일정'].map((category) => (
+            <Category
+              name={category}
+              category={scheduleBtn}
+              handleClick={() => handleClickCategory(category)}
+            />
+          ))}
         </div>
         {scheduleBtn === '앞으로의 일정' && (
           <>
@@ -98,7 +74,7 @@ const TripSchedule = ({ tripSchedules }: { tripSchedules: Schedule[] }) => {
               삭제
             </span>
             <span onClick={handleDeleteSchedule} className={styles.deleteIcon}>
-              <RiDeleteBin6Line color="#66a5fc" size="25px" />
+              <RiDeleteBin6Line />
             </span>
           </>
         )}

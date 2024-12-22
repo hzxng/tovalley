@@ -18,116 +18,109 @@ import axiosInstance from '@utils/axios_interceptor'
 
 const LostItemPost = () => {
   const { category, id } = useParams()
-
-  const [lostPost, setLostPost] = useState<LostPost | null>(null)
-  const [commentList, setCommentList] = useState<LostPostComment[] | null>(null)
-  const [resolveCheck, setResolveCheck] = useState(false)
-  const [commentText, setCommentText] = useState('')
-  const [deleteModal, setDeleteModal] = useState(false)
-
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const cookies = new Cookies()
+
+  const [lostPost, setLostPost] = useState<LostPost | null>(null)
+  const [commentList, setCommentList] = useState<LostPostComment[]>([])
+  const [resolveCheck, setResolveCheck] = useState(false)
+  const [commentText, setCommentText] = useState('')
+  const [deleteModal, setDeleteModal] = useState(false)
 
   useEffect(() => {
     axiosInstance
       .get(`/api/lostItem/${id}`)
       .then((res) => {
         setLostPost(res.data.data)
-        setCommentList(res.data.data.comments)
+        setCommentList(res.data.data.comments || [])
         setResolveCheck(res.data.data.isResolved)
       })
       .catch((err) => console.log(err))
   }, [id])
 
-  const checkResolve = () => {
-    axiosInstance
-      .patch(
+  const toggleResolveStatus = async () => {
+    try {
+      await axiosInstance.patch(
         `/api/auth/lostItem/${id}`,
         {},
         {
-          params: {
-            isResolved: !resolveCheck,
-          },
+          params: { isResolved: !resolveCheck },
         }
       )
-      .then(() => {
-        setResolveCheck(!resolveCheck)
-      })
-      .catch((err) => console.log(err))
+      setResolveCheck((prev) => !prev)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
-  const deletePost = () => {
-    axiosInstance
-      .delete(`/api/auth/lostItem/${id}`)
-      .then((res) => {
-        console.log(res)
-        window.location.replace('/lost-item')
-      })
-      .catch((err) => console.log(err))
+  const deletePost = async () => {
+    try {
+      await axiosInstance.delete(`/api/auth/lostItem/${id}`)
+      navigate('/lost-item')
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const closeDeleteModal = () => {
     setDeleteModal(false)
   }
 
-  const addComment = () => {
-    axiosInstance
-      .post(`/api/auth/lostItem/${id}/comment`, {
-        commentContent: commentText,
-      })
-      .then((res) => {
-        const newComment = {
-          commentId: res.data.data.commentId,
-          commentAuthor: res.data.data.commentAuthor,
-          commentContent: res.data.data.commentContent,
-          commentCreateAt: res.data.data.commentCreateAt,
-          commentByUser: true,
-          commentAuthorProfile: res.data.data.commentAuthorProfile,
+  const addComment = async () => {
+    if (!commentText.trim()) return
+    try {
+      const { data } = await axiosInstance.post(
+        `/api/auth/lostItem/${id}/comment`,
+        {
+          commentContent: commentText,
         }
-        if (commentList && commentList.length > 0) {
-          setCommentList([...commentList, newComment])
-        } else {
-          setCommentList([newComment])
-        }
-        // const newCommentList = commentList?.concat([res.data.data]);
-        setCommentText('')
-      })
-      .catch((err) => console.log(err))
+      )
+      const newComment = {
+        commentId: data.data.commentId,
+        commentAuthor: data.data.commentAuthor,
+        commentContent: data.data.commentContent,
+        commentCreateAt: data.data.commentCreateAt,
+        commentByUser: true,
+        commentAuthorProfile: data.data.commentAuthorProfile,
+      }
+      setCommentList((prev) => [...prev, newComment])
+      setCommentText('')
+    } catch (error) {
+      console.error(error)
+    }
   }
 
-  const deleteComment = (item: LostPostComment) => {
-    axiosInstance
-      .delete(`/api/auth/lostItem/${id}/comment/${item.commentId}`)
-      .then((res) => {
-        console.log(res)
-
-        const newCommentList = commentList!.filter((comment) => {
-          return comment !== item
-        })
-        setCommentList(newCommentList)
-      })
-      .catch((err) => console.log(err))
+  const deleteComment = async (item: LostPostComment) => {
+    try {
+      await axiosInstance.delete(
+        `/api/auth/lostItem/${id}/comment/${item.commentId}`
+      )
+      setCommentList((prev) =>
+        prev.filter((comment) => comment.commentId !== item.commentId)
+      )
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const moveToUpdatePage = () => {
     navigate(`/lost-item/${category}/${id}/update`)
   }
 
-  const newChatRoom = (nickname: string) => {
-    axiosInstance
-      .post('/api/auth/chatroom', {
-        // 채팅방 생성 or 기존채팅방 id 요청
+  const newChatRoom = async (nickname: string) => {
+    try {
+      const { data } = await axiosInstance.post('/api/auth/chatroom', {
         recipientNick: nickname,
       })
-      .then((res) => {
-        console.log(res)
-        dispatch(enterChatRoom(res.data.data.chatRoomId))
-        dispatch(view(true))
-      })
+      dispatch(enterChatRoom(data.data.chatRoomId))
+      dispatch(view(true))
+    } catch (error) {
+      console.error(error)
+    }
   }
 
-  if (!lostPost || !commentList) return <div>loading</div>
+  if (!lostPost || !lostPost) return <div>loading</div>
 
   return (
     <div className={styles.body}>
@@ -187,7 +180,7 @@ const LostItemPost = () => {
                   className={cn(styles.checkBox, {
                     [styles.checked]: resolveCheck,
                   })}
-                  onClick={checkResolve}
+                  onClick={toggleResolveStatus}
                 >
                   <FaCheck />
                 </div>
@@ -219,17 +212,15 @@ const LostItemPost = () => {
           </div>
         </div>
       )}
-      {commentList.length > 0 && (
-        <div className={styles.commentList}>
-          {commentList.map((item) => (
-            <CommentItem
-              item={item}
-              newChatRoom={newChatRoom}
-              deleteComment={deleteComment}
-            />
-          ))}
-        </div>
-      )}
+      <div className={styles.commentList}>
+        {commentList.map((item) => (
+          <CommentItem
+            item={item}
+            newChatRoom={newChatRoom}
+            deleteComment={deleteComment}
+          />
+        ))}
+      </div>
       {deleteModal && (
         <CustomModal
           content="정말 삭제하시겠습니까?"

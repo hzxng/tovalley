@@ -17,7 +17,7 @@ const ConfirmModal = ({
   CustomFunc?: () => void
 }) => {
   const handleClick = () => {
-    if (handleModal) handleModal({ view: false, content: content })
+    if (handleModal) handleModal({ view: false, content })
     else if (CustomFunc) CustomFunc()
     else window.location.reload()
   }

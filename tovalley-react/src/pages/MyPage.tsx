@@ -18,8 +18,8 @@ const MyPage = () => {
   const { user, loginModal } = useUserData()
   const { myPosts, target, isPageEnd } = useMyPostData()
 
-  const moveToLostItemPage = () => {
-    navigation(`/lost-item`)
+  const handleClickCategory = (category: string) => {
+    setCurrentCategory(category)
   }
 
   if (!user || !myPosts) return <Loading />
@@ -46,7 +46,7 @@ const MyPage = () => {
                     key={name}
                     name={name}
                     category={currentCategory}
-                    setCategory={setCurrentCategory}
+                    handleClick={() => handleClickCategory(name)}
                   />
                 ))}
               </div>
@@ -62,7 +62,7 @@ const MyPage = () => {
                         <div
                           key={post.lostFoundBoardId}
                           className={styles.postItem}
-                          onClick={moveToLostItemPage}
+                          onClick={() => navigation(`/lost-item`)}
                         >
                           <p>{post.title}</p>
                           <span>{elapsedTime(post.postCreateAt)}</span>

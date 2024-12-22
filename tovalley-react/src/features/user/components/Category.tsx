@@ -4,20 +4,18 @@ import styles from '@styles/user/Category.module.scss'
 const Category = ({
   name,
   category,
-  setCategory,
+  handleClick,
 }: {
   name: string
   category: string
-  setCategory: React.Dispatch<React.SetStateAction<string>>
+  handleClick: () => void
 }) => {
   return (
     <span
       className={cn(styles.category, {
         [styles.active]: category === name,
       })}
-      onClick={() => {
-        setCategory(name)
-      }}
+      onClick={handleClick}
     >
       {name}
     </span>
