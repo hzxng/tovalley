@@ -17,32 +17,40 @@ const cookies = new Cookies()
 
 const AlarmList = () => {
   const [alarmList, setAlarmList] = useState<AlarmListType[]>([])
+  const [isPageEnd, setIsPageEnd] = useState<boolean>(false)
+  const [loading, setLoading] = useState(false)
+
   const notificationView = useSelector(
     (state: RootState) => state.notificationView.value
   )
-  const [isPageEnd, setIsPageEnd] = useState<boolean>(false)
   const notification = useSelector(
     (state: RootState) => state.notification.value
   )
-  const [loading, setLoading] = useState(false)
+
   const dispatch = useDispatch()
   const loginStatus = cookies.get('ISLOGIN')
 
-  useEffect(() => {
-    const requestAlarmList = async () => {
-      try {
-        const res = await axiosInstance.get('/api/auth/notifications')
-        setAlarmList(res.data.data.content)
-        if (res.data.data.content.length < 5 || res.data.data.last) {
-          setIsPageEnd(true)
-        }
-      } catch (err) {
-        console.log(err)
-      }
-    }
+  const getAlarmList = useCallback(async (cursorId?: number | string) => {
+    try {
+      setLoading(true)
+      const { data } = await axiosInstance.get('/api/auth/notifications', {
+        params: cursorId ? { cursorId } : undefined,
+      })
 
-    if (loginStatus && notificationView) requestAlarmList()
-  }, [loginStatus, notificationView])
+      setAlarmList((prev) => [...prev, ...data.data.content])
+      if (data.data.content.length < 5 || data.data.last) {
+        setIsPageEnd(true)
+      }
+    } catch (error) {
+      console.error('Error fetching alarm list:', error)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (loginStatus && notificationView) getAlarmList()
+  }, [loginStatus, notificationView, getAlarmList])
 
   useEffect(() => {
     if (
@@ -54,7 +62,7 @@ const AlarmList = () => {
       setAlarmList((prev) => {
         return [
           {
-            chatNotificationId: alarmList ? prev[0].chatNotificationId + 1 : 1,
+            chatNotificationId: prev[0] ? prev[0].chatNotificationId + 1 : 1,
             chatRoomId: notification.chatRoomId,
             senderNick: notification.senderNick,
             createdDate: notification.createdDate,
@@ -64,35 +72,32 @@ const AlarmList = () => {
           ...prev,
         ]
       })
-  }, [notification, notificationView, loading, alarmList])
+  }, [notification, notificationView, loading])
 
-  const getAlarmList = useCallback(async (value?: number | string) => {
-    let config
-
-    if (value) {
-      config = {
-        params: {
-          cursorId: value,
-        },
-      }
-    } else {
-      config = undefined
-    }
-
+  const deleteAlarm = useCallback(async (id: number) => {
     try {
-      setLoading(true)
-      const res = await axiosInstance.get('/api/auth/notifications', config)
-      setAlarmList((prev) => {
-        return [...prev, ...res.data.data.content]
-      })
-      if (res.data.data.content.length < 5 || res.data.data.last) {
-        setIsPageEnd(true)
-      }
-      setLoading(false)
-    } catch (err) {
-      console.log(err)
+      setAlarmList((prev) =>
+        prev.filter((alarm) => alarm.chatNotificationId !== id)
+      )
+      await axiosInstance.delete(`/api/auth/notifications/${id}`)
+    } catch (error) {
+      console.error('Error deleting alarm:', error)
     }
   }, [])
+
+  const deleteAllAlarms = useCallback(async () => {
+    try {
+      setAlarmList([])
+      await axiosInstance.delete('/api/auth/notifications')
+    } catch (error) {
+      console.error('Error deleting all alarms:', error)
+    }
+  }, [])
+
+  const startChat = (id: number) => {
+    dispatch(view(true))
+    dispatch(enterChatRoom(id))
+  }
 
   const { target } = useObserver({
     getData: getAlarmList,
@@ -100,29 +105,6 @@ const AlarmList = () => {
       ? alarmList[alarmList.length - 1].chatNotificationId
       : undefined,
   })
-
-  const deleteAlarm = (id: number) => {
-    console.log(alarmList)
-    const deleteAlarmList = alarmList?.filter((alarm) => {
-      return alarm.chatNotificationId !== id
-    })
-    setAlarmList(deleteAlarmList)
-    axiosInstance.delete(`/api/auth/notifications/${id}`).then((res) => {
-      console.log(res)
-    })
-  }
-
-  const deleteAllAlarm = () => {
-    setAlarmList([])
-    axiosInstance.delete('/api/auth/notifications').then((res) => {
-      console.log(res)
-    })
-  }
-
-  const startChat = (id: number) => {
-    dispatch(view(true))
-    dispatch(enterChatRoom(id))
-  }
 
   return (
     <Drawer
@@ -134,10 +116,10 @@ const AlarmList = () => {
       isView={notificationView}
       isAlarm
     >
-      <span className={styles.allDelete} onClick={deleteAllAlarm}>
+      <span className={styles.allDelete} onClick={deleteAllAlarms}>
         모두 지우기
       </span>
-      {alarmList?.map((alarm) => (
+      {alarmList.map((alarm) => (
         <div
           key={alarm.chatNotificationId}
           className={styles.alarmComponent}
@@ -145,7 +127,10 @@ const AlarmList = () => {
         >
           <span
             className={styles.closeBtn}
-            onClick={() => deleteAlarm(alarm.chatNotificationId)}
+            onClick={(e) => {
+              e.stopPropagation()
+              deleteAlarm(alarm.chatNotificationId)
+            }}
           >
             <MdClose />
           </span>

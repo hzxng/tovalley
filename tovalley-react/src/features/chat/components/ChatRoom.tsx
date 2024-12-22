@@ -12,11 +12,10 @@ import useObserver from '@hooks/useObserver'
 import SpeechBubble from './SpeechBubble'
 
 const ChatRoom = () => {
-  const [prevMessage, setPrevMessage] = useState<MessageListType>()
-  const [newMessage, setNewMessage] = useState<MessageType>()
-  const [newMessageList, setNewMessageList] = useState<MessageType[]>([])
+  const [prevMessages, setPrevMessages] = useState<MessageListType>()
+  const [newMessages, setNewMessages] = useState<MessageType[]>([])
   const [content, setContent] = useState('') // 보낼 메시지
-  const [newMessageView, setNewMessageView] = useState(false)
+  const [showNewMessageAlert, setShowNewMessageAlert] = useState(false)
   const [isPageEnd, setIsPageEnd] = useState<boolean>(false)
   const [reqMsg, setReqMsg] = useState(false)
 
@@ -28,88 +27,36 @@ const ChatRoom = () => {
 
   const observeFunc = () => {
     setReqMsg(false)
-    setNewMessageView(false)
+    setShowNewMessageAlert(false)
   }
   const endRef = useRef<HTMLDivElement>(null)
   const { target: messageEndRef } = useObserver({ observeFunc })
 
-  useEffect(() => {
-    const requestMessageList = async () => {
-      const response = await axiosInstance.get(
-        `/api/auth/chat/messages/${chatRoomId}` // 채팅 메시지 목록 조회
-      )
-      setPrevMessage(response.data.data)
-
-      if (client?.connected) {
-        // console.log('채팅방 구독 시작!!')
-        const subscribe = client.subscribe(
-          `/sub/chat/room/${chatRoomId}`,
-          (msg) => {
-            // 특정 채팅방 구독
-            // console.log(JSON.parse(msg.body))
-            setNewMessage(JSON.parse(msg.body))
-            setNewMessageList((prev) => {
-              return [...prev, JSON.parse(msg.body)]
-            })
-          }
-        )
-        dispatch(setSubscription(subscribe))
-      }
-    }
-
-    if (client) requestMessageList()
-  }, [client, chatRoomId, dispatch])
-
-  useEffect(() => {
-    endRef.current?.scrollIntoView()
-  }, [prevMessage])
-
-  useEffect(() => {
-    if (newMessage && newMessage.senderId === prevMessage?.memberId) {
-      messageEndRef.current?.scrollIntoView()
-      setNewMessageView(false)
-    }
-
-    if (reqMsg && newMessage && newMessage.senderId !== prevMessage?.memberId) {
-      setNewMessageView(true)
-    }
-  }, [newMessage, messageEndRef, prevMessage?.memberId, reqMsg])
-
   const getMessageList = useCallback(
-    async (id?: string | number) => {
-      setReqMsg(true)
-      let config
+    async (cursorId?: string | number) => {
+      try {
+        setReqMsg(true)
 
-      if (id) {
-        config = {
-          params: {
-            cursor: id,
-          },
-        }
-      } else {
-        config = undefined
-      }
+        const params = cursorId ? { params: { cursor: cursorId } } : undefined
+        const { data } = await axiosInstance.get(
+          `/api/auth/chat/messages/${chatRoomId}`,
+          params
+        )
 
-      const res = await axiosInstance.get(
-        `/api/auth/chat/messages/${chatRoomId}`,
-        config // 채팅 메시지 목록 조회
-      )
-
-      setPrevMessage((prev) => {
-        return {
+        setPrevMessages((prev) => ({
           ...prev!,
           chatMessages: {
-            ...res.data.data.chatMessages,
+            ...data.data.chatMessages,
             content: [
-              ...res.data.data.chatMessages.content,
-              ...prev!.chatMessages.content,
+              ...data.data.chatMessages.content,
+              ...(prev?.chatMessages.content || []),
             ],
           },
-        }
-      })
+        }))
 
-      if (res.data.data.chatMessages.last) {
-        setIsPageEnd(true)
+        if (data.data.chatMessages.last) setIsPageEnd(true)
+      } catch (error) {
+        console.error('메시지 불러오기 실패:', error)
       }
     },
     [chatRoomId]
@@ -118,73 +65,90 @@ const ChatRoom = () => {
   const { target } = useObserver({
     getData: getMessageList,
     isPageEnd,
-    value: prevMessage?.chatMessages.content[0].chatMessageId,
+    value: prevMessages?.chatMessages.content[0].chatMessageId,
   })
 
-  const sendMessage = () => {
-    if (client?.connected && content !== '') {
-      const chatMessage = {
-        chatRoomId: chatRoomId,
-        content,
-      }
-      client.publish({
-        destination: '/pub/chat/message',
-        body: JSON.stringify(chatMessage),
-      }) // 메시지 전송
-      setContent('')
-    } else if (!client?.connected) {
-      console.error('웹소켓 연결이 활성화되지 않았습니다.')
-      alert('잠시 후 다시 시도해주세요.')
-    }
-  }
+  const sendMessage = async () => {
+    if (!client?.connected) return alert('웹소켓 연결이 활성화되지 않았습니다.')
 
-  const sendImageMessage = () => {
-    if (client?.connected) {
-      const formData = new FormData()
-      formData.append('image', imgFiles[0])
+    if (imgFiles.length > 0) {
+      try {
+        const formData = new FormData()
+        formData.append('image', imgFiles[0])
+        const { data } = await axiosInstance.post(
+          '/api/auth/chat/images/upload',
+          formData
+        )
 
-      axiosInstance
-        .post('/api/auth/chat/images/upload', formData)
-        .then((res) => {
-          const chatMessage = {
-            chatRoomId: chatRoomId,
+        client.publish({
+          destination: '/pub/chat/message',
+          body: JSON.stringify({
+            chatRoomId,
             content: '',
             chatType: 'IMAGE',
-            imageName: res.data.data.storeFileName,
-            imageUrl: res.data.data.storeFileUrl,
-          }
-          client.publish({
-            destination: '/pub/chat/message',
-            body: JSON.stringify(chatMessage),
-          }) // 메시지 전송
-          setContent('')
-          handleDeleteImage(0)
+            imageName: data.data.storeFileName,
+            imageUrl: data.data.storeFileUrl,
+          }),
         })
-    } else {
-      console.error('웹소켓 연결이 활성화되지 않았습니다.')
-    }
-  }
 
-  const confirmNewMessage = () => {
-    setNewMessageView(false)
-    messageEndRef.current?.scrollIntoView()
+        handleDeleteImage(0)
+      } catch (error) {
+        console.error('이미지 전송 실패:', error)
+      }
+    } else if (content.trim()) {
+      client.publish({
+        destination: '/pub/chat/message',
+        body: JSON.stringify({ chatRoomId, content }),
+      }) // 메시지 전송
+      setContent('')
+    }
   }
 
   useEffect(() => {
-    setNewMessageView(false)
+    setShowNewMessageAlert(false)
   }, [uploadImg])
 
-  const handleSendMessage = () => {
-    if (imgFiles.length !== 0) {
-      sendImageMessage()
-    } else sendMessage()
-  }
+  const handleNewMessage = useCallback(
+    (msg: MessageType) => {
+      setNewMessages((prev) => [...prev, msg])
+      if (reqMsg && msg.senderId !== prevMessages?.memberId)
+        setShowNewMessageAlert(true)
+      else {
+        setShowNewMessageAlert(false)
+        messageEndRef.current?.scrollIntoView()
+      }
+    },
+    [reqMsg, messageEndRef, prevMessages]
+  )
+
+  useEffect(() => {
+    if (client?.connected) {
+      // console.log('채팅방 구독 시작!!')
+      const subscribe = client.subscribe(
+        `/sub/chat/room/${chatRoomId}`,
+        (msg) => {
+          // 특정 채팅방 구독
+          // console.log(JSON.parse(msg.body))
+          handleNewMessage(JSON.parse(msg.body))
+        }
+      )
+      dispatch(setSubscription(subscribe))
+    }
+  }, [client, chatRoomId, dispatch, handleNewMessage])
+
+  useEffect(() => {
+    getMessageList()
+  }, [getMessageList])
+
+  useEffect(() => {
+    endRef.current?.scrollIntoView()
+  }, [prevMessages])
 
   return (
     <div className={styles.chatComponent}>
       <div className={styles.messageList}>
         <div>
-          {prevMessage?.chatMessages.content.map((message, index) => {
+          {prevMessages?.chatMessages.content.map((message, index) => {
             return (
               <SpeechBubble
                 key={`${index}-${message.createdAt}`}
@@ -199,21 +163,30 @@ const ChatRoom = () => {
             )
           })}
         </div>
-        {newMessageList.map((el) => {
+        {newMessages.map((el) => {
           return (
             <SpeechBubble
               key={el.createdAt}
               message={el}
-              isMyMsg={el?.senderId === prevMessage?.memberId}
+              isMyMsg={el?.senderId === prevMessages?.memberId}
             />
           )
         })}
         <div ref={messageEndRef} className={styles.ref} />
       </div>
-      {newMessageView && (
+      {showNewMessageAlert && (
         <div className={styles.newMessageContainer}>
-          <div className={styles.newMessage} onClick={confirmNewMessage}>
-            <p>{newMessage?.content ?? '사진을 보냈습니다.'}</p>
+          <div
+            className={styles.newMessage}
+            onClick={() => {
+              setShowNewMessageAlert(false)
+              messageEndRef.current?.scrollIntoView()
+            }}
+          >
+            <p>
+              {newMessages[newMessages.length - 1]?.content ||
+                '사진을 보냈습니다.'}
+            </p>
             <span>
               <IoIosArrowDown />
             </span>
@@ -222,7 +195,7 @@ const ChatRoom = () => {
       )}
       <div className={styles.sendMessage}>
         <div>
-          {uploadImg.length !== 0 && (
+          {uploadImg.length > 0 && (
             <div className={styles.previewImg}>
               {uploadImg.map((image, id) => (
                 <div key={id} className={styles.imageContainer}>
@@ -240,12 +213,10 @@ const ChatRoom = () => {
             placeholder="메시지 보내기"
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            readOnly={imgFiles.length !== 0}
+            readOnly={imgFiles.length > 0}
             maxLength={200}
             onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                sendMessage()
-              }
+              e.key === 'Enter' && sendMessage()
             }}
           />
           <span className={styles.imageIcon}>
@@ -261,7 +232,7 @@ const ChatRoom = () => {
               <MdImage />
             </label>
           </span>
-          <button onClick={handleSendMessage}>전송</button>
+          <button onClick={sendMessage}>전송</button>
         </div>
       </div>
     </div>

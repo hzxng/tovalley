@@ -14,63 +14,61 @@ import { useSaveImg } from '@hooks/useSaveImg'
 
 const LostItemWrite = () => {
   const { uploadImg, imgFiles, saveImgFile, handleDeleteImage } = useSaveImg()
-  const [currentCategory, setCurrentCategory] = useState('찾아요')
-  const clickCategory = (category: string) => {
-    setCurrentCategory(category)
-  }
-  const [write, setWrite] = useState({
-    title: '',
-    content: '',
-  })
+  const [currentCategory, setCurrentCategory] = useState<'LOST' | 'FOUND'>(
+    'LOST'
+  )
+  const [formData, setFormData] = useState({ title: '', content: '' })
   const [modalView, setModalView] = useState(false)
   const [selectedPlace, setSelectedPlace] = useState<PlaceName[]>([])
-  const [confirm, setConfirm] = useState({ view: false, content: '' })
-  const [alert, setAlert] = useState({ view: false, content: '' })
+  const [modalConfig, setModalConfig] = useState({
+    confirm: { view: false, content: '', action: () => {} },
+    alert: { view: false, content: '' },
+  })
   const navigation = useNavigate()
 
-  const toBack = () => {
-    navigation(-1)
+  const handleCategoryClick = (category: 'LOST' | 'FOUND') =>
+    setCurrentCategory(category)
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => setFormData({ ...formData, [e.target.name]: e.target.value })
+
+  const closeModal = () => setModalView(false)
+
+  const closeAlert = () => {
+    setModalConfig((prev) => ({ ...prev, alert: { view: false, content: '' } }))
   }
 
-  const closeModal = () => {
-    setModalView(false)
-  }
-
-  const moveToListPage = () => {
-    window.location.replace('/lost-item')
-  }
-
-  const writeLostPost = (e: any) => {
+  const submitPost = (e: React.FormEvent) => {
     e.preventDefault()
-    const formData = new FormData()
 
-    let category
-    if (currentCategory === '찾아요') category = 'LOST'
-    else category = 'FOUND'
-
-    if (!selectedPlace.length || !write.title || !write.content) {
-      setAlert({ view: true, content: '항목을 모두 입력해주세요.' })
-    } else {
-      formData.append('category', category)
-      formData.append('waterPlaceId', `${selectedPlace[0].waterPlaceId}`)
-      formData.append('title', write.title)
-      formData.append('content', write.content)
-      for (let i = 0; i < imgFiles.length; i++) {
-        formData.append('postImage', imgFiles[i])
-      }
-
-      axiosInstance
-        .post('/api/auth/lostItem', formData)
-        .then((res) => {
-          console.log(res)
-          res.status === 201 &&
-            setConfirm({
-              view: true,
-              content: '글이 등록되었습니다.',
-            })
-        })
-        .catch((err) => console.log(err))
+    if (!selectedPlace.length || !formData.title || !formData.content) {
+      return setModalConfig((prev) => ({
+        ...prev,
+        alert: { view: true, content: '항목을 모두 입력해주세요.' },
+      }))
     }
+
+    const formDataObj = new FormData()
+    formDataObj.append('category', currentCategory)
+    formDataObj.append('waterPlaceId', `${selectedPlace[0].waterPlaceId}`)
+    formDataObj.append('title', formData.title)
+    formDataObj.append('content', formData.content)
+    imgFiles.forEach((file) => formDataObj.append('postImage', file))
+
+    axiosInstance
+      .post('/api/auth/lostItem', formDataObj)
+      .then(() =>
+        setModalConfig((prev) => ({
+          ...prev,
+          confirm: {
+            view: true,
+            content: '글이 등록되었습니다.',
+            action: () => navigation('/lost-item'),
+          },
+        }))
+      )
+      .catch(console.error)
   }
 
   return (
@@ -83,9 +81,12 @@ const LostItemWrite = () => {
               <span
                 key={item}
                 className={cn(styles.categoryBtn, {
-                  [styles.clickCategory]: currentCategory === item,
+                  [styles.clickCategory]:
+                    currentCategory === (item === '찾아요' ? 'LOST' : 'FOUND'),
                 })}
-                onClick={() => clickCategory(item)}
+                onClick={() =>
+                  handleCategoryClick(item === '찾아요' ? 'LOST' : 'FOUND')
+                }
               >
                 {item}
               </span>
@@ -99,7 +100,7 @@ const LostItemWrite = () => {
             >
               계곡 선택
             </span>
-            {selectedPlace.length !== 0 && (
+            {selectedPlace.length > 0 && (
               <span className={styles.valleySeleted}>
                 {selectedPlace[0].waterPlaceName}
               </span>
@@ -109,21 +110,25 @@ const LostItemWrite = () => {
         <div className={styles.contentWrap}>
           <div className={styles.category}>
             <h4>주소</h4>
-            {selectedPlace.length !== 0 && (
+            {selectedPlace.length > 0 && (
               <span>{selectedPlace[0].address}</span>
             )}
           </div>
         </div>
         <div className={styles.contentWrap}>
           <input
+            name="title"
             placeholder="제목을 입력하세요"
-            onChange={(e) => setWrite({ ...write, title: e.target.value })}
+            value={formData.title}
+            onChange={handleInputChange}
           />
         </div>
         <div className={styles.contentWrap}>
           <textarea
+            name="content"
             placeholder="내용을 입력하세요"
-            onChange={(e) => setWrite({ ...write, content: e.target.value })}
+            value={formData.content}
+            onChange={handleInputChange}
           />
         </div>
         {!uploadImg.length ? (
@@ -169,13 +174,13 @@ const LostItemWrite = () => {
         )}
       </div>
       <div className={styles.uploadBtn}>
-        <button onClick={writeLostPost}>
+        <button onClick={submitPost}>
           <span>
             <LuPencil />
           </span>
           등록하기
         </button>
-        <div className={styles.cancleBtn} onClick={toBack}>
+        <div className={styles.cancleBtn} onClick={() => navigation(-1)}>
           취소
         </div>
       </div>
@@ -186,11 +191,17 @@ const LostItemWrite = () => {
           writePage={true}
         />
       )}
-      {confirm.view && (
-        <ConfirmModal content={confirm.content} CustomFunc={moveToListPage} />
+      {modalConfig.confirm.view && (
+        <ConfirmModal
+          content={modalConfig.confirm.content}
+          CustomFunc={modalConfig.confirm.action}
+        />
       )}
-      {alert.view && (
-        <ConfirmModal content={alert.content} handleModal={setAlert} />
+      {modalConfig.alert.view && (
+        <ConfirmModal
+          content={modalConfig.alert.content}
+          CustomFunc={closeAlert}
+        />
       )}
     </form>
   )

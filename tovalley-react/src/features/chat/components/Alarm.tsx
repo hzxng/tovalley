@@ -20,22 +20,21 @@ const Alarm = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    const fadeTimer = setTimeout(() => {
-      setFade(false)
-    }, 2700)
-    const timer = setTimeout(() => {
-      dispatch(setNotification(null))
-    }, 3000)
+    const fadeTimer = setTimeout(() => setFade(false), 2700)
+    const hideTimer = setTimeout(() => dispatch(setNotification(null)), 3000)
     return () => {
       clearTimeout(fadeTimer)
-      clearTimeout(timer)
+      clearTimeout(hideTimer)
     }
   }, [dispatch])
 
   const startChat = () => {
-    dispatch(view(true))
-    dispatch(enterChatRoom(notification?.chatRoomId))
+    if (notification?.chatRoomId) {
+      dispatch(view(true))
+      dispatch(enterChatRoom(notification.chatRoomId))
+    }
   }
+  if (!notification || notificationView || chatView) return null
 
   return (
     <div className={styles.alarmWrap}>
@@ -43,15 +42,14 @@ const Alarm = () => {
         className={cn(styles.alarmComponent, {
           [styles.fadein]: fade,
           [styles.fadeout]: !fade,
-          [styles.none]: notificationView || chatView,
         })}
         onClick={startChat}
       >
-        <h4>{notification?.senderNick}</h4>
+        <h4>{notification.senderNick}</h4>
         <p className={styles.alarmContent}>
-          {notification?.content ?? '사진을 보냈습니다.'}
+          {notification.content ?? '사진을 보냈습니다.'}
         </p>
-        {notification?.createdDate && (
+        {notification.createdDate && (
           <span className={styles.alarmTime}>
             {elapsedTime(notification.createdDate)}
           </span>

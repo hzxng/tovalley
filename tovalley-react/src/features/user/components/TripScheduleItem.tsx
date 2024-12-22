@@ -35,23 +35,18 @@ const TripScheduleItem = ({
     navigation(`/valley/${schedule.waterPlaceId}`)
   }
 
-  const handleCheck = () => {
+  const toggleCheck = () => {
+    setCheck((prev) => !prev)
     checkItemHandler(schedule, !check)
-    setCheck(!check)
   }
 
-  const handleModal = () => {
-    setWriteReviewModal(true)
-  }
-
-  const handleModalClose = () => {
-    setWriteReviewModal(false)
-  }
+  const openReviewModal = () => setWriteReviewModal(true)
+  const closeReviewModal = () => setWriteReviewModal(false)
 
   return (
     <div className={styles.scheduleItem}>
       {scheduleBtn === '앞으로의 일정' && (
-        <span className={styles.scheduleCheck} onClick={handleCheck}>
+        <span className={styles.scheduleCheck} onClick={toggleCheck}>
           {check ? <MdCheckBox /> : <MdCheckBoxOutlineBlank />}
         </span>
       )}
@@ -92,11 +87,11 @@ const TripScheduleItem = ({
             <Congestion traffic={schedule.waterPlaceTraffic} />
           </div>
         ) : (
-          <div className={styles.writeReviewBtn}>
-            {!schedule.hasReview && (
-              <span onClick={handleModal}>리뷰 쓰기</span>
-            )}
-          </div>
+          !schedule.hasReview && (
+            <div className={styles.writeReviewBtn}>
+              <span onClick={openReviewModal}>리뷰 쓰기</span>
+            </div>
+          )
         )}
         <div className={styles.responsiveCongestion}>
           <span>계곡 혼잡도</span>
@@ -114,7 +109,7 @@ const TripScheduleItem = ({
       </div>
       {writeReviewModal && (
         <WriteReviewModal
-          handleModalClose={handleModalClose}
+          handleModalClose={closeReviewModal}
           valleyInfo={{
             id: schedule.tripScheduleId,
             title: schedule.waterPlaceName,

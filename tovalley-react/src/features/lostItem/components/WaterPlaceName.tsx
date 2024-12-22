@@ -18,7 +18,6 @@ const WaterPlaceName = ({
 
   return (
     <div
-      key={el.waterPlaceId}
       className={styles.placeNameWrap}
       onMouseOver={() => setDetailName(el.waterPlaceName)}
       onMouseLeave={() => setDetailName('')}

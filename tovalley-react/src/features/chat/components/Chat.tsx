@@ -14,7 +14,23 @@ import ChatRoom from './ChatRoom'
 import Drawer from './Drawer'
 
 const Chat = () => {
-  const chatView = useSelector((state: RootState) => state.view.value)
+  const dispatch = useDispatch()
+
+  const {
+    view: chatView,
+    client,
+    chatRoomId,
+    notification,
+    subscription,
+    chatRoomName,
+  } = useSelector((state: RootState) => ({
+    view: state.view.value,
+    client: state.client.value,
+    chatRoomId: state.chatRoomId.value,
+    notification: state.notification.value,
+    subscription: state.subscription.value,
+    chatRoomName: state.chatRoomName.value,
+  }))
 
   const [chatRoomList, setChatRoomList] = useState<{
     memberName: String
@@ -23,82 +39,69 @@ const Chat = () => {
     memberName: '',
     chatRooms: [],
   })
-  const dispatch = useDispatch()
-  const client = useSelector((state: RootState) => state.client.value)
-  const chatRoomId = useSelector((state: RootState) => state.chatRoomId.value)
-  const notification = useSelector(
-    (state: RootState) => state.notification.value
-  )
-  const subscription = useSelector(
-    (state: RootState) => state.subscription.value
-  )
-  const chatRoomName = useSelector(
-    (state: RootState) => state.chatRoomName.value
-  )
 
   useEffect(() => {
     if (client && chatView && !chatRoomId) {
       axiosInstance
         .get('/api/auth/chatroom') // 채팅방 목록
         .then((res) => {
-          res.data !== '' && setChatRoomList(res.data.data)
+          if (res.data) setChatRoomList(res.data.data)
         })
         .catch((err) => console.log(err))
     }
   }, [client, chatView, chatRoomId])
 
   const arrangeChat = useCallback((notification: NotificationType) => {
-    setChatRoomList((prevChatRoomList) => {
-      const index = prevChatRoomList.chatRooms.findIndex(
-        (el) => el.chatRoomId === notification.chatRoomId
+    setChatRoomList((prev) => {
+      const index = prev.chatRooms.findIndex(
+        (room) => room.chatRoomId === notification.chatRoomId
       )
 
+      const updatedChatRooms = prev.chatRooms
+      const newChatRoom = {
+        chatRoomId: notification.chatRoomId,
+        chatRoomTitle: '',
+        otherUserProfileImage: null,
+        otherUserNick: notification.senderNick,
+        createdChatRoomDate: notification.createdDate,
+        lastMessageContent: notification.content,
+        unReadMessageCount: 1,
+        lastMessageTime: notification.createdDate,
+      }
+
       if (index >= 0) {
-        let newList = prevChatRoomList.chatRooms
-        const originChat = newList[index]
-        const newChat = {
-          ...originChat,
-          lastMessageContent: notification.content,
-          unReadMessageCount: originChat.unReadMessageCount + 1,
-          lastMessageTime: notification.createdDate,
-        }
-
-        newList.splice(index, 1)
+        const existingRoom = updatedChatRooms[index]
+        updatedChatRooms.splice(index, 1)
 
         return {
-          ...prevChatRoomList,
-          chatRooms: [newChat, ...newList],
-        }
-      } else
-        return {
-          ...prevChatRoomList,
+          ...prev,
           chatRooms: [
             {
-              chatRoomId: notification.chatRoomId,
-              chatRoomTitle: '',
-              otherUserProfileImage: null,
-              otherUserNick: notification.senderNick,
-              createdChatRoomDate: notification.createdDate,
+              ...existingRoom,
               lastMessageContent: notification.content,
-              unReadMessageCount: 1,
+              unReadMessageCount: existingRoom.unReadMessageCount + 1,
               lastMessageTime: notification.createdDate,
             },
-            ...prevChatRoomList.chatRooms,
+            ...updatedChatRooms,
           ],
         }
+      }
+
+      return {
+        ...prev,
+        chatRooms: [newChatRoom, ...updatedChatRooms],
+      }
     })
   }, [])
 
   useEffect(() => {
     if (chatView && notification?.notificationType === 'CHAT') {
-      console.log(notification.notificationType)
       arrangeChat(notification)
     }
   }, [notification, chatView, arrangeChat])
 
   const outChatting = () => {
     if (client?.connected && subscription) {
-      console.log('구독해제!!')
       client.unsubscribe(subscription.id)
       dispatch(setSubscription(null))
     }
@@ -167,7 +170,7 @@ const Chat = () => {
                   <span className={styles.content}>
                     {chatRoom.lastMessageContent ?? '사진을 보냈습니다.'}
                   </span>
-                  {chatRoom.unReadMessageCount !== 0 && (
+                  {chatRoom.unReadMessageCount > 0 && (
                     <div className={styles.count}>
                       {chatRoom.unReadMessageCount}
                     </div>

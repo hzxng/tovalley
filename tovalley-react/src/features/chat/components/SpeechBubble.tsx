@@ -5,6 +5,16 @@ import dateFormat from '../utils/dateFormat'
 import { useSelector } from 'react-redux'
 import { RootState } from '@store/store'
 
+interface SpeechBubbleProps {
+  message: ChatMessage | MessageType
+  isMyMsg: boolean
+  isPageEnd?: boolean
+  isPrev?: boolean
+  index?: number
+  target?: React.RefObject<HTMLDivElement>
+  endRef?: React.RefObject<HTMLDivElement>
+}
+
 const SpeechBubble = ({
   message,
   isMyMsg,
@@ -13,23 +23,30 @@ const SpeechBubble = ({
   index,
   target,
   endRef,
-}: {
-  message: ChatMessage | MessageType
-  isMyMsg: boolean
-  isPageEnd?: boolean
-  isPrev?: boolean
-  index?: number
-  target?: React.RefObject<HTMLDivElement>
-  endRef?: React.RefObject<HTMLDivElement>
-}) => {
-  const date = isPrev
-    ? new Date(message.createdAt)
-    : dateFormat(message.createdAt)
-
+}: SpeechBubbleProps) => {
   const notification = useSelector(
     (state: RootState) => state.notification.value
   )
   const chatRoomId = useSelector((state: RootState) => state.chatRoomId.value)
+
+  const formattedDate = isPrev
+    ? new Date(message.createdAt)
+    : dateFormat(message.createdAt)
+
+  const shouldShowReadCount = (): boolean => {
+    if (
+      notification?.notificationType === 'READ_COUNT_UPDATE' &&
+      dateFormat(notification.createdDate) > formattedDate
+    ) {
+      return false
+    }
+    return message.readCount !== 0
+  }
+
+  const formatTime = (date: Date): string =>
+    `${date.getHours()}`.padStart(2, '0') +
+    ':' +
+    `${date.getMinutes()}`.padStart(2, '0')
 
   return (
     <div key={message.createdAt} className={styles.bubbleContainer}>
@@ -40,16 +57,10 @@ const SpeechBubble = ({
       >
         {isMyMsg && (
           <div className={styles.alignRight}>
-            {notification?.notificationType === 'READ_COUNT_UPDATE' &&
-            dateFormat(notification.createdDate) > date
-              ? ''
-              : message.readCount !== 0 && (
-                  <span className={styles.readCount}>{message.readCount}</span>
-                )}
-            <span className={styles.sendTime}>
-              {`${date.getHours()}`.padStart(2, '0')}:
-              {`${date.getMinutes()}`.padStart(2, '0')}
-            </span>
+            {shouldShowReadCount() && (
+              <span className={styles.readCount}>{message.readCount}</span>
+            )}
+            <span className={styles.sendTime}>{formatTime(formattedDate)}</span>
           </div>
         )}
         <div
@@ -77,17 +88,18 @@ const SpeechBubble = ({
             {!isPrev && message.readCount !== 0 && (
               <span className={styles.readCount}>{message.readCount}</span>
             )}
-            <span className={styles.sendTime}>
-              {`${date.getHours()}`.padStart(2, '0')}:
-              {`${date.getMinutes()}`.padStart(2, '0')}
-            </span>
+            <span className={styles.sendTime}>{formatTime(formattedDate)}</span>
           </div>
         )}
       </div>
-      {isPrev && !isPageEnd && index === 0 && (
-        <div ref={target} className={styles.ref} />
+      {isPrev && (
+        <>
+          {index === 0 && !isPageEnd && (
+            <div ref={target} className={styles.ref} />
+          )}
+          {index === 19 && <div ref={endRef} className={styles.ref} />}
+        </>
       )}
-      {isPrev && index === 19 && <div ref={endRef} className={styles.ref} />}
     </div>
   )
 }
