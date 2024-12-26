@@ -115,19 +115,23 @@
   border-radius: 5px;
 }
 
+.bottom {
+  position: relative;
+}
+
 .newMessageContainer {
   width: 100%;
   display: flex;
   justify-content: center;
-  position: fixed;
-  bottom: 60px;
+  position: absolute;
+  top: -40px;
 }
 
 .newMessage {
+  width: 90%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 90%;
   background-color: rgba(242, 242, 242, 0.645);
   border-radius: 5px;
   cursor: pointer;

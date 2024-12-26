@@ -9,28 +9,26 @@ import { ChatRoomItem, NotificationType } from 'types/chat'
 import axiosInstance from '@utils/axios_interceptor'
 import { enterChatRoom } from '@store/chat/chatRoomIdSlice'
 import { setChatRoomName } from '@store/chat/chatRoomNameSlice'
-import { setSubscription } from '@store/chat/subscriptionSlice'
 import ChatRoom from './ChatRoom'
 import Drawer from './Drawer'
+import { Cookies } from 'react-cookie'
+import useWebSocket from '@hooks/useWebSocket'
+
+const cookies = new Cookies()
 
 const Chat = () => {
   const dispatch = useDispatch()
+  const { connect, outChatting } = useWebSocket()
 
-  const {
-    view: chatView,
-    client,
-    chatRoomId,
-    notification,
-    subscription,
-    chatRoomName,
-  } = useSelector((state: RootState) => ({
-    view: state.view.value,
-    client: state.client.value,
-    chatRoomId: state.chatRoomId.value,
-    notification: state.notification.value,
-    subscription: state.subscription.value,
-    chatRoomName: state.chatRoomName.value,
-  }))
+  const chatView = useSelector((state: RootState) => state.view.value)
+  const client = useSelector((state: RootState) => state.client.value)
+  const chatRoomId = useSelector((state: RootState) => state.chatRoomId.value)
+  const notification = useSelector(
+    (state: RootState) => state.notification.value
+  )
+  const chatRoomName = useSelector(
+    (state: RootState) => state.chatRoomName.value
+  )
 
   const [chatRoomList, setChatRoomList] = useState<{
     memberName: String
@@ -39,6 +37,14 @@ const Chat = () => {
     memberName: '',
     chatRooms: [],
   })
+
+  useEffect(() => {
+    if (cookies.get('ISLOGIN') && !client) {
+      // console.log('connectSocket')
+      connect()
+      // 웹 소켓이 연결되어 있다면 연결 요청 x
+    }
+  }, [client, connect])
 
   useEffect(() => {
     if (client && chatView && !chatRoomId) {
@@ -99,13 +105,6 @@ const Chat = () => {
       arrangeChat(notification)
     }
   }, [notification, chatView, arrangeChat])
-
-  const outChatting = () => {
-    if (client?.connected && subscription) {
-      client.unsubscribe(subscription.id)
-      dispatch(setSubscription(null))
-    }
-  }
 
   const handleClickBack = () => {
     dispatch(enterChatRoom(null))

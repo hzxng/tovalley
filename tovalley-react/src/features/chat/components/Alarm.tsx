@@ -34,6 +34,7 @@ const Alarm = () => {
       dispatch(enterChatRoom(notification.chatRoomId))
     }
   }
+
   if (!notification || notificationView || chatView) return null
 
   return (

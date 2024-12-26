@@ -1,21 +1,21 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { StompSubscription } from "@stomp/stompjs";
+import { createSlice } from '@reduxjs/toolkit'
+import { StompSubscription } from '@stomp/stompjs'
 
 interface SubscribeType {
-  value: StompSubscription | null;
+  value: StompSubscription | null
 }
 
-const initialState: SubscribeType = { value: null };
+const initialState: SubscribeType = { value: null }
 
 const subscriptionSlice = createSlice({
-  name: "subscription",
+  name: 'subscription',
   initialState,
   reducers: {
     setSubscription(state, action) {
-      state.value = action.payload;
+      state.value = action.payload
     },
   },
-});
+})
 
-export default subscriptionSlice;
-export const { setSubscription } = subscriptionSlice.actions;
+export default subscriptionSlice.reducer
+export const { setSubscription } = subscriptionSlice.actions
