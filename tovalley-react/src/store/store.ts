@@ -2,10 +2,8 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import clientSlice from './client/clientSlice'
 import chatViewSlice from './chat/chatViewSlice'
 import chatRoomIdSlice from './chat/chatRoomIdSlice'
-import chatIdSlice from './chat/chatIdSlice'
 import notificationSlice from './notification/notificationSlice'
 import notificationViewSlice from './notification/notificationViewSlice'
-import loginSlice from './login/loginSlice'
 import { persistReducer } from 'redux-persist'
 import storageSession from 'redux-persist/lib/storage/session'
 import subscriptionSlice from './chat/subscriptionSlice'
@@ -14,13 +12,11 @@ import chatRoomNameSlice from './chat/chatRoomNameSlice'
 const rootReducer = combineReducers({
   client: clientSlice,
   notification: notificationSlice,
-  view: chatViewSlice.reducer,
-  chatRoomId: chatRoomIdSlice.reducer,
-  chatId: chatIdSlice.reducer,
-  login: loginSlice.reducer,
-  notificationView: notificationViewSlice.reducer,
-  subscription: subscriptionSlice.reducer,
-  chatRoomName: chatRoomNameSlice.reducer,
+  view: chatViewSlice,
+  chatRoomId: chatRoomIdSlice,
+  notificationView: notificationViewSlice,
+  subscription: subscriptionSlice,
+  chatRoomName: chatRoomNameSlice,
 })
 
 const persistConfig = {
