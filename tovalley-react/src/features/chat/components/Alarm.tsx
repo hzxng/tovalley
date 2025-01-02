@@ -1,37 +1,29 @@
 import { useEffect, useState } from 'react'
 import styles from '@styles/chat/Alarm.module.scss'
-import { useDispatch, useSelector } from 'react-redux'
 import { elapsedTime } from '@utils/elapsedTime'
-import { RootState } from '@store/store'
-import { setNotification } from '@store/notification/notificationSlice'
-import { view } from '@store/chat/chatViewSlice'
-import { enterChatRoom } from '@store/chat/chatRoomIdSlice'
 import cn from 'classnames'
+import useNotificationStore from '@store/notificationStore'
+import useChatStore from '@store/chatStore'
 
 const Alarm = () => {
-  const notification = useSelector(
-    (state: RootState) => state.notification.value
-  )
-  const notificationView = useSelector(
-    (state: RootState) => state.notificationView.value
-  )
-  const chatView = useSelector((state: RootState) => state.view.value)
+  const { notification, notificationView, setNotification } =
+    useNotificationStore()
+  const { chatView, setChatView, setChatRoomId } = useChatStore()
   const [fade, setFade] = useState(true)
-  const dispatch = useDispatch()
 
   useEffect(() => {
     const fadeTimer = setTimeout(() => setFade(false), 2700)
-    const hideTimer = setTimeout(() => dispatch(setNotification(null)), 3000)
+    const hideTimer = setTimeout(() => setNotification(null), 3000)
     return () => {
       clearTimeout(fadeTimer)
       clearTimeout(hideTimer)
     }
-  }, [dispatch])
+  }, [setNotification])
 
   const startChat = () => {
     if (notification?.chatRoomId) {
-      dispatch(view(true))
-      dispatch(enterChatRoom(notification.chatRoomId))
+      setChatView(true)
+      setChatRoomId(notification.chatRoomId)
     }
   }
 

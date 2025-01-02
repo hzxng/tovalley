@@ -2,33 +2,25 @@ import { useCallback, useEffect, useState } from 'react'
 import styles from '@styles/chat/Chat.module.scss'
 import { MdLogout } from 'react-icons/md'
 import { MdArrowBackIos } from 'react-icons/md'
-import { useDispatch, useSelector } from 'react-redux'
 import { elapsedTime } from '@utils/elapsedTime'
-import { RootState } from '@store/store'
 import { ChatRoomItem, NotificationType } from 'types/chat'
 import axiosInstance from '@utils/axios_interceptor'
-import { enterChatRoom } from '@store/chat/chatRoomIdSlice'
-import { setChatRoomName } from '@store/chat/chatRoomNameSlice'
 import ChatRoom from './ChatRoom'
 import Drawer from './Drawer'
 import { Cookies } from 'react-cookie'
 import useWebSocket from '@hooks/useWebSocket'
+import useClientStore from '@store/clientStore'
+import useChatStore from '@store/chatStore'
+import useNotificationStore from '@store/notificationStore'
 
 const cookies = new Cookies()
 
 const Chat = () => {
-  const dispatch = useDispatch()
   const { connect, outChatting } = useWebSocket()
-
-  const chatView = useSelector((state: RootState) => state.view.value)
-  const client = useSelector((state: RootState) => state.client.value)
-  const chatRoomId = useSelector((state: RootState) => state.chatRoomId.value)
-  const notification = useSelector(
-    (state: RootState) => state.notification.value
-  )
-  const chatRoomName = useSelector(
-    (state: RootState) => state.chatRoomName.value
-  )
+  const { client } = useClientStore()
+  const { chatView, chatRoomId, chatRoomName, setChatRoomId, setChatRoomName } =
+    useChatStore()
+  const { notification } = useNotificationStore()
 
   const [chatRoomList, setChatRoomList] = useState<{
     memberName: String
@@ -51,6 +43,7 @@ const Chat = () => {
       axiosInstance
         .get('/api/auth/chatroom') // 채팅방 목록
         .then((res) => {
+          console.log(res.data)
           if (res.data) setChatRoomList(res.data.data)
         })
         .catch((err) => console.log(err))
@@ -107,13 +100,13 @@ const Chat = () => {
   }, [notification, chatView, arrangeChat])
 
   const handleClickBack = () => {
-    dispatch(enterChatRoom(null))
+    setChatRoomId(null)
     outChatting()
   }
 
   const clickChatRoom = (chatRoom: ChatRoomItem) => {
-    dispatch(enterChatRoom(chatRoom.chatRoomId))
-    dispatch(setChatRoomName(chatRoom.otherUserNick))
+    setChatRoomId(chatRoom.chatRoomId)
+    setChatRoomName(chatRoom.otherUserNick)
   }
 
   return (

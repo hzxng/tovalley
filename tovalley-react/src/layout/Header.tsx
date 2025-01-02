@@ -7,20 +7,16 @@ import { BiUser } from 'react-icons/bi'
 import { FiLogOut } from 'react-icons/fi'
 import { FaRegBell } from 'react-icons/fa'
 import { IoChatbubblesSharp } from 'react-icons/io5'
-import { useDispatch, useSelector } from 'react-redux'
 import cn from 'classnames'
 import axiosInstance from '@utils/axios_interceptor'
-import { RootState } from '@store/store'
-import { view } from '@store/chat/chatViewSlice'
-import { setNotificationView } from '@store/notification/notificationViewSlice'
-import { enterChatRoom } from '@store/chat/chatRoomIdSlice'
 import { navList } from '@features/header/utils/nav'
 import useWebSocket from '@hooks/useWebSocket'
+import useChatStore from '@store/chatStore'
+import useNotificationStore from '@store/notificationStore'
 
 const cookies = new Cookies()
 
 const Header = () => {
-  const dispatch = useDispatch()
   const navigation = useNavigate()
   const location = useLocation()
 
@@ -28,14 +24,9 @@ const Header = () => {
   const [navClick, setNavClick] = useState(false)
   const [newAlarm, setNewAlarm] = useState(false)
 
-  const chatView = useSelector((state: RootState) => state.view.value)
-  const notificationView = useSelector(
-    (state: RootState) => state.notificationView.value
-  )
-  const notification = useSelector(
-    (state: RootState) => state.notification.value
-  )
-  const chatRoomId = useSelector((state: RootState) => state.chatRoomId.value)
+  const { chatRoomId, chatView, setChatRoomId, setChatView } = useChatStore()
+  const { notification, notificationView, setNotificationView } =
+    useNotificationStore()
 
   const { disconnect, outChatting } = useWebSocket()
 
@@ -49,7 +40,7 @@ const Header = () => {
   }, [notification, chatRoomId, notificationView])
 
   const handleLogout = () => {
-    dispatch(view(false))
+    setChatView(false)
     axiosInstance
       .delete(`/api/logout`)
       .then((res) => {
@@ -62,14 +53,14 @@ const Header = () => {
   }
 
   const handleClickAlarm = () => {
-    dispatch(setNotificationView(!notificationView))
-    dispatch(enterChatRoom(null))
+    setNotificationView(!notificationView)
+    setChatRoomId(null)
   }
 
   const handleClickChat = () => {
     outChatting()
-    dispatch(view(!chatView))
-    dispatch(enterChatRoom(null))
+    setChatView(!chatView)
+    setChatRoomId(null)
   }
 
   return (
@@ -102,7 +93,7 @@ const Header = () => {
               <span
                 className={styles.myPage}
                 onClick={() => {
-                  dispatch(view(false))
+                  setChatView(false)
                   navigation('/mypage')
                 }}
               >
@@ -114,7 +105,7 @@ const Header = () => {
               <span
                 className={styles.myPageIcon}
                 onClick={() => {
-                  dispatch(view(false))
+                  setChatView(false)
                   navigation('/mypage')
                 }}
               >

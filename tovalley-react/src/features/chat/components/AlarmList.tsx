@@ -1,17 +1,15 @@
 import { useCallback, useEffect, useState } from 'react'
 import styles from '@styles/chat/AlarmList.module.scss'
 import { MdClose } from 'react-icons/md'
-import { useDispatch, useSelector } from 'react-redux'
 import { Cookies } from 'react-cookie'
 import { elapsedTime } from '@utils/elapsedTime'
 import { AlarmListType } from 'types/chat'
-import { RootState } from '@store/store'
-import { view } from '@store/chat/chatViewSlice'
-import { enterChatRoom } from '@store/chat/chatRoomIdSlice'
 import axiosInstance from '@utils/axios_interceptor'
 import Drawer from './Drawer'
 import cn from 'classnames'
 import useObserver from '@hooks/useObserver'
+import useNotificationStore from '@store/notificationStore'
+import useChatStore from '@store/chatStore'
 
 const cookies = new Cookies()
 
@@ -20,14 +18,9 @@ const AlarmList = () => {
   const [isPageEnd, setIsPageEnd] = useState<boolean>(false)
   const [loading, setLoading] = useState(false)
 
-  const notificationView = useSelector(
-    (state: RootState) => state.notificationView.value
-  )
-  const notification = useSelector(
-    (state: RootState) => state.notification.value
-  )
+  const { notification, notificationView } = useNotificationStore()
+  const { setChatView, setChatRoomId } = useChatStore()
 
-  const dispatch = useDispatch()
   const loginStatus = cookies.get('ISLOGIN')
 
   const getAlarmList = useCallback(async (cursorId?: number | string) => {
@@ -95,8 +88,8 @@ const AlarmList = () => {
   }, [])
 
   const startChat = (id: number) => {
-    dispatch(view(true))
-    dispatch(enterChatRoom(id))
+    setChatView(true)
+    setChatRoomId(id)
   }
 
   const { target } = useObserver({

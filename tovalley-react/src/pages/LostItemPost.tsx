@@ -5,9 +5,6 @@ import { FaRegComment } from 'react-icons/fa'
 import { MdLocationPin } from 'react-icons/md'
 import { useNavigate, useParams } from 'react-router-dom'
 import { FaCheck } from 'react-icons/fa6'
-import { useDispatch } from 'react-redux'
-import { view } from '../store/chat/chatViewSlice'
-import { enterChatRoom } from '../store/chat/chatRoomIdSlice'
 import { Cookies } from 'react-cookie'
 import { LostPost, LostPostComment } from 'types/lost-found'
 import { elapsedTime } from '@utils/elapsedTime'
@@ -15,11 +12,11 @@ import cn from 'classnames'
 import CommentItem from '@features/lostItem/components/CommentItem'
 import CustomModal from '@component/CustomModal'
 import axiosInstance from '@utils/axios_interceptor'
+import useChatStore from '@store/chatStore'
 
 const LostItemPost = () => {
   const { category, id } = useParams()
   const navigate = useNavigate()
-  const dispatch = useDispatch()
   const cookies = new Cookies()
 
   const [lostPost, setLostPost] = useState<LostPost | null>(null)
@@ -27,6 +24,8 @@ const LostItemPost = () => {
   const [resolveCheck, setResolveCheck] = useState(false)
   const [commentText, setCommentText] = useState('')
   const [deleteModal, setDeleteModal] = useState(false)
+
+  const { setChatRoomId, setChatView } = useChatStore()
 
   useEffect(() => {
     axiosInstance
@@ -113,8 +112,8 @@ const LostItemPost = () => {
       const { data } = await axiosInstance.post('/api/auth/chatroom', {
         recipientNick: nickname,
       })
-      dispatch(enterChatRoom(data.data.chatRoomId))
-      dispatch(view(true))
+      setChatRoomId(data.data.chatRoomId)
+      setChatView(true)
     } catch (error) {
       console.error(error)
     }
