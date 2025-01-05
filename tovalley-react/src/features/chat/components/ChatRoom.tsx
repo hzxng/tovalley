@@ -1,15 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import styles from '@styles/chat/ChatRoom.module.scss'
-import { useDispatch, useSelector } from 'react-redux'
 import { MdImage } from 'react-icons/md'
 import { IoIosArrowDown } from 'react-icons/io'
 import { useSaveImg } from '@hooks/useSaveImg'
 import { MessageListType, MessageType } from 'types/chat'
-import { RootState } from '@store/store'
 import axiosInstance from '@utils/axios_interceptor'
-import { setSubscription } from '@store/chat/subscriptionSlice'
 import useObserver from '@hooks/useObserver'
 import SpeechBubble from './SpeechBubble'
+import { useAtomValue, useSetAtom } from 'jotai'
+import { chatRoomIdAtom, clientAtom, subscriptionAtom } from 'jotai/atom'
 
 const ChatRoom = () => {
   const [prevMessages, setPrevMessages] = useState<MessageListType>()
@@ -18,10 +17,10 @@ const ChatRoom = () => {
   const [showNewMessageAlert, setShowNewMessageAlert] = useState(false)
   const [isPageEnd, setIsPageEnd] = useState<boolean>(false)
 
-  const client = useSelector((state: RootState) => state.client.value)
-  const chatRoomId = useSelector((state: RootState) => state.chatRoomId.value)
+  const client = useAtomValue(clientAtom)
+  const chatRoomId = useAtomValue(chatRoomIdAtom)
+  const setSubscription = useSetAtom(subscriptionAtom)
 
-  const dispatch = useDispatch()
   const { uploadImg, imgFiles, saveImgFile, handleDeleteImage } = useSaveImg()
 
   const endRef = useRef<HTMLDivElement>(null)
@@ -143,9 +142,15 @@ const ChatRoom = () => {
           handleNewMessage(JSON.parse(msg.body), prevMessages.memberId)
         }
       )
-      dispatch(setSubscription(subscribe))
+      setSubscription(subscribe)
     }
-  }, [client, prevMessages?.memberId, chatRoomId, dispatch, handleNewMessage])
+  }, [
+    client,
+    prevMessages?.memberId,
+    chatRoomId,
+    setSubscription,
+    handleNewMessage,
+  ])
 
   useEffect(() => {
     endRef.current?.scrollIntoView()

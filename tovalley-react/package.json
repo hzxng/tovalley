@@ -21,6 +21,7 @@
     "@types/sockjs-client": "^1.5.4",
     "chart.js": "^4.3.3",
     "classnames": "^2.5.1",
+    "jotai": "^2.11.0",
     "luxon": "^3.4.4",
     "moment": "^2.29.4",
     "node-sass": "^7.0.3",

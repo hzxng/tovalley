@@ -1,7 +1,6 @@
-import { view } from '@store/chat/chatViewSlice'
-import { setNotificationView } from '@store/notification/notificationViewSlice'
+import { useSetAtom } from 'jotai'
+import { chatViewAtom, notificationViewAtom } from 'jotai/atom'
 import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 const Wrapper = styled.div<{ appear: string; size: number }>`
@@ -27,7 +26,9 @@ const Drawer = ({
 }: DrawerProps) => {
   const [bgForeground, setBgForeground] = useState(false)
   const [appear, setAppear] = useState('')
-  const dispatch = useDispatch()
+
+  const setChatView = useSetAtom(chatViewAtom)
+  const setNotificationView = useSetAtom(notificationViewAtom)
 
   useEffect(() => {
     if (isView) {
@@ -47,11 +48,11 @@ const Drawer = ({
   useEffect(() => {
     if (isView) {
       setAppear('start')
-      dispatch(isAlarm ? view(false) : setNotificationView(false))
+      isAlarm ? setChatView(false) : setNotificationView(false)
     } else {
       setAppear('end')
     }
-  }, [isAlarm, isView, dispatch])
+  }, [isAlarm, isView, setChatView, setNotificationView])
 
   useEffect(() => {
     if (appear === 'end') {

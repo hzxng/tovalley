@@ -1,6 +1,5 @@
 import { Route, Routes } from 'react-router-dom'
 import './App.css'
-import { RootState } from './store/store'
 import Home from '@pages/Home'
 import Layout from 'layout/Layout'
 import Login from '@pages/Login'
@@ -14,15 +13,14 @@ import LostItemPost from '@pages/LostItemPost'
 import LostItemUpdate from '@pages/LostItemUpdate'
 import LostItemWrite from '@pages/LostItemWrite'
 import SocialLoginException from '@pages/SocialLoginException'
-import { useSelector } from 'react-redux'
 import Chat from '@features/chat/components/Chat'
 import Alarm from '@features/chat/components/Alarm'
 import AlarmList from '@features/chat/components/AlarmList'
+import { useAtomValue } from 'jotai'
+import { notificationAtom } from 'jotai/atom'
 
 function App() {
-  const notification = useSelector(
-    (state: RootState) => state.notification.value
-  )
+  const notification = useAtomValue(notificationAtom)
 
   return (
     <div>

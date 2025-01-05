@@ -2,22 +2,18 @@ import { useState, useCallback } from 'react'
 import SockJS from 'sockjs-client'
 import { Client } from '@stomp/stompjs'
 import axiosInstance from '@utils/axios_interceptor'
-import { useDispatch, useSelector } from 'react-redux'
-import { setNotification } from '@store/notification/notificationSlice'
-import { newClient } from '@store/client/clientSlice'
-import { RootState } from '@store/store'
-import { setSubscription } from '@store/chat/subscriptionSlice'
+import { useAtom, useSetAtom } from 'jotai'
+import { clientAtom, notificationAtom, subscriptionAtom } from 'jotai/atom'
 
 const localhost = process.env.REACT_APP_HOST
 
 const useWebSocket = () => {
-  const [client, setClient] = useState<Client | null>(null)
+  const [newClient, setNewClient] = useState<Client | null>(null)
   const [socket, setSocket] = useState<WebSocket>()
-  const subscription = useSelector(
-    (state: RootState) => state.subscription.value
-  )
 
-  const dispatch = useDispatch()
+  const setClient = useSetAtom(clientAtom)
+  const setNotification = useSetAtom(notificationAtom)
+  const [subscription, setSubscription] = useAtom(subscriptionAtom)
 
   const getMemberId = useCallback(
     async (client: Client) => {
@@ -27,14 +23,14 @@ const useWebSocket = () => {
         client.subscribe(
           `/sub/notification/${data.data}`, // 알림 토픽 구독
           (notify) => {
-            dispatch(setNotification(JSON.parse(notify.body)))
+            setNotification(JSON.parse(notify.body))
           }
         )
       } catch (err) {
         console.log(err)
       }
     },
-    [dispatch]
+    [setNotification]
   )
 
   const connect = useCallback(() => {
@@ -54,26 +50,26 @@ const useWebSocket = () => {
 
     stompClient.onConnect = () => {
       // console.log('WebSocket connected')
-      dispatch(newClient(stompClient))
       setClient(stompClient)
+      setNewClient(stompClient)
 
       getMemberId(stompClient)
     }
-  }, [dispatch, getMemberId])
+  }, [setClient, getMemberId])
 
   const disconnect = useCallback(() => {
-    if (client?.connected) {
+    if (newClient?.connected) {
       socket?.close()
-      client.deactivate()
-      setClient(null)
+      newClient.deactivate()
+      setNewClient(null)
     }
-  }, [client, socket])
+  }, [newClient, socket])
 
   const outChatting = () => {
-    if (client?.connected && subscription) {
+    if (newClient?.connected && subscription) {
       // console.log('구독해제!!')
-      client.unsubscribe(subscription.id)
-      dispatch(setSubscription(null))
+      newClient.unsubscribe(subscription.id)
+      setSubscription(null)
     }
   }
 
