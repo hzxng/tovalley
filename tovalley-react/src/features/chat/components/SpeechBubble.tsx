@@ -2,8 +2,8 @@ import { ChatMessage, MessageType } from 'types/chat'
 import styles from '@styles/chat/SpeechBubble.module.scss'
 import cn from 'classnames'
 import dateFormat from '../utils/dateFormat'
-import { useSelector } from 'react-redux'
-import { RootState } from '@store/store'
+import { useRecoilValue } from 'recoil'
+import { chatRoomIdState, notificationState } from 'recoil/atom'
 
 interface SpeechBubbleProps {
   message: ChatMessage | MessageType
@@ -24,10 +24,8 @@ const SpeechBubble = ({
   target,
   endRef,
 }: SpeechBubbleProps) => {
-  const notification = useSelector(
-    (state: RootState) => state.notification.value
-  )
-  const chatRoomId = useSelector((state: RootState) => state.chatRoomId.value)
+  const notification = useRecoilValue(notificationState)
+  const chatRoomId = useRecoilValue(chatRoomIdState)
 
   const formattedDate = isPrev
     ? new Date(message.createdAt)

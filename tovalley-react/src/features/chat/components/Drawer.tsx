@@ -1,7 +1,6 @@
-import { view } from '@store/chat/chatViewSlice'
-import { setNotificationView } from '@store/notification/notificationViewSlice'
 import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useSetRecoilState } from 'recoil'
+import { chatViewState, notificationViewState } from 'recoil/atom'
 import styled from 'styled-components'
 
 const Wrapper = styled.div<{ appear: string; size: number }>`
@@ -27,7 +26,8 @@ const Drawer = ({
 }: DrawerProps) => {
   const [bgForeground, setBgForeground] = useState(false)
   const [appear, setAppear] = useState('')
-  const dispatch = useDispatch()
+  const setChatView = useSetRecoilState(chatViewState)
+  const setNotificationView = useSetRecoilState(notificationViewState)
 
   useEffect(() => {
     if (isView) {
@@ -47,11 +47,11 @@ const Drawer = ({
   useEffect(() => {
     if (isView) {
       setAppear('start')
-      dispatch(isAlarm ? view(false) : setNotificationView(false))
+      isAlarm ? setChatView(false) : setNotificationView(false)
     } else {
       setAppear('end')
     }
-  }, [isAlarm, isView, dispatch])
+  }, [isAlarm, isView, setChatView, setNotificationView])
 
   useEffect(() => {
     if (appear === 'end') {

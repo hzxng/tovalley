@@ -5,21 +5,22 @@ import { FaUserCircle } from 'react-icons/fa'
 import { AiOutlineComment } from 'react-icons/ai'
 import RatingStar from '@component/RatingStar'
 import axiosInstance from '@utils/axios_interceptor'
-import { enterChatRoom } from 'store/chat/chatRoomIdSlice'
-import { view } from 'store/chat/chatViewSlice'
-import { useDispatch } from 'react-redux'
 import useMobile from '@hooks/useMobile'
 import { useState } from 'react'
 import cn from 'classnames'
 import DetailReviewImg from './DetailReviewImg'
+import { useSetRecoilState } from 'recoil'
+import { chatRoomIdState, chatViewState } from 'recoil/atom'
 
 const ValleyReviewItem = ({ item }: { item: ReviewContent }) => {
-  const dispatch = useDispatch()
   const { innerWidth } = useMobile()
   const [detailReview, setDetailReview] = useState<{
     view: boolean
     images: string[]
   }>({ view: false, images: [] })
+
+  const setChatRoomId = useSetRecoilState(chatRoomIdState)
+  const setChatView = useSetRecoilState(chatViewState)
 
   const newChatRoom = (nickname: string) => {
     axiosInstance
@@ -29,8 +30,8 @@ const ValleyReviewItem = ({ item }: { item: ReviewContent }) => {
       })
       .then((res) => {
         console.log(res)
-        dispatch(enterChatRoom(res.data.data.chatRoomId))
-        dispatch(view(true))
+        setChatRoomId(res.data.data.chatRoomId)
+        setChatView(true)
       })
   }
 
