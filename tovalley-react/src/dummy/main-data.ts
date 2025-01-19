@@ -3,7 +3,7 @@ import { MainData } from 'types/main'
 export const data: MainData = {
   nationalWeather: [
     {
-      weatherDate: '2024-05-14',
+      weatherDate: '2024-08-14',
       dailyNationalWeather: [
         {
           region: '백령',
@@ -212,7 +212,7 @@ export const data: MainData = {
       ],
     },
     {
-      weatherDate: '2024-05-15',
+      weatherDate: '2024-08-15',
       dailyNationalWeather: [
         {
           region: '백령',
@@ -421,7 +421,7 @@ export const data: MainData = {
       ],
     },
     {
-      weatherDate: '2024-05-16',
+      weatherDate: '2024-08-16',
       dailyNationalWeather: [
         {
           region: '백령',
@@ -630,7 +630,7 @@ export const data: MainData = {
       ],
     },
     {
-      weatherDate: '2024-05-17',
+      weatherDate: '2024-08-17',
       dailyNationalWeather: [
         {
           region: '백령',
@@ -839,7 +839,7 @@ export const data: MainData = {
       ],
     },
     {
-      weatherDate: '2024-05-18',
+      weatherDate: '2024-08-18',
       dailyNationalWeather: [
         {
           region: '백령',
@@ -1112,7 +1112,7 @@ export const data: MainData = {
       {
         month: 2,
         deathCnt: 0,
-        disappearanceCnt: 0,
+        disappearanceCnt: 1,
         injuryCnt: 0,
       },
       {
@@ -1130,26 +1130,26 @@ export const data: MainData = {
       {
         month: 5,
         deathCnt: 0,
-        disappearanceCnt: 0,
+        disappearanceCnt: 1,
         injuryCnt: 0,
       },
       {
         month: 6,
-        deathCnt: 0,
+        deathCnt: 3,
         disappearanceCnt: 0,
-        injuryCnt: 0,
+        injuryCnt: 16,
       },
       {
         month: 7,
-        deathCnt: 0,
+        deathCnt: 5,
         disappearanceCnt: 0,
-        injuryCnt: 0,
+        injuryCnt: 20,
       },
       {
         month: 8,
-        deathCnt: 0,
-        disappearanceCnt: 0,
-        injuryCnt: 0,
+        deathCnt: 19,
+        disappearanceCnt: 40,
+        injuryCnt: 48,
       },
       {
         month: 9,
@@ -1161,11 +1161,11 @@ export const data: MainData = {
         month: 10,
         deathCnt: 0,
         disappearanceCnt: 0,
-        injuryCnt: 0,
+        injuryCnt: 21,
       },
       {
         month: 11,
-        deathCnt: 0,
+        deathCnt: 1,
         disappearanceCnt: 0,
         injuryCnt: 0,
       },
@@ -1177,9 +1177,9 @@ export const data: MainData = {
       },
     ],
     province: '전국',
-    totalDeathCnt: 0,
-    totalDisappearanceCnt: 0,
-    totalInjuryCnt: 0,
+    totalDeathCnt: 28,
+    totalDisappearanceCnt: 42,
+    totalInjuryCnt: 105,
   },
   nationalPopularWaterPlaces: [
     {
@@ -1188,7 +1188,7 @@ export const data: MainData = {
       location: '서울특별시 관악구',
       rating: 3.5,
       reviewCnt: 2,
-      waterPlaceImageUrl: null,
+      waterPlaceImageUrl: '/img/dummy/계곡이미지1.jpg',
     },
     {
       waterPlaceId: 2,
@@ -1196,7 +1196,7 @@ export const data: MainData = {
       location: '부산광역시 북구',
       rating: 1.9,
       reviewCnt: 10,
-      waterPlaceImageUrl: null,
+      waterPlaceImageUrl: '/img/dummy/계곡이미지2.jpg',
     },
     {
       waterPlaceId: 3,
@@ -1204,7 +1204,7 @@ export const data: MainData = {
       location: '부산광역시 해운대구',
       rating: 2.4,
       reviewCnt: 7,
-      waterPlaceImageUrl: null,
+      waterPlaceImageUrl: '/img/dummy/계곡이미지4.jpg',
     },
     {
       waterPlaceId: 4,
@@ -1212,7 +1212,7 @@ export const data: MainData = {
       location: '부산광역시 기장군',
       rating: 0,
       reviewCnt: 0,
-      waterPlaceImageUrl: null,
+      waterPlaceImageUrl: '/img/dummy/계곡이미지5.jpg',
     },
     {
       waterPlaceId: 5,
@@ -1220,7 +1220,7 @@ export const data: MainData = {
       location: '부산광역시 기장군',
       rating: 0,
       reviewCnt: 0,
-      waterPlaceImageUrl: null,
+      waterPlaceImageUrl: '/img/dummy/계곡이미지6.jpg',
     },
     {
       waterPlaceId: 6,
@@ -1228,7 +1228,7 @@ export const data: MainData = {
       location: '광주광역시 광산구',
       rating: 0,
       reviewCnt: 0,
-      waterPlaceImageUrl: null,
+      waterPlaceImageUrl: '/img/dummy/계곡이미지7.jpg',
     },
     {
       waterPlaceId: 7,
@@ -1236,7 +1236,7 @@ export const data: MainData = {
       location: '대전광역시 동구',
       rating: 0,
       reviewCnt: 0,
-      waterPlaceImageUrl: null,
+      waterPlaceImageUrl: '/img/dummy/계곡이미지8.jpg',
     },
     {
       waterPlaceId: 8,
@@ -1244,21 +1244,21 @@ export const data: MainData = {
       location: '대전광역시 중구',
       rating: 0,
       reviewCnt: 0,
-      waterPlaceImageUrl: null,
+      waterPlaceImageUrl: '/img/dummy/계곡이미지9.jpg',
     },
   ],
   recentReviews: [
     {
       reviewId: 2,
       reviewRating: 4,
-      reviewContent: '좋아요',
+      reviewContent: '조용하고 좋아요',
       reviewCreatedAt: '2024-05-06 22:34:15',
       waterPlaceId: 1,
     },
     {
       reviewId: 1,
       reviewRating: 3,
-      reviewContent: 'dd',
+      reviewContent: '가족들이랑 오기 좋아요~',
       reviewCreatedAt: '2024-03-04 01:34:42',
       waterPlaceId: 1,
     },

@@ -5,22 +5,23 @@ import { FaRegComment } from 'react-icons/fa'
 import { MdLocationPin } from 'react-icons/md'
 import { useNavigate, useParams } from 'react-router-dom'
 import { FaCheck } from 'react-icons/fa6'
-import { useDispatch } from 'react-redux'
-import { view } from '../store/chat/chatViewSlice'
-import { enterChatRoom } from '../store/chat/chatRoomIdSlice'
-import { Cookies } from 'react-cookie'
 import { LostPost, LostPostComment } from 'types/lost-found'
 import { elapsedTime } from '@utils/elapsedTime'
 import cn from 'classnames'
 import CommentItem from '@features/lostItem/components/CommentItem'
 import CustomModal from '@component/CustomModal'
-import axiosInstance from '@utils/axios_interceptor'
+import {
+  data1,
+  data2,
+  data3,
+  data4,
+  data5,
+  data6,
+} from 'dummy/lostItemPost-data'
 
 const LostItemPost = () => {
   const { category, id } = useParams()
   const navigate = useNavigate()
-  const dispatch = useDispatch()
-  const cookies = new Cookies()
 
   const [lostPost, setLostPost] = useState<LostPost | null>(null)
   const [commentList, setCommentList] = useState<LostPostComment[]>([])
@@ -29,38 +30,39 @@ const LostItemPost = () => {
   const [deleteModal, setDeleteModal] = useState(false)
 
   useEffect(() => {
-    axiosInstance
-      .get(`/api/lostItem/${id}`)
-      .then((res) => {
-        setLostPost(res.data.data)
-        setCommentList(res.data.data.comments || [])
-        setResolveCheck(res.data.data.isResolved)
-      })
-      .catch((err) => console.log(err))
+    if (id === '18') {
+      setLostPost(data1)
+      setCommentList(data1.comments)
+      setResolveCheck(data1.isResolved)
+    } else if (id === '17') {
+      setLostPost(data2)
+      setCommentList(data2.comments)
+      setResolveCheck(data2.isResolved)
+    } else if (id === '16') {
+      setLostPost(data3)
+      setCommentList(data3.comments)
+      setResolveCheck(data3.isResolved)
+    } else if (id === '15') {
+      setLostPost(data4)
+      setCommentList(data4.comments)
+      setResolveCheck(data4.isResolved)
+    } else if (id === '14') {
+      setLostPost(data5)
+      setCommentList(data5.comments)
+      setResolveCheck(data5.isResolved)
+    } else if (id === '11') {
+      setLostPost(data6)
+      setCommentList(data6.comments)
+      setResolveCheck(data6.isResolved)
+    }
   }, [id])
 
   const toggleResolveStatus = async () => {
-    try {
-      await axiosInstance.patch(
-        `/api/auth/lostItem/${id}`,
-        {},
-        {
-          params: { isResolved: !resolveCheck },
-        }
-      )
-      setResolveCheck((prev) => !prev)
-    } catch (error) {
-      console.error(error)
-    }
+    setResolveCheck((prev) => !prev)
   }
 
   const deletePost = async () => {
-    try {
-      await axiosInstance.delete(`/api/auth/lostItem/${id}`)
-      navigate('/lost-item')
-    } catch (error) {
-      console.error(error)
-    }
+    navigate('/lost-item')
   }
 
   const closeDeleteModal = () => {
@@ -69,56 +71,40 @@ const LostItemPost = () => {
 
   const addComment = async () => {
     if (!commentText.trim()) return
-    try {
-      const { data } = await axiosInstance.post(
-        `/api/auth/lostItem/${id}/comment`,
-        {
-          commentContent: commentText,
-        }
-      )
-      const newComment = {
-        commentId: data.data.commentId,
-        commentAuthor: data.data.commentAuthor,
-        commentContent: data.data.commentContent,
-        commentCreateAt: data.data.commentCreateAt,
-        commentByUser: true,
-        commentAuthorProfile: data.data.commentAuthorProfile,
-      }
-      setCommentList((prev) => [...prev, newComment])
-      setCommentText('')
-    } catch (error) {
-      console.error(error)
+    const user = JSON.parse(localStorage.getItem('user') ?? '')
+    const date = new Date()
+    const month = date.getMonth() + 1
+    const newComment = {
+      commentId: 1,
+      commentAuthor: user.id,
+      commentContent: commentText,
+      commentCreateAt: `${date.getFullYear()}-${month
+        .toString()
+        .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date
+        .getHours()
+        .toString()
+        .padStart(2, '0')}:${date
+        .getMinutes()
+        .toString()
+        .padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`,
+      commentByUser: true,
+      commentAuthorProfile: '/img/dummy/profile-img2.jpg',
     }
+    setCommentList((prev) => [...prev, newComment])
+    setCommentText('')
   }
 
   const deleteComment = async (item: LostPostComment) => {
-    try {
-      await axiosInstance.delete(
-        `/api/auth/lostItem/${id}/comment/${item.commentId}`
-      )
-      setCommentList((prev) =>
-        prev.filter((comment) => comment.commentId !== item.commentId)
-      )
-    } catch (error) {
-      console.error(error)
-    }
+    setCommentList((prev) =>
+      prev.filter((comment) => comment.commentId !== item.commentId)
+    )
   }
 
   const moveToUpdatePage = () => {
-    navigate(`/lost-item/${category}/${id}/update`)
+    // navigate(`/lost-item/${category}/${id}/update`)
   }
 
-  const newChatRoom = async (nickname: string) => {
-    try {
-      const { data } = await axiosInstance.post('/api/auth/chatroom', {
-        recipientNick: nickname,
-      })
-      dispatch(enterChatRoom(data.data.chatRoomId))
-      dispatch(view(true))
-    } catch (error) {
-      console.error(error)
-    }
-  }
+  const newChatRoom = async (nickname: string) => {}
 
   if (!lostPost || !lostPost) return <div>loading</div>
 
@@ -198,7 +184,7 @@ const LostItemPost = () => {
           )}
         </div>
       </div>
-      {cookies.get('ISLOGIN') && (
+      {localStorage.getItem('user') && (
         <div className={styles.postComment}>
           <div className={styles.commentInput}>
             <input
@@ -215,6 +201,7 @@ const LostItemPost = () => {
       <div className={styles.commentList}>
         {commentList.map((item) => (
           <CommentItem
+            key={item.commentCreateAt}
             item={item}
             newChatRoom={newChatRoom}
             deleteComment={deleteComment}

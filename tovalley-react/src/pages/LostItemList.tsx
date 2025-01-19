@@ -1,22 +1,19 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FaCheck } from 'react-icons/fa6'
 import { LuPencil } from 'react-icons/lu'
 import { IoCloseOutline } from 'react-icons/io5'
 import styles from '@styles/lostItem/LostItemList.module.scss'
 import { useNavigate } from 'react-router-dom'
-import { Cookies } from 'react-cookie'
 import cn from 'classnames'
 import { LostList, PlaceName } from 'types/lost-found'
 import LostItemPostItem from '@features/lostItem/components/LostItemPostItem'
 import Search from '@features/lostItem/components/Search'
 import ValleyModal from '@features/lostItem/components/ValleyModal'
-import { Axios } from '@utils/axios_interceptor'
-import Loading from '@component/Loading'
+import { data, data1, data1867, dataFOUND, dataLost } from 'dummy/lostItem-data'
 
 const LostItemList = () => {
   const CATEGORIES = ['전체', '물건 찾아요', '주인 찾아요']
   const navigation = useNavigate()
-  const cookies = new Cookies()
 
   const [currentCategory, setCurrentCategory] = useState('전체')
   const [except, setExcept] = useState(false)
@@ -24,41 +21,32 @@ const LostItemList = () => {
   const [lostList, setLostList] = useState<LostList[] | null>(null)
   const [modalView, setModalView] = useState(false)
   const [selectedPlace, setSelectedPlace] = useState<PlaceName[]>([])
-  const [loading, setLoading] = useState(false)
-
-  const getLostList = useCallback(async () => {
-    setLoading(true)
-    const selectedPlaceIds = selectedPlace.map((el) => el.waterPlaceId)
-    const params: {
-      searchWord?: string
-      isResolved: boolean
-      category?: string
-    } = {
-      isResolved: !except,
-      ...(search.click && { searchWord: search.text }),
-      ...(currentCategory === '물건 찾아요' && { category: 'LOST' }),
-      ...(currentCategory === '주인 찾아요' && { category: 'FOUND' }),
-    }
-
-    const waterPlaceParams = selectedPlaceIds
-      .map((id) => `&waterPlaceId=${id}`)
-      .join('')
-
-    try {
-      const response = await Axios.get(`/api/lostItem?${waterPlaceParams}`, {
-        params,
-      })
-      setLostList(response.data.data.content)
-    } catch (error) {
-      console.error('Failed to fetch lost items:', error)
-    } finally {
-      setLoading(false)
-    }
-  }, [currentCategory, except, search, selectedPlace])
 
   useEffect(() => {
-    getLostList()
-  }, [getLostList])
+    const selectedPlaceIds = selectedPlace.map((el) => el.waterPlaceId)
+
+    if (search.click) {
+      setLostList(data1.filter((e) => e.title.includes(search.text)))
+    }
+
+    if (selectedPlaceIds.length) {
+      if (selectedPlaceIds.includes(1)) {
+        if (currentCategory === '전체') setLostList(data1)
+        else if (currentCategory === '물건 찾아요')
+          setLostList(data1.filter((e) => e.category === 'LOST'))
+        else setLostList(data1.filter((e) => e.category === 'FOUND'))
+      } else if (selectedPlaceIds.includes(1867)) {
+        if (currentCategory === '전체') setLostList(data1867)
+        else if (currentCategory === '물건 찾아요')
+          setLostList(data1867.filter((e) => e.category === 'LOST'))
+        else setLostList(data1867.filter((e) => e.category === 'FOUND'))
+      } else setLostList([])
+    }
+
+    if (currentCategory === '전체') setLostList(data)
+    else if (currentCategory === '물건 찾아요') setLostList(dataLost)
+    else setLostList(dataFOUND)
+  }, [currentCategory, search, selectedPlace])
 
   const handleCategoryClick = (category: string) => {
     setCurrentCategory(category)
@@ -71,7 +59,7 @@ const LostItemList = () => {
   const closeModal = () => setModalView(false)
 
   const moveToWritePage = () => {
-    cookies.get('ISLOGIN')
+    localStorage.getItem('user')
       ? navigation('/lost-item/write')
       : navigation('/login')
   }
@@ -121,9 +109,8 @@ const LostItemList = () => {
   )
 
   const renderLostItems = () => {
-    if (loading) return <Loading />
     if (!lostList || lostList.length === 0)
-      return <div className={styles.noItems}>등록된 항목이 없습니다.</div>
+      return <div className={styles.noItems} />
 
     return lostList.map((item) => (
       <LostItemPostItem key={item.id} item={item} />

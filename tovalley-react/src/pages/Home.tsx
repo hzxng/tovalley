@@ -3,14 +3,11 @@ import Weather from '@features/home/components/Weather'
 import Accident from '@features/home/components/Accident'
 import PopularValley from '@features/home/components/PopularValley'
 import RecentPost from '@features/home/components/RecentPost'
-import useHomeData from '@features/home/hooks/useHomeData'
-import Loading from '@component/Loading'
-// import { data } from 'dummy/main-data'
+import { data } from 'dummy/main-data'
 
 const Home = () => {
-  const { data: main, isLoading } = useHomeData()
-
-  if (isLoading || !main) return <Loading />
+  // const { data: main, isLoading } = useHomeData()
+  const main = data
 
   return (
     <div className={styles.mainPage}>

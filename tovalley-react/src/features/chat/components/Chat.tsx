@@ -6,22 +6,16 @@ import { useDispatch, useSelector } from 'react-redux'
 import { elapsedTime } from '@utils/elapsedTime'
 import { RootState } from '@store/store'
 import { ChatRoomItem, NotificationType } from 'types/chat'
-import axiosInstance from '@utils/axios_interceptor'
 import { enterChatRoom } from '@store/chat/chatRoomIdSlice'
 import { setChatRoomName } from '@store/chat/chatRoomNameSlice'
 import ChatRoom from './ChatRoom'
 import Drawer from './Drawer'
-import { Cookies } from 'react-cookie'
-import useWebSocket from '@hooks/useWebSocket'
-
-const cookies = new Cookies()
+import { chatList } from 'dummy/chat-data'
 
 const Chat = () => {
   const dispatch = useDispatch()
-  const { connect, outChatting } = useWebSocket()
 
   const chatView = useSelector((state: RootState) => state.view.value)
-  const client = useSelector((state: RootState) => state.client.value)
   const chatRoomId = useSelector((state: RootState) => state.chatRoomId.value)
   const notification = useSelector(
     (state: RootState) => state.notification.value
@@ -39,23 +33,10 @@ const Chat = () => {
   })
 
   useEffect(() => {
-    if (cookies.get('ISLOGIN') && !client) {
-      // console.log('connectSocket')
-      connect()
-      // 웹 소켓이 연결되어 있다면 연결 요청 x
+    if (chatView) {
+      setChatRoomList(chatList)
     }
-  }, [client, connect])
-
-  useEffect(() => {
-    if (client && chatView && !chatRoomId) {
-      axiosInstance
-        .get('/api/auth/chatroom') // 채팅방 목록
-        .then((res) => {
-          if (res.data) setChatRoomList(res.data.data)
-        })
-        .catch((err) => console.log(err))
-    }
-  }, [client, chatView, chatRoomId])
+  }, [chatView])
 
   const arrangeChat = useCallback((notification: NotificationType) => {
     setChatRoomList((prev) => {
@@ -108,7 +89,6 @@ const Chat = () => {
 
   const handleClickBack = () => {
     dispatch(enterChatRoom(null))
-    outChatting()
   }
 
   const clickChatRoom = (chatRoom: ChatRoomItem) => {

@@ -63,17 +63,10 @@ const WriteReviewModal = ({
     }
 
     if (review.quality && review.content && rating) {
-      axiosInstance
-        .post('/api/auth/reviews', formData)
-        .then((res) => {
-          console.log(res)
-          res.status === 201 &&
-            setConfirm({
-              view: true,
-              content: '리뷰가 정상적으로 등록되었습니다.',
-            })
-        })
-        .catch((err) => console.log(err))
+      setConfirm({
+        view: true,
+        content: '리뷰가 정상적으로 등록되었습니다.',
+      })
     } else {
       setConfirm({ view: true, content: '항목을 모두 입력해주세요.' })
     }

@@ -1,7 +1,5 @@
-import axiosInstance from '@utils/axios_interceptor'
 import { useState } from 'react'
 import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai'
-import { useParams } from 'react-router-dom'
 import { TripPeopleCnt } from 'types/valley'
 import styles from '@styles/valley/ScheduleInfo.module.scss'
 import Modal from '@component/Modal'
@@ -27,27 +25,20 @@ const ScheduleInfo = ({
   setClickedDate: React.Dispatch<React.SetStateAction<Date | undefined>>
   setPeopleCnt: React.Dispatch<React.SetStateAction<TripPeopleCnt>>
 }) => {
-  const { id } = useParams()
   const [peopleCount, setPeopleCount] = useState(0)
 
   const addSchedule = (tripDate: Date) => {
-    const data = {
-      waterPlaceId: Number(id),
-      tripDate: dateFormat(tripDate),
-      tripPartySize: peopleCount,
-    }
+    const date = dateFormat(tripDate)
 
-    console.log(data)
-    axiosInstance
-      .post('/api/auth/trip-schedules', data)
-      .then((res) => {
-        console.log(res)
-        setPeopleCnt({ tripPlanToWaterPlace: res.data.data })
-        setScheduleInfo(false)
-        setAddScheduleBtn(false)
-        setClickedDate(undefined)
-      })
-      .catch((err) => console.log(err))
+    setPeopleCnt((prev) => {
+      return {
+        ...prev,
+        [date]: peopleCount,
+      }
+    })
+    setScheduleInfo(false)
+    setAddScheduleBtn(false)
+    setClickedDate(undefined)
   }
 
   const handlePeopleCnt = (type: string) => {

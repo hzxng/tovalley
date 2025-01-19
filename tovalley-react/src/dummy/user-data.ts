@@ -1,0 +1,188 @@
+const user = JSON.parse(localStorage.getItem('user') ?? '')
+
+export const userData = {
+  userProfile: {
+    memberProfileImg: '/img/dummy/profile-img2.jpg',
+    memberName: 'test',
+    memberNick: user.id,
+  },
+  myReviews: {
+    content: [
+      {
+        reviewId: 1,
+        waterPlaceId: 1,
+        waterPlaceName: '관악산계곡어린이물놀이장-신림계곡지구',
+        rating: 3,
+        createdReviewDate: '2024-05-04 01:34:42',
+        content: 'dd',
+        reviewImages: [
+          '/img/dummy/계곡이미지12.jpg',
+          '/img/dummy/계곡이미지11.jpg',
+        ],
+        waterQuality: '괜찮아요',
+      },
+    ],
+    pageable: {
+      sort: {
+        empty: false,
+        sorted: true,
+        unsorted: false,
+      },
+      offset: 0,
+      pageNumber: 0,
+      pageSize: 5,
+      unpaged: false,
+      paged: true,
+    },
+    size: 5,
+    first: true,
+    last: true,
+    number: 0,
+    sort: {
+      empty: false,
+      sorted: true,
+      unsorted: false,
+    },
+    numberOfElements: 1,
+    empty: false,
+  },
+  myUpcomingTripSchedules: [
+    {
+      tripScheduleId: 197,
+      waterPlaceId: 20,
+      waterPlaceName: '봉선사세월교',
+      waterPlaceImg: '/img/dummy/계곡이미지8.jpg',
+      waterPlaceAddr: '경기도 남양주 진접읍 부평리 266-2',
+      waterPlaceRating: '4',
+      waterPlaceReviewCnt: 7,
+      waterPlaceTraffic: 3,
+      tripDate: '2024-08-21',
+      tripPartySize: 3,
+      rescueSupplies: {
+        lifeBoatNum: 2,
+        portableStandNum: 3,
+        lifeJacketNum: 2,
+        lifeRingNum: 2,
+        rescueRopeNum: 2,
+        rescueRodNum: 0,
+      },
+      hasReview: null,
+    },
+    {
+      tripScheduleId: 198,
+      waterPlaceId: 145,
+      waterPlaceName: '무릉계곡-무릉반석',
+      waterPlaceImg: '/img/dummy/계곡이미지10.jpg',
+      waterPlaceAddr: '강원도 동해시 삼화동 산 267',
+      waterPlaceRating: '3.2',
+      waterPlaceReviewCnt: 4,
+      waterPlaceTraffic: 2,
+      tripDate: '2024-08-30',
+      tripPartySize: 2,
+      rescueSupplies: {
+        lifeBoatNum: 9,
+        portableStandNum: 0,
+        lifeJacketNum: 9,
+        lifeRingNum: 9,
+        rescueRopeNum: 9,
+        rescueRodNum: 0,
+      },
+      hasReview: null,
+    },
+  ],
+  myLostFoundBoards: {
+    content: [
+      {
+        lostFoundBoardId: 17,
+        title: '금오계곡에서 찾았어요',
+        postCreateAt: '2024-05-05 09:19:49',
+      },
+      {
+        lostFoundBoardId: 14,
+        title: '관악산 계곡에서 키링 보신분 있나요?',
+        postCreateAt: '2024-05-05 09:06:14',
+      },
+    ],
+    pageable: {
+      sort: {
+        empty: false,
+        sorted: true,
+        unsorted: false,
+      },
+      offset: 0,
+      pageNumber: 0,
+      pageSize: 5,
+      unpaged: false,
+      paged: true,
+    },
+    size: 5,
+    first: true,
+    last: true,
+    number: 0,
+    sort: {
+      empty: false,
+      sorted: true,
+      unsorted: false,
+    },
+    numberOfElements: 2,
+    empty: false,
+  },
+}
+
+export const post = [
+  {
+    lostFoundBoardId: 14,
+    title: '관악산 계곡에서 키링 보신분 있나요?',
+    postCreateAt: '2024-05-05 09:06:14',
+  },
+  {
+    lostFoundBoardId: 17,
+    title: '금오계곡에서 찾았어요',
+    postCreateAt: '2024-05-05 09:19:49',
+  },
+]
+
+export const preSchedule = [
+  {
+    tripScheduleId: 20,
+    waterPlaceId: 1,
+    waterPlaceName: '관악산계곡어린이물놀이장-신림계곡지구',
+    waterPlaceImg: '/img/dummy/계곡이미지9.jpg',
+    waterPlaceAddr: '서울특별시 관악구 신림동 210',
+    waterPlaceRating: '3.5',
+    waterPlaceReviewCnt: 2,
+    waterPlaceTraffic: 2,
+    tripDate: '2024-07-09',
+    tripPartySize: 2,
+    rescueSupplies: {
+      lifeBoatNum: 10,
+      portableStandNum: 0,
+      lifeJacketNum: 10,
+      lifeRingNum: 10,
+      rescueRopeNum: 10,
+      rescueRodNum: 0,
+    },
+    hasReview: false,
+  },
+  {
+    tripScheduleId: 18,
+    waterPlaceId: 1,
+    waterPlaceName: '내평계곡',
+    waterPlaceImg: null,
+    waterPlaceAddr: '강원도 삼척시 근덕면 동막리 693',
+    waterPlaceRating: '3.0',
+    waterPlaceReviewCnt: 3,
+    waterPlaceTraffic: 16,
+    tripDate: '2024-07-15',
+    tripPartySize: 2,
+    rescueSupplies: {
+      lifeBoatNum: 5,
+      portableStandNum: 5,
+      lifeJacketNum: 3,
+      lifeRingNum: 5,
+      rescueRopeNum: 5,
+      rescueRodNum: 0,
+    },
+    hasReview: false,
+  },
+]

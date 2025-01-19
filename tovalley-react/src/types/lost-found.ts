@@ -22,7 +22,7 @@ export interface LostList {
   category: string
   commentCnt: number
   postCreateAt: string
-  postImage: string
+  postImage: string | null
 }
 
 export interface PlaceName {
@@ -37,7 +37,7 @@ export interface LostPostComment {
   commentContent: string
   commentCreateAt: string
   commentByUser: boolean
-  commentAuthorProfile: string
+  commentAuthorProfile: string | null
 }
 
 export interface LostPost {
@@ -50,7 +50,7 @@ export interface LostPost {
   postImages: string[]
   isResolved: boolean
   isMyBoard: boolean
-  boardAuthorProfile: string
+  boardAuthorProfile: string | null
   commentCnt: number
   comments: LostPostComment[]
 }

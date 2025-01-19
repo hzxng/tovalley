@@ -3,6 +3,8 @@ import { WaterPlaceDetails } from 'types/valley'
 import { BiImage } from 'react-icons/bi'
 import { IoMdClose } from 'react-icons/io'
 import { useState } from 'react'
+import { useSelector } from 'react-redux'
+import { RootState } from '@store/store'
 
 const ValleyTitle = ({
   waterPlaceDetails,
@@ -10,11 +12,14 @@ const ValleyTitle = ({
   waterPlaceDetails: WaterPlaceDetails
 }) => {
   const [clickImg, setClickImg] = useState(false)
+  const valleyInfo = useSelector((state: RootState) => state.valley.value)
 
   return (
     <div className={styles.title}>
       <div className={styles.valleyName}>
-        <span>{waterPlaceDetails.waterPlaceName}</span>
+        <span>
+          {valleyInfo ? valleyInfo.name : waterPlaceDetails.waterPlaceName}
+        </span>
         {waterPlaceDetails.waterPlaceImage && (
           <span onClick={() => setClickImg(!clickImg)}>
             <BiImage color="white" size="28px" />
@@ -28,10 +33,14 @@ const ValleyTitle = ({
             </span>
           </div>
         )}
-        <span>{waterPlaceDetails.managementType}</span>
+        <span>
+          {valleyInfo ? valleyInfo.type : waterPlaceDetails.managementType}
+        </span>
       </div>
       <div className={styles.valleyAddress}>
-        <span>{waterPlaceDetails.detailAddress}</span>
+        <span>
+          {valleyInfo ? valleyInfo.addr : waterPlaceDetails.detailAddress}
+        </span>
       </div>
     </div>
   )

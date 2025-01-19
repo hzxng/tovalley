@@ -4,11 +4,9 @@ import { useNavigate } from 'react-router-dom'
 import { NationalPopularWaterPlaces } from 'types/main'
 import useCarousel from '@hooks/useCarousel'
 import Category from '@component/Category'
-import { Axios } from '@utils/axios_interceptor'
 
 const PopularValley = ({ place }: { place: NationalPopularWaterPlaces[] }) => {
-  const [popularValley, setPopularValley] =
-    useState<NationalPopularWaterPlaces[]>(place)
+  const [popularValley] = useState<NationalPopularWaterPlaces[]>(place)
   const [clicked, setClicked] = useState<string>('평점')
 
   const navigation = useNavigate()
@@ -24,16 +22,16 @@ const PopularValley = ({ place }: { place: NationalPopularWaterPlaces[] }) => {
     return [...popularValley, ...extraItems]
   }
 
-  const getPopluarValley = async (cond: string) => {
-    try {
-      const { data } = await Axios.get('/api/main-page/popular-water-places', {
-        params: { cond },
-      })
-      setPopularValley(data.data)
-    } catch (error) {
-      console.error(error)
-    }
-  }
+  // const getPopluarValley = async (cond: string) => {
+  //   try {
+  //     const { data } = await Axios.get('/api/main-page/popular-water-places', {
+  //       params: { cond },
+  //     })
+  //     setPopularValley(data.data)
+  //   } catch (error) {
+  //     console.error(error)
+  //   }
+  // }
 
   const MobilePopularValley = () => {
     return (
@@ -75,7 +73,6 @@ const PopularValley = ({ place }: { place: NationalPopularWaterPlaces[] }) => {
             category={{ ko, en: ko === '평점' ? 'RATING' : 'REVIEW' }}
             clicked={clicked}
             setClicked={setClicked}
-            getData={getPopluarValley}
           />
         ))}
       </div>
@@ -98,10 +95,7 @@ const PopularValley = ({ place }: { place: NationalPopularWaterPlaces[] }) => {
               </span>
               <div className={styles.valleyItemImg}>
                 <img
-                  src={
-                    item.waterPlaceImageUrl ??
-                    process.env.PUBLIC_URL + '/img/default-image.png'
-                  }
+                  src={process.env.PUBLIC_URL + item.waterPlaceImageUrl}
                   alt="계곡 이미지"
                   width="100%"
                 />

@@ -9,15 +9,15 @@ import ValleyTitle from '@features/valley/components/ValleyTitle'
 import ValleyQuality from '@features/valley/components/ValleyQuality'
 import ValleySchedule from '@features/valley/components/ValleySchedule'
 import ValleyReview from '@features/valley/components/ValleyReview'
-import axiosInstance from '@utils/axios_interceptor'
-import { useParams } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { newValley } from '@store/valley/valleySlice'
 
 const Valley = () => {
   const [valley, setValley] = useState<ValleyData | null>(null)
-  const { id } = useParams()
-
   const [loginModal, setLoginModal] = useState(false)
   const [dangerSegmentsView, setDangerSegmentsView] = useState(false)
+
+  const dispatch = useDispatch()
 
   const dangerSegmentClose = () => {
     setDangerSegmentsView(false)
@@ -27,6 +27,10 @@ const Valley = () => {
     setValley(data)
 
     if (data.waterPlaceDetails.dangerSegments) setDangerSegmentsView(true)
+
+    if (!localStorage.getItem('user')) setLoginModal(true)
+
+    // if (!cookies.get('ISLOGIN')) setLoginModal(true)
 
     // axiosInstance
     //   .get(`/api/auth/water-places/${id}`)
@@ -38,7 +42,11 @@ const Valley = () => {
     //     console.log(err)
     //     err.response.status === 401 && setLoginModal(true)
     //   })
-  }, [])
+
+    return () => {
+      dispatch(newValley(null))
+    }
+  }, [dispatch])
 
   if (!valley) {
     return <div>loading</div>

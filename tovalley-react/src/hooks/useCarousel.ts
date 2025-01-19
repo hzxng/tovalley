@@ -31,7 +31,7 @@ const useCarousel = ({
     if (length <= 1) return
 
     const timer = setInterval(() => {
-      // setCurrentIndex((prevIndex) => prevIndex + 1)
+      setCurrentIndex((prevIndex) => prevIndex + 1)
       setCarouselTransition(`transform ${duration}ms ease-in-out`)
     }, interval)
 

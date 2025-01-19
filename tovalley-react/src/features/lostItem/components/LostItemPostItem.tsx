@@ -8,7 +8,9 @@ import cn from 'classnames'
 const LostItemPostItem = ({ item }: { item: LostList }) => {
   const navigation = useNavigate()
   const moveToLostItemPost = () => {
-    navigation(`/lost-item/${item.category}/${item.id}`)
+    localStorage.getItem('user')
+      ? navigation(`/lost-item/${item.category}/${item.id}`)
+      : navigation('/login')
   }
 
   return (
@@ -37,7 +39,10 @@ const LostItemPostItem = ({ item }: { item: LostList }) => {
       {item.postImage && (
         <div className={styles.lostItemImage}>
           <div className={styles.imageContainer}>
-            <img src={item.postImage} alt="postImage" />
+            <img
+              src={process.env.PUBLIC_URL + item.postImage}
+              alt="postImage"
+            />
           </div>
         </div>
       )}

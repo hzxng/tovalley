@@ -6,7 +6,6 @@ import SocialLogin from '@component/SocialLogin'
 import FindInfoModal from '@features/user/components/FindInfoModal'
 import Logo from '@component/Logo'
 import Input from '@component/Input'
-import axiosInstance from '@utils/axios_interceptor'
 
 const cookies = new Cookies()
 
@@ -32,16 +31,12 @@ const Login = () => {
 
   const handleLogin = () => {
     const { email, password } = login
-    const data = { username: email, password }
 
-    axiosInstance
-      .post('/api/login', data)
-      .then((res) => {
-        if (res) res.status === 200 && window.location.replace('/')
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+    localStorage.setItem(
+      'user',
+      JSON.stringify({ id: email, password: password })
+    )
+    window.location.replace('/')
   }
 
   const handleChange = (

@@ -1,11 +1,23 @@
 import { useNavigate } from 'react-router-dom'
 import { ValleyItemType } from 'types/valley-list'
 import styles from '@styles/valleyList/ValleyItem.module.scss'
+import { useDispatch } from 'react-redux'
+import { newValley } from '@store/valley/valleySlice'
 
-const ValleyItem = ({ item }: { item: ValleyItemType }) => {
+const ValleyItem = ({ item, idx }: { item: ValleyItemType; idx: number }) => {
   const navigation = useNavigate()
+  const dispatch = useDispatch()
 
   const moveToValleyPage = (id: number) => {
+    dispatch(
+      newValley({
+        name: item.waterPlaceName,
+        addr: item.waterPlaceAddr,
+        type: item.managementType,
+        review: item.waterPlaceRating,
+        reviewCnt: item.waterPlaceReviewCnt,
+      })
+    )
     navigation(`/valley/${id}`)
   }
 
@@ -16,11 +28,7 @@ const ValleyItem = ({ item }: { item: ValleyItemType }) => {
     >
       <div>
         <img
-          src={
-            !item.waterPlaceImageUrl
-              ? process.env.PUBLIC_URL + '/img/default-image.png'
-              : item.waterPlaceImageUrl
-          }
+          src={process.env.PUBLIC_URL + `/img/dummy/계곡이미지${idx + 8}.jpg`}
           alt="계곡 이미지"
         />
       </div>

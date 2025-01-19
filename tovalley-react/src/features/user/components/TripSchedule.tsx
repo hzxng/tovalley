@@ -59,6 +59,7 @@ const TripSchedule = ({ tripSchedules }: { tripSchedules: Schedule[] }) => {
         <div className={styles.categoryWrap}>
           {['앞으로의 일정', '지난 일정'].map((category) => (
             <Category
+              key={category}
               name={category}
               category={scheduleBtn}
               handleClick={() => handleClickCategory(category)}
