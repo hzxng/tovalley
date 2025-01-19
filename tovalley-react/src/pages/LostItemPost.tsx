@@ -20,7 +20,7 @@ import {
 } from 'dummy/lostItemPost-data'
 
 const LostItemPost = () => {
-  const { category, id } = useParams()
+  const { id } = useParams()
   const navigate = useNavigate()
 
   const [lostPost, setLostPost] = useState<LostPost | null>(null)

@@ -6,7 +6,6 @@ import cn from 'classnames'
 import SubmitCode from '@features/user/components/SubmitCode'
 import { FaRegCircleCheck } from 'react-icons/fa6'
 import ConfirmModal from '@component/ConfirmModal'
-import { Axios } from '@utils/axios_interceptor'
 
 const Signup = () => {
   const [inputInfo, setInputInfo] = useState({
@@ -52,10 +51,6 @@ const Signup = () => {
   }
 
   const checkDuplication = () => {
-    const data = {
-      nickname: inputInfo.nickName,
-    }
-
     // Axios.post('/api/members/check-nickname', data)
     //   .then((res) => {
     //     console.log(res)
@@ -141,13 +136,6 @@ const Signup = () => {
   }
 
   const handleSignUp = () => {
-    const data = {
-      name: inputInfo.name,
-      email: inputInfo.email,
-      nickname: inputInfo.nickName,
-      password: inputInfo.password,
-    }
-
     if (
       !inputInfo.name ||
       !inputInfo.email ||

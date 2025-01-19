@@ -8,7 +8,6 @@ import Search from '@features/valleyList/components/Search'
 import ValleyItem from '@features/valleyList/components/ValleyItem'
 import PagingBtn from '@component/PagingBtn'
 import useMobile from '@hooks/useMobile'
-import Loading from '@component/Loading'
 import {
   seoul,
   seoulReview,

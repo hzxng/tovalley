@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import styles from '@styles/valley/ValleyReview.module.scss'
-import { useParams } from 'react-router-dom'
 import { ReviewRespDto } from 'types/valley'
 import PagingBtn from '@component/PagingBtn'
 import ReviewStatistics from './ReviewStatistics'
@@ -13,30 +12,9 @@ const ValleyReview = ({ reviewRespDto }: { reviewRespDto: ReviewRespDto }) => {
   const sortMenu = ['최신순', '평점 높은 순', '평점 낮은 순']
   const [page, setPage] = useState(1)
 
-  const [valleyReview, setValleyReview] = useState<ReviewRespDto>(reviewRespDto)
-
-  const { id } = useParams()
+  const [valleyReview] = useState<ReviewRespDto>(reviewRespDto)
 
   useDidMountEffect(() => {
-    let params: { page: number; size: number; sort?: string } = {
-      page: page - 1,
-      size: 5,
-    }
-
-    if (sort === '최신순') {
-      params = { ...params, sort: 'createdDate,desc' }
-    }
-
-    if (sort === '평점 높은 순') {
-      params = { ...params, sort: 'rating,desc' }
-    }
-
-    if (sort === '평점 낮은 순') {
-      params = { ...params, sort: 'rating,asc' }
-    }
-
-    const config = { params }
-
     // axiosInstance
     //   .get(`/api/auth/water-places/${id}/reviews`, config)
     //   .then((res) => {

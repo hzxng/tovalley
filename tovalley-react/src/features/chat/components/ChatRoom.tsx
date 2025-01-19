@@ -15,7 +15,7 @@ const ChatRoom = () => {
   const [newMessages, setNewMessages] = useState<MessageType[]>([])
   const [content, setContent] = useState('') // 보낼 메시지
   const [showNewMessageAlert, setShowNewMessageAlert] = useState(false)
-  const [isPageEnd, setIsPageEnd] = useState<boolean>(false)
+  const [isPageEnd] = useState<boolean>(false)
   const chatRoomId = useSelector((state: RootState) => state.chatRoomId.value)
 
   const { uploadImg, imgFiles, saveImgFile } = useSaveImg()

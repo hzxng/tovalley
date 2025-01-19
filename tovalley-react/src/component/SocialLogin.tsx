@@ -1,16 +1,6 @@
 import styles from './SocialLogin.module.scss'
 
-const social_localhost = process.env.REACT_APP_SOCIAL_HOST
-
 const SocialLogin = ({ type, size }: { type: string; size: number }) => {
-  const KAKAO_AUTH_URL = `${social_localhost}/oauth2/authorization/kakao`
-  const GOOGLE_AUTH_URL = `${social_localhost}/oauth2/authorization/google`
-  const NAVER_AUTH_URL = `${social_localhost}/oauth2/authorization/naver`
-
-  const Login = (url: string) => {
-    window.location.href = url
-  }
-
   return (
     <div>
       <div className={styles.socialLoginTitle}>

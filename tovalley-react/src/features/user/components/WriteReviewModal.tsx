@@ -9,7 +9,6 @@ import {
 import { MdClose } from 'react-icons/md'
 import { MdOutlineStar } from 'react-icons/md'
 import { IoIosCloseCircle } from 'react-icons/io'
-import axiosInstance from '@utils/axios_interceptor'
 import ConfirmModal from '@component/ConfirmModal'
 import Modal from '@component/Modal'
 import { useSaveImg } from '@hooks/useSaveImg'
