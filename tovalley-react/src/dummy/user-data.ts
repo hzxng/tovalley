@@ -1,10 +1,10 @@
-const user = JSON.parse(localStorage.getItem('user') ?? 'null')
+// const user = JSON.parse(localStorage.getItem('user') ?? 'null')
 
 export const userData = {
   userProfile: {
     memberProfileImg: '/img/dummy/profile-img2.jpg',
     memberName: 'test',
-    memberNick: user.id,
+    memberNick: 'user',
   },
   myReviews: {
     content: [
