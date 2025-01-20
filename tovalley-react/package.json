@@ -71,5 +71,5 @@
     "@types/styled-components": "^5.1.26",
     "tsconfig-paths-webpack-plugin": "^4.1.0"
   },
-  "homepage": ""
+  "homepage": "https://tovalley.netlify.app"
 }
