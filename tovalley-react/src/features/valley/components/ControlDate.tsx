@@ -6,11 +6,9 @@ import {
   MdNavigateBefore,
   MdNavigateNext,
 } from 'react-icons/md'
-import { useParams } from 'react-router-dom'
 import { BsFillFileEarmarkPostFill } from 'react-icons/bs'
 import { BiCheck } from 'react-icons/bi'
 import { TripPeopleCnt } from 'types/valley'
-import axiosInstance from '@utils/axios_interceptor'
 import useMobile from '@hooks/useMobile'
 import cn from 'classnames'
 import ScheduleInfo from './ScheduleInfo'
@@ -41,7 +39,6 @@ const ControlDate = ({
   tripPlanToWaterPlace,
   setPeopleCnt,
 }: Props) => {
-  const { id } = useParams()
   const date = new Date(nowDate.getTime())
   const newDate = new Date()
 
@@ -58,16 +55,6 @@ const ControlDate = ({
 
   useDidMountEffect(() => {
     const getMonthTripSchedule = () => {
-      const nowMonth = `${nowDate.getMonth() + 1}`.padStart(2, '0')
-
-      const yearMonth = `${nowDate.getFullYear()}-${nowMonth}`
-
-      const config = {
-        params: {
-          yearMonth,
-        },
-      }
-
       // axiosInstance
       //   .get(`/api/auth/water-places/${id}/trip-schedules`, config)
       //   .then((res) => {

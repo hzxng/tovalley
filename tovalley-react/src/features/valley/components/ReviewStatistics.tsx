@@ -3,6 +3,8 @@ import styles from '@styles/valley/ReviewStatistics.module.scss'
 import { ReviewRespDto } from 'types/valley'
 import { MdOutlineChatBubble } from 'react-icons/md'
 import useMobile from '@hooks/useMobile'
+import { useSelector } from 'react-redux'
+import { RootState } from '@store/store'
 
 const ReviewStatistics = ({
   reviewRespDto,
@@ -10,6 +12,7 @@ const ReviewStatistics = ({
   reviewRespDto: ReviewRespDto
 }) => {
   const { innerWidth } = useMobile()
+  const valley = useSelector((state: RootState) => state.valley.value)
 
   return (
     <div className={styles.reviewStatistics}>
@@ -18,7 +21,7 @@ const ReviewStatistics = ({
         <div className={styles.ratingStar}>
           <span>
             <RatingStar
-              rating={reviewRespDto.waterPlaceRating}
+              rating={valley ? valley.review : reviewRespDto.waterPlaceRating}
               size={
                 innerWidth <= 730 ? '20px' : innerWidth <= 880 ? '25px' : '30px'
               }
@@ -26,7 +29,7 @@ const ReviewStatistics = ({
           </span>
         </div>
         <div className={styles.ratingNum}>
-          <span>{reviewRespDto.waterPlaceRating}</span>
+          <span>{valley ? valley.review : reviewRespDto.waterPlaceRating}</span>
           <span> / 5</span>
         </div>
       </div>
@@ -35,7 +38,7 @@ const ReviewStatistics = ({
         <span>
           <MdOutlineChatBubble color="#999999" />
         </span>
-        <span>{reviewRespDto.reviewCnt}개</span>
+        <span>{valley ? valley.reviewCnt : reviewRespDto.reviewCnt}개</span>
       </div>
       <div className={styles.totalRatio}>
         <span>평점 비율</span>
@@ -43,27 +46,47 @@ const ReviewStatistics = ({
           <RatioItem
             num={5}
             ratingRatio={reviewRespDto.ratingRatio[5]}
-            percent={reviewRespDto.ratingRatio[5] / reviewRespDto.reviewCnt}
+            percent={
+              valley
+                ? reviewRespDto.ratingRatio[5] / valley.reviewCnt
+                : reviewRespDto.ratingRatio[5] / reviewRespDto.reviewCnt
+            }
           />
           <RatioItem
             num={4}
             ratingRatio={reviewRespDto.ratingRatio[4]}
-            percent={reviewRespDto.ratingRatio[4] / reviewRespDto.reviewCnt}
+            percent={
+              valley
+                ? reviewRespDto.ratingRatio[4] / valley.reviewCnt
+                : reviewRespDto.ratingRatio[4] / reviewRespDto.reviewCnt
+            }
           />
           <RatioItem
             num={3}
             ratingRatio={reviewRespDto.ratingRatio[3]}
-            percent={reviewRespDto.ratingRatio[3] / reviewRespDto.reviewCnt}
+            percent={
+              valley
+                ? reviewRespDto.ratingRatio[3] / valley.reviewCnt
+                : reviewRespDto.ratingRatio[3] / reviewRespDto.reviewCnt
+            }
           />
           <RatioItem
             num={2}
             ratingRatio={reviewRespDto.ratingRatio[2]}
-            percent={reviewRespDto.ratingRatio[2] / reviewRespDto.reviewCnt}
+            percent={
+              valley
+                ? reviewRespDto.ratingRatio[2] / valley.reviewCnt
+                : reviewRespDto.ratingRatio[2] / reviewRespDto.reviewCnt
+            }
           />
           <RatioItem
             num={1}
             ratingRatio={reviewRespDto.ratingRatio[1]}
-            percent={reviewRespDto.ratingRatio[1] / reviewRespDto.reviewCnt}
+            percent={
+              valley
+                ? reviewRespDto.ratingRatio[1] / valley.reviewCnt
+                : reviewRespDto.ratingRatio[1] / reviewRespDto.reviewCnt
+            }
           />
         </div>
       </div>

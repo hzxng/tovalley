@@ -2,7 +2,7 @@ export const data = {
   waterPlaceWeathers: [
     // 물놀이 장소 날씨 리스트(5일)
     {
-      weatherDate: '2023-08-16', // 날짜
+      weatherDate: '2024-08-14', // 날짜
       climateIcon: '10d', // 날씨 아이콘 Id
       climateDescription: '실 비', // 날씨 상세설명
       lowestTemperature: 24.08, // 일일 최저 온도
@@ -14,7 +14,7 @@ export const data = {
       dayFeelsLike: 25.28, // 주간 체감 온도
     },
     {
-      weatherDate: '2023-08-17',
+      weatherDate: '2024-08-15',
       climateIcon: '03d',
       climateDescription: '구름조금',
       lowestTemperature: 25.53,
@@ -26,11 +26,11 @@ export const data = {
       dayFeelsLike: 26.38,
     },
     {
-      weatherDate: '2023-08-18',
-      climateIcon: '03d',
-      climateDescription: '구름조금',
-      lowestTemperature: 25.53,
-      highestTemperature: 27.82,
+      weatherDate: '2024-08-16',
+      climateIcon: '01d',
+      climateDescription: '맑음',
+      lowestTemperature: 27.53,
+      highestTemperature: 34.82,
       humidity: 80,
       windSpeed: 1.58,
       rainPrecipitation: 0.0,
@@ -38,11 +38,11 @@ export const data = {
       dayFeelsLike: 26.38,
     },
     {
-      weatherDate: '2023-08-19',
-      climateIcon: '03d',
-      climateDescription: '구름조금',
-      lowestTemperature: 25.53,
-      highestTemperature: 27.82,
+      weatherDate: '2024-08-17',
+      climateIcon: '01d',
+      climateDescription: '맑음',
+      lowestTemperature: 27.53,
+      highestTemperature: 33.82,
       humidity: 80,
       windSpeed: 1.58,
       rainPrecipitation: 0.0,
@@ -50,11 +50,11 @@ export const data = {
       dayFeelsLike: 26.38,
     },
     {
-      weatherDate: '2023-08-20',
+      weatherDate: '2024-08-18',
       climateIcon: '03d',
       climateDescription: '구름조금',
       lowestTemperature: 25.53,
-      highestTemperature: 27.82,
+      highestTemperature: 33.82,
       humidity: 80,
       windSpeed: 1.58,
       rainPrecipitation: 0.0,
@@ -98,16 +98,61 @@ export const data = {
   },
   accidents: {
     // 최근 5년간 사건사고 수
-    totalDeathCnt: 200,
-    totalDisappearanceCnt: 66,
+    totalDeathCnt: 0,
+    totalDisappearanceCnt: 3,
     totalInjuryCnt: 4,
   },
   tripPlanToWaterPlace: {
     // 해당 계곡의 여행 계획자 수
-    '2023-08-31': 0, // 날짜 : 인원수
-    '2023-08-30': 0,
-    '2023-08-02': 0,
-    '2023-08-01': 16,
+    '2025-01-03': 5, // 날짜 : 인원수
+    '2025-01-15': 10,
+    '2025-01-20': 15,
+    '2025-01-22': 16,
+    '2025-02-11': 10,
+    '2025-02-20': 10,
+    '2025-02-25': 16,
+    '2025-02-26': 10,
+    '2025-03-03': 10,
+    '2025-03-05': 16,
+    '2025-03-27': 10,
+    '2025-04-20': 10,
+    '2025-04-25': 16,
+    '2025-05-05': 10,
+    '2025-05-06': 16,
+    '2025-05-08': 31,
+    '2025-05-12': 16,
+    '2025-05-15': 10,
+    '2025-05-20': 10,
+    '2025-06-08': 10,
+    '2025-06-12': 10,
+    '2025-06-15': 10,
+    '2025-06-20': 16,
+    '2025-06-26': 31,
+    '2025-06-29': 16,
+    '2025-07-03': 10,
+    '2025-07-08': 16,
+    '2025-07-10': 10,
+    '2025-07-12': 10,
+    '2025-07-15': 10,
+    '2025-07-18': 16,
+    '2025-07-20': 16,
+    '2025-07-21': 31,
+    '2025-07-26': 31,
+    '2025-07-27': 46,
+    '2025-07-28': 31,
+    '2025-07-30': 10,
+    '2025-08-01': 16,
+    '2025-08-04': 16,
+    '2025-08-10': 31,
+    '2025-08-12': 31,
+    '2025-08-15': 46,
+    '2025-08-16': 31,
+    '2025-08-17': 16,
+    '2025-08-18': 31,
+    '2025-08-21': 31,
+    '2025-08-24': 46,
+    '2025-08-25': 10,
+    '2025-08-27': 10,
   },
   reviewRespDto: {
     waterPlaceRating: 3.2, // 물놀이 장소 평점
@@ -126,32 +171,57 @@ export const data = {
         // 리뷰 리스트 (5개)
         {
           reviewId: 6, // 리뷰 아이디
-          memberProfileImg: null, // 작성자 프로필 이미지
-          nickname: 'member5', // 작성자 닉네임
+          memberProfileImg: '/img/dummy/profile-img4.jpg', // 작성자 프로필 이미지
+          nickname: '계곡탐험가', // 작성자 닉네임
           rating: 5, // 작성자가 작성한 평점
-          createdReviewDate: '2023-08-16 14:43:23', // 작성 시간
-          content: 'content5', // 리뷰 작성 내용
+          createdReviewDate: '2024-08-10 14:43:23', // 작성 시간
+          content: '좋아요~', // 리뷰 작성 내용
           reviewImages: [
             // 리뷰 이미지 Url 리스트
-            'storeFileUrl1',
-            'storeFileUrl2',
-            'storeFileUrl3',
-            'storeFileUrl4',
-            'storeFileUrl5',
-            'storeFileUrl6',
+            '/img/dummy/계곡이미지15.jpg',
+            '/img/dummy/계곡이미지16.jpg',
+            '/img/dummy/계곡이미지17.jpg',
+            '/img/dummy/계곡이미지18.jpg',
+            '/img/dummy/계곡이미지19.jpg',
+            '/img/dummy/계곡이미지20.jpg',
           ],
-          waterQuality: '',
+          waterQuality: '깨끗해요',
           isMyReview: false,
         },
         {
           reviewId: 2,
           memberProfileImg: null,
-          nickname: 'member3',
+          nickname: 'jeong',
           rating: 3,
-          createdReviewDate: '2023-08-16 14:43:23',
-          content: 'content3',
+          createdReviewDate: '2024-08-08 12:40:11',
+          content: '물이 맑아요~',
+          reviewImages: ['/img/dummy/계곡이미지14.jpg'],
+          waterQuality: '깨끗해요',
+          isMyReview: false,
+        },
+        {
+          reviewId: 3,
+          memberProfileImg: '/img/dummy/profile-img1.jpg',
+          nickname: 'mom',
+          rating: 4,
+          createdReviewDate: '2024-07-29 19:22:05',
+          content: '가족들이랑 오기 좋아요~',
+          reviewImages: [
+            '/img/dummy/계곡이미지9.jpg',
+            '/img/dummy/계곡이미지8.jpg',
+          ],
+          waterQuality: '괜찮아요',
+          isMyReview: false,
+        },
+        {
+          reviewId: 4,
+          memberProfileImg: '/img/dummy/profile-img3.jpg',
+          nickname: 'user1',
+          rating: 4,
+          createdReviewDate: '2024-07-22 13:01:29',
+          content: '잘 놀고 갑니다',
           reviewImages: [],
-          waterQuality: '',
+          waterQuality: '깨끗해요',
           isMyReview: false,
         },
       ],

@@ -11,7 +11,7 @@ export interface ReviewContent {
   rating: number // 내가 작성한 평점
   createdReviewDate: string // 내가 리뷰를 작성한 시간
   content: string // 내가 작성한 리뷰 내용
-  reviewImages: string | null // 내가 추가한 리뷰 이미지들
+  reviewImages: string[] | null // 내가 추가한 리뷰 이미지들
   waterQuality: string // 내가 작성한 수질 정보
 }
 
@@ -94,7 +94,7 @@ export interface Schedule {
     rescueRopeNum: number // 구명로프
     rescueRodNum: number // 구조봉
   }
-  hasReview: boolean // 리뷰 작성 여부(앞으로의 일정은 리뷰를 작성할 수 없음)
+  hasReview: boolean | null // 리뷰 작성 여부(앞으로의 일정은 리뷰를 작성할 수 없음)
 }
 
 export interface PreSchedule {

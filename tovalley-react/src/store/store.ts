@@ -8,6 +8,7 @@ import { persistReducer } from 'redux-persist'
 import storageSession from 'redux-persist/lib/storage/session'
 import subscriptionSlice from './chat/subscriptionSlice'
 import chatRoomNameSlice from './chat/chatRoomNameSlice'
+import valleySlice from './valley/valleySlice'
 
 const rootReducer = combineReducers({
   client: clientSlice,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   notificationView: notificationViewSlice,
   subscription: subscriptionSlice,
   chatRoomName: chatRoomNameSlice,
+  valley: valleySlice,
 })
 
 const persistConfig = {

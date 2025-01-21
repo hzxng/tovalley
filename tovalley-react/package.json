@@ -23,7 +23,6 @@
     "classnames": "^2.5.1",
     "luxon": "^3.4.4",
     "moment": "^2.29.4",
-    "node-sass": "^7.0.3",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-cookie": "^6.0.1",
@@ -36,6 +35,7 @@
     "react-scripts": "5.0.1",
     "react-spinners": "^0.14.1",
     "redux-persist": "^6.0.0",
+    "sass": "^1.83.4",
     "socket.io-client": "^4.7.4",
     "sockjs-client": "^1.6.1",
     "styled-components": "^6.0.7",
@@ -44,7 +44,7 @@
   },
   "scripts": {
     "start": "craco start",
-    "build": "craco build",
+    "build": "CI=false craco build",
     "test": "craco test",
     "eject": "craco eject"
   },
@@ -67,7 +67,9 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@types/styled-components": "^5.1.26",
     "tsconfig-paths-webpack-plugin": "^4.1.0"
-  }
+  },
+  "homepage": "https://tovalley.netlify.app"
 }

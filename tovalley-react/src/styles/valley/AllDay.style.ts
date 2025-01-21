@@ -35,6 +35,8 @@ export const Container = styled.div<ContainerProps>`
           border-radius: 100%;
           width: 1.3em;
           height: 1.3em;
+          display: flex;
+          justify-content: center;
         `}
 
     ${({ clickDay }) =>
@@ -44,6 +46,9 @@ export const Container = styled.div<ContainerProps>`
           border-radius: 100%;
           padding: 0.3em;
           width: 1.3em;
+          height: 1.3em;
+          display: flex;
+          justify-content: center;
         `}
   }
 `

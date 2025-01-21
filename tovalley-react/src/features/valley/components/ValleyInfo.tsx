@@ -56,7 +56,7 @@ const ValleyInfo = ({
       </div>
       <div className={styles.valleyDetail}>
         <div className={styles.valleyWeather}>
-          <span>{waterPlaceDetails.town} 날씨</span>
+          <span>ㅤ</span>
           <div className={styles.weatherList}>
             {weatherList.map((item, index) => {
               return <WeatherItem key={index} item={item} />

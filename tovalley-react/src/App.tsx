@@ -18,11 +18,16 @@ import { useSelector } from 'react-redux'
 import Chat from '@features/chat/components/Chat'
 import Alarm from '@features/chat/components/Alarm'
 import AlarmList from '@features/chat/components/AlarmList'
+import { useEffect } from 'react'
 
 function App() {
   const notification = useSelector(
     (state: RootState) => state.notification.value
   )
+
+  useEffect(() => {
+    localStorage.setItem('user', JSON.stringify({ id: 'user', password: 1234 }))
+  }, [])
 
   return (
     <div>

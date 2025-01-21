@@ -6,7 +6,6 @@ import cn from 'classnames'
 import SubmitCode from '@features/user/components/SubmitCode'
 import { FaRegCircleCheck } from 'react-icons/fa6'
 import ConfirmModal from '@component/ConfirmModal'
-import { Axios } from '@utils/axios_interceptor'
 
 const Signup = () => {
   const [inputInfo, setInputInfo] = useState({
@@ -52,31 +51,27 @@ const Signup = () => {
   }
 
   const checkDuplication = () => {
-    const data = {
-      nickname: inputInfo.nickName,
-    }
-
-    Axios.post('/api/members/check-nickname', data)
-      .then((res) => {
-        console.log(res)
-        if (res.status === 200) {
-          setAvailable({
-            ...available,
-            available: true,
-            alert: res.data.msg,
-          })
-        }
-      })
-      .catch((err) => {
-        console.log(err)
-        if (err.response.status === 400) {
-          setAvailable({
-            ...available,
-            available: false,
-            alert: err.response.data.msg,
-          })
-        }
-      })
+    // Axios.post('/api/members/check-nickname', data)
+    //   .then((res) => {
+    //     console.log(res)
+    //     if (res.status === 200) {
+    //       setAvailable({
+    //         ...available,
+    //         available: true,
+    //         alert: res.data.msg,
+    //       })
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.log(err)
+    //     if (err.response.status === 400) {
+    //       setAvailable({
+    //         ...available,
+    //         available: false,
+    //         alert: err.response.data.msg,
+    //       })
+    //     }
+    //   })
   }
 
   const checkEmailDuplication = () => {
@@ -141,13 +136,6 @@ const Signup = () => {
   }
 
   const handleSignUp = () => {
-    const data = {
-      name: inputInfo.name,
-      email: inputInfo.email,
-      nickname: inputInfo.nickName,
-      password: inputInfo.password,
-    }
-
     if (
       !inputInfo.name ||
       !inputInfo.email ||
@@ -161,24 +149,7 @@ const Signup = () => {
       available.available &&
       emailDuplication.status
     ) {
-      Axios.post('/api/members', data)
-        .then((res) => {
-          console.log(res)
-          if (res.status === 201) {
-            setConfirmModal({
-              view: true,
-              content: '회원가입이 완료되었습니다.',
-            })
-            window.location.replace('/login')
-          }
-        })
-        .catch((err) => {
-          console.log(err)
-          setConfirmModal({
-            view: true,
-            content: err.response.data.msg,
-          })
-        })
+      window.location.replace('/login')
     } else if (!emailDuplication.message) {
       setConfirmModal({
         view: true,

@@ -8,19 +8,23 @@ import Search from '@features/valleyList/components/Search'
 import ValleyItem from '@features/valleyList/components/ValleyItem'
 import PagingBtn from '@component/PagingBtn'
 import useMobile from '@hooks/useMobile'
-import Loading from '@component/Loading'
-import { Axios } from '@utils/axios_interceptor'
-
-type Params = {
-  province: string
-  sortCond: string
-  page: number
-  city?: string
-  searchWord?: string
-}
+import {
+  seoul,
+  seoulReview,
+  whole1,
+  whole2,
+  whole3,
+  whole4,
+  whole5,
+  wholeReview1,
+  wholeReview2,
+  wholeReview3,
+  wholeReview4,
+  wholeReview5,
+} from 'dummy/valley-list-data'
 
 const ValleyListPage = () => {
-  const [list, setList] = useState<ValleyList | null>(null)
+  const [list, setList] = useState<ValleyList | null>(whole1)
   const [click, setClick] = useState({
     category: '전국',
     detail: false,
@@ -34,24 +38,25 @@ const ValleyListPage = () => {
   const { innerWidth } = useMobile()
 
   const getValleyList = useCallback(
-    (
-      province: string,
-      city: string,
-      sortCond: string,
-      searchWord: string,
-      page: number
-    ) => {
-      let params: Params = {
-        province,
-        sortCond,
-        page,
-        ...(city !== '전체' && province !== '전국' && { city }),
-        ...(searchWord && { searchWord }),
+    (province: string, sortCond: string, page: number) => {
+      if (province === '전국') {
+        if (sortCond === 'rating') {
+          if (page === 0) setList(whole1)
+          else if (page === 1) setList(whole2)
+          else if (page === 2) setList(whole3)
+          else if (page === 3) setList(whole4)
+          else if (page === 4) setList(whole5)
+        } else {
+          if (page === 0) setList(wholeReview1)
+          else if (page === 1) setList(wholeReview2)
+          else if (page === 2) setList(wholeReview3)
+          else if (page === 3) setList(wholeReview4)
+          else if (page === 4) setList(wholeReview5)
+        }
+      } else if (province === '서울특별시') {
+        if (sortCond === 'rating') setList(seoul)
+        else setList(seoulReview)
       }
-
-      Axios.get('/api/water-place/list', { params })
-        .then((res) => setList(res.data.data))
-        .catch((err) => console.log(err))
     },
     []
   )
@@ -63,9 +68,7 @@ const ValleyListPage = () => {
   useEffect(() => {
     getValleyList(
       click.category,
-      click.region.ko,
       sort === '평점' ? 'rating' : 'review',
-      debouncedSearchText,
       page - 1
     )
   }, [
@@ -76,8 +79,6 @@ const ValleyListPage = () => {
     page,
     getValleyList,
   ])
-
-  if (!list) return <Loading />
 
   return (
     <div className={styles.valleyListPage}>
@@ -99,15 +100,15 @@ const ValleyListPage = () => {
               <Search searchText={searchText} setSearchText={setSearchText} />
             </div>
             <div className={styles.valleyList}>
-              {list.content.map((item) => (
-                <ValleyItem key={item.waterPlaceId} item={item} />
+              {list!.content.map((item, idx) => (
+                <ValleyItem key={item.waterPlaceId} item={item} idx={idx} />
               ))}
             </div>
           </div>
           <PagingBtn
             page={page}
             setPage={setPage}
-            totalPages={list.totalPages}
+            totalPages={list!.totalPages}
             count={innerWidth <= 500 ? 2 : 4}
           />
         </div>

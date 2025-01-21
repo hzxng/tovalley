@@ -4,6 +4,7 @@ import { RecentLostPostType, RecentReviewType } from 'types/main'
 import cn from 'classnames'
 import { elapsedTime } from '@utils/elapsedTime'
 import RatingStar from '@component/RatingStar'
+import { Cookies } from 'react-cookie'
 
 interface PostItemProps {
   title: string
@@ -13,6 +14,8 @@ interface PostItemProps {
   onClick: () => void
   rating?: number
 }
+
+const cookies = new Cookies()
 
 const PostItem = ({
   title,
@@ -67,11 +70,13 @@ const RecentPost = ({
               content={post.lostFoundBoardContent}
               category={post.lostFoundBoardCategory}
               createdAt={post.lostFoundBoardCreatedAt}
-              onClick={() =>
-                navigation(
-                  `/lost-item/${post.lostFoundBoardCategory}/${post.lostFoundBoardId}`
-                )
-              }
+              onClick={() => {
+                cookies.get('ISLOGIN')
+                  ? navigation(
+                      `/lost-item/${post.lostFoundBoardCategory}/${post.lostFoundBoardId}`
+                    )
+                  : navigation('/login')
+              }}
             />
           ))}
         {recentReviewPost &&

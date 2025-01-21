@@ -36,6 +36,11 @@
   }
 }
 
+.chatImage {
+  max-width: 200px;
+  border-radius: 5px;
+}
+
 .readCount {
   color: $primary;
   font-size: 0.8rem;

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import styles from '@styles/header/Header.module.scss'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Cookies } from 'react-cookie'
 import { RxHamburgerMenu } from 'react-icons/rx'
 import { BiUser } from 'react-icons/bi'
 import { FiLogOut } from 'react-icons/fi'
@@ -9,15 +8,12 @@ import { FaRegBell } from 'react-icons/fa'
 import { IoChatbubblesSharp } from 'react-icons/io5'
 import { useDispatch, useSelector } from 'react-redux'
 import cn from 'classnames'
-import axiosInstance from '@utils/axios_interceptor'
 import { RootState } from '@store/store'
 import { view } from '@store/chat/chatViewSlice'
 import { setNotificationView } from '@store/notification/notificationViewSlice'
 import { enterChatRoom } from '@store/chat/chatRoomIdSlice'
 import { navList } from '@features/header/utils/nav'
 import useWebSocket from '@hooks/useWebSocket'
-
-const cookies = new Cookies()
 
 const Header = () => {
   const dispatch = useDispatch()
@@ -37,10 +33,10 @@ const Header = () => {
   )
   const chatRoomId = useSelector((state: RootState) => state.chatRoomId.value)
 
-  const { disconnect, outChatting } = useWebSocket()
+  const { outChatting } = useWebSocket()
 
   useEffect(() => {
-    cookies.get('ISLOGIN') ? setLogin(true) : setLogin(false)
+    localStorage.getItem('user') ? setLogin(true) : setLogin(false)
   }, [])
 
   useEffect(() => {
@@ -50,15 +46,8 @@ const Header = () => {
 
   const handleLogout = () => {
     dispatch(view(false))
-    axiosInstance
-      .delete(`/api/logout`)
-      .then((res) => {
-        if (res.status === 200) {
-          disconnect()
-          window.location.replace('/')
-        }
-      })
-      .catch((err) => console.log(err))
+    localStorage.removeItem('user')
+    navigation('/')
   }
 
   const handleClickAlarm = () => {

@@ -8,7 +8,6 @@ import { useNavigate } from 'react-router-dom'
 import { PlaceName } from 'types/lost-found'
 import ValleyModal from '@features/lostItem/components/ValleyModal'
 import cn from 'classnames'
-import axiosInstance from '@utils/axios_interceptor'
 import ConfirmModal from '@component/ConfirmModal'
 import { useSaveImg } from '@hooks/useSaveImg'
 
@@ -56,19 +55,14 @@ const LostItemWrite = () => {
     formDataObj.append('content', formData.content)
     imgFiles.forEach((file) => formDataObj.append('postImage', file))
 
-    axiosInstance
-      .post('/api/auth/lostItem', formDataObj)
-      .then(() =>
-        setModalConfig((prev) => ({
-          ...prev,
-          confirm: {
-            view: true,
-            content: '글이 등록되었습니다.',
-            action: () => navigation('/lost-item'),
-          },
-        }))
-      )
-      .catch(console.error)
+    setModalConfig((prev) => ({
+      ...prev,
+      confirm: {
+        view: true,
+        content: '글이 등록되었습니다.',
+        action: () => navigation('/lost-item'),
+      },
+    }))
   }
 
   return (

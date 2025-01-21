@@ -4,10 +4,10 @@
   border-top: none;
   border-left: none;
   display: flex;
-  justify-content: right;
-  align-items: top;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
   padding: 0 1.2em;
-  position: relative;
 
   &:nth-child(7n) {
     border-right: none;
@@ -22,17 +22,15 @@
     z-index: 2;
     margin-top: 0.7em;
     height: fit-content;
-    text-align: center;
+    text-align: right;
   }
 }
 
 .peopleCnt {
-  width: 85%;
+  width: 100%;
   height: 8px;
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
   border-radius: 10px;
+  margin-bottom: 10px;
 }
 
 @media screen and (max-width: 950px) {

@@ -4,7 +4,7 @@ import { MdClose } from 'react-icons/md'
 import { PlaceName } from 'types/lost-found'
 import Modal from '@component/Modal'
 import WaterPlaceName from './WaterPlaceName'
-import { Axios } from '@utils/axios_interceptor'
+import { data } from 'dummy/water-place-data'
 
 const ValleyModal = ({
   closeModal,
@@ -42,15 +42,7 @@ const ValleyModal = ({
   ]
 
   useEffect(() => {
-    const getWaterPlaceList = async () => {
-      try {
-        const response = await Axios.get('/api/water-place')
-        setWaterPlaceList(response.data.data)
-      } catch (error) {
-        console.error('Failed to fetch water places:', error)
-      }
-    }
-    getWaterPlaceList()
+    setWaterPlaceList(data)
   }, [])
 
   // 한글을 초성으로 변환하는 함수

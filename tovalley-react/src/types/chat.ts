@@ -35,7 +35,7 @@ export interface ChatRoomItem {
   createdChatRoomDate: string
   lastMessageContent: string | null
   unReadMessageCount: number
-  lastMessageTime: string
+  lastMessageTime: string | null
 }
 
 export interface ChatMessage {
@@ -105,7 +105,7 @@ export interface AlarmListType {
   chatRoomId: number
   senderNick: string
   createdDate: string
-  content: string
+  content: string | null
   hasRead: boolean
 }
 

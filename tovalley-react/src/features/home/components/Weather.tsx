@@ -22,13 +22,13 @@ const Weather = ({
   useEffect(() => {
     if (nationalWeather.length > 0) {
       setWeatherDate(nationalWeather[0])
-      setRegionClicked(nationalWeather[0].dailyNationalWeather[2])
+      setRegionClicked(nationalWeather[0].dailyNationalWeather[1])
     }
   }, [nationalWeather])
 
   const handleWeatherDateChange = (newWeatherDate: NationalWeather) => {
     setWeatherDate(newWeatherDate)
-    setRegionClicked(newWeatherDate.dailyNationalWeather[3])
+    setRegionClicked(newWeatherDate.dailyNationalWeather[1])
   }
 
   if (!weatherDate || !regionClicked) return <div>error</div>

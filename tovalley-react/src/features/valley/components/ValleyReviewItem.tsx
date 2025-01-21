@@ -54,7 +54,7 @@ const ValleyReviewItem = ({ item }: { item: ReviewContent }) => {
         <img
           src={
             item.reviewImages?.length
-              ? `${item.reviewImages[0]}`
+              ? process.env.PUBLIC_URL + `${item.reviewImages[0]}`
               : process.env.PUBLIC_URL + '/img/default-image.png'
           }
           alt="계곡 이미지"

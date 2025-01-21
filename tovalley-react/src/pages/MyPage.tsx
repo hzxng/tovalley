@@ -5,18 +5,16 @@ import { elapsedTime } from '@utils/elapsedTime'
 import ProfileImage from '@features/user/components/ProfileImage'
 import MyNickName from '@features/user/components/MyNickName'
 import MyReviewItem from '@features/user/components/MyReviewItem'
-import LoginModal from '@component/LoginModal'
 import TripSchedule from '@features/user/components/TripSchedule'
 import Category from '@features/user/components/Category'
 import Loading from '@component/Loading'
-import useUserData from '@features/user/hooks/useUserData'
-import useMyPostData from '@features/user/hooks/useMyPostData'
+import { post, userData } from 'dummy/user-data'
 
 const MyPage = () => {
   const navigation = useNavigate()
   const [currentCategory, setCurrentCategory] = useState('내 리뷰')
-  const { user, loginModal } = useUserData()
-  const { myPosts, target, isPageEnd } = useMyPostData()
+  const user = userData
+  const myPosts = post
 
   const handleClickCategory = (category: string) => {
     setCurrentCategory(category)
@@ -69,7 +67,6 @@ const MyPage = () => {
                         </div>
                       )
                     })}
-                    {!isPageEnd && <div ref={target} className={styles.ref} />}
                   </div>
                 )}
               </div>
@@ -78,7 +75,6 @@ const MyPage = () => {
         </div>
         <TripSchedule tripSchedules={user.myUpcomingTripSchedules} />
       </div>
-      {loginModal && <LoginModal />}
     </div>
   )
 }
