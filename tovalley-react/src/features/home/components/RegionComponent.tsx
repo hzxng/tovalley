@@ -52,7 +52,6 @@ const RegionComponent = ({
         <img
           src={`https://openweathermap.org/img/wn/${weatherIcon}@2x.png`}
           alt="날씨 아이콘"
-          width="50px"
         />
       )}
       <div className={styles.temperature}>

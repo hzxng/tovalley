@@ -131,6 +131,10 @@
       color: $red;
     }
   }
+
+  img {
+    width: 50px;
+  }
 }
 
 .weatherMapContainer > div {
@@ -242,16 +246,184 @@
   position: relative;
 }
 
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: 1240px) {
+  .weather {
+    margin-right: 1rem;
+    min-width: 0;
+  }
+
+  .weatherMap {
+    padding: 0;
+  }
+
+  .weatherMapContainer {
+    > img {
+      width: 370px;
+    }
+  }
+
+  .dayContainer {
+    min-width: auto;
+  }
+
+  .regionContainer {
+    padding: 0.4em 0em;
+
+    span:first-child {
+      font-size: 0.6rem;
+
+      &.small {
+        font-size: 0.4rem;
+      }
+    }
+
+    .temperature {
+      font-size: 0.5rem;
+
+      span:first-child {
+        font-size: 0.4rem;
+      }
+    }
+
+    img {
+      width: 40px;
+    }
+  }
+
+  .baengnyeong {
+    left: 60px;
+  }
+
+  .cheongju {
+    top: 140px;
+    right: 160px;
+  }
+
+  .ulleung {
+    right: 15px;
+  }
+
+  .suwon {
+    top: 140px;
+  }
+
+  .jeonju {
+    top: 250px;
+  }
+
+  .gwangju {
+    top: 290px;
+    left: 80px;
+  }
+
+  .mokpo {
+    top: 340px;
+    left: 40px;
+  }
+
+  .yeosu {
+    top: 320px;
+  }
+
+  .busan {
+    top: 310px;
+    right: 80px;
+  }
+}
+
+@media screen and (max-width: 1100px) {
   .weather {
     margin-right: 0;
     max-width: 100%;
   }
+
+  .dayContainer {
+    margin-right: 0.3em;
+  }
+
+  .weatherMap {
+    margin-top: 0.8em;
+    margin-right: 0.8em;
+  }
+
+  .weatherMapContainer {
+    > img {
+      width: 400px;
+    }
+  }
+
+  .regionContainer {
+    padding: 0.5em 0.1em;
+
+    span:first-child {
+      font-size: 0.7rem;
+
+      &.small {
+        font-size: 0.6rem;
+      }
+    }
+
+    .temperature {
+      font-size: 0.8rem;
+
+      span:first-child {
+        font-size: 0.7rem;
+      }
+    }
+
+    img {
+      width: 50px;
+    }
+  }
+
+  .baengnyeong {
+    left: 40px;
+  }
+
+  .cheongju {
+    top: 150px;
+    right: 140px;
+  }
+
+  .ulleung {
+    right: 0px;
+  }
+
+  .suwon {
+    top: 150px;
+  }
+
+  .jeonju {
+    top: 270px;
+  }
+
+  .gwangju {
+    top: 320px;
+    left: 70px;
+  }
+
+  .mokpo {
+    top: 370px;
+    left: 20px;
+  }
+
+  .yeosu {
+    top: 360px;
+  }
+
+  .busan {
+    top: 330px;
+    right: 60px;
+  }
 }
 
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 770px) {
   .weather {
     min-width: 400px;
+  }
+
+  .weatherMap {
+    padding: 1em 0 1.5em;
   }
 
   .dayContainer {

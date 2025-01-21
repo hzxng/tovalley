@@ -8,6 +8,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-width: 360px;
+
+  img {
+    width: 110px;
+  }
 }
 
 .terms {
@@ -49,7 +54,7 @@
 .backend > span,
 .frontend > span:first-child {
   margin-right: 1em;
-  min-width: 60px;
+  min-width: fit-content;
 }
 
 .backend > div > span,
@@ -68,12 +73,31 @@
 }
 
 @media screen and (max-width: 400px) {
+  .footer {
+    img {
+      width: 90px;
+    }
+  }
+
   .terms span:not(:last-of-type) {
     margin-right: 0.8em;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
+  }
+
+  .terms span:last-child {
+    font-size: 0.6rem;
   }
 
   .engineerInfo span {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
+  }
+
+  .engineerInfo > div {
+    margin-right: 0em;
+  }
+
+  .backend > span,
+  .frontend > span:first-child {
+    margin-right: 0.5em;
   }
 }
