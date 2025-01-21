@@ -78,7 +78,9 @@ const ValleyReviewItem = ({ item }: { item: ReviewContent }) => {
             <span className={styles.nickname}>{item.nickname}</span>
             {!item.isMyReview && (
               <div className={styles.chatBtn} onClick={handleChatting}>
-                <AiOutlineComment size="20px" />
+                <span>
+                  <AiOutlineComment />
+                </span>
                 <span>채팅하기</span>
               </div>
             )}

@@ -73,7 +73,7 @@ export const data = {
     annualVisitors: '0.5', // 연평균 총 이용객 수(천명)
     safetyMeasures: '', // 안전조치 사항(null일 경우 빈문자열)
     waterPlaceSegment: 320, // 물놀이구간(m)
-    dangerSegments: '', // 위험구역구간(null일 경우 빈문자열)
+    dangerSegments: 100, // 위험구역구간(null일 경우 빈문자열)
     dangerSignboardsNum: '', // 위험구역 설정 안내표지판(합계, null일 경우 빈문자열)
     deepestDepth: 6, // 수심(깊은곳)
     avgDepth: 3, // 평균 수심

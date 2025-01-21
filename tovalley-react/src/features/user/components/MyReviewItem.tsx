@@ -30,7 +30,7 @@ const MyReviewItem = ({ item }: { item: ReviewContent }) => {
           <div className={styles.reviewRating}>
             <div>
               <span>
-                <RatingStar rating={item.rating} size="20px" />
+                <RatingStar rating={item.rating} size="18px" />
               </span>
               <span>{item.rating}</span>
             </div>

@@ -422,6 +422,14 @@
 
   .rescueList {
     min-width: 0;
+
+    > div {
+      > span {
+        &:first-child {
+          font-size: 30px;
+        }
+      }
+    }
   }
 }
 
@@ -443,6 +451,16 @@
       }
     }
   }
+
+  .rescueList {
+    > div {
+      > span {
+        &:first-child {
+          font-size: 22px;
+        }
+      }
+    }
+  }
 }
 
 @media screen and (max-width: 410px) {
@@ -450,16 +468,6 @@
     > span {
       &:nth-child(2) {
         max-width: 10em;
-      }
-    }
-  }
-}
-
-@media screen and (max-width: 400px) {
-  .rescueItem {
-    > span {
-      &:first-child {
-        font-size: 25px;
       }
     }
   }

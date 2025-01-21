@@ -90,7 +90,11 @@
   font-weight: 700;
   cursor: pointer;
 
-  > span {
+  > span:first-child {
+    font-size: 20px;
+  }
+
+  > span:last-child {
     margin-left: 0.3em;
     font-size: 0.9rem;
   }
@@ -139,6 +143,18 @@
   color: #696969;
 }
 
+@media screen and (max-width: 800px) {
+  .nickname {
+    margin-right: 0.5em;
+  }
+
+  .chatBtn {
+    span:last-child {
+      display: none;
+    }
+  }
+}
+
 @media screen and (max-width: 730px) {
   .valleyImg {
     height: 120px;
@@ -181,6 +197,38 @@
 
   .imgIcon {
     font-size: 20px;
+  }
+}
+
+@media screen and (max-width: 540px) {
+  .userInfo {
+    > div {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .defaultProfile {
+    font-size: 20px;
+  }
+
+  .chatBtn {
+    > span:first-child {
+      font-size: 16px;
+    }
+  }
+
+  .nickname {
+    font-size: 0.8rem;
+  }
+
+  .waterQuality {
+    border: 1px solid $primary;
+    color: $primary;
+    border-radius: 30px;
+    padding: 0.2em 0.6em;
+    margin: 0 1.2em;
+    font-size: 0.6rem;
   }
 }
 

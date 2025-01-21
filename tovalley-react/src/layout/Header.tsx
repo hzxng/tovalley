@@ -44,7 +44,7 @@ const Header = () => {
 
   const handleLogout = () => {
     dispatch(view(false))
-    localStorage.removeItem('user')
+    localStorage.clear()
     window.location.replace('/')
   }
 

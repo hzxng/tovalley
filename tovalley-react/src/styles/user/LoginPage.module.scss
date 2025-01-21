@@ -11,6 +11,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 0 10%;
 }
 
 .loginContainer {
@@ -18,8 +19,9 @@
   border: 1px solid $light-gray;
   border-radius: 10px;
   padding: 1.8em 2.5em;
-  width: 500px;
   box-sizing: border-box;
+  width: 100%;
+  max-width: 480px;
 }
 
 .loginInput {
@@ -57,7 +59,6 @@
   margin-top: 1.5em;
   margin-bottom: 6em;
   text-align: center;
-  min-width: 450px;
 
   span {
     color: #787878;
@@ -67,29 +68,20 @@
   }
 }
 
-@media screen and (max-width: 900px) {
-  .loginContainer {
-    width: 480px;
-  }
-}
-
 @media screen and (max-width: 700px) {
   .loginContainer {
-    width: 380px;
     padding: 1.8em 1.5em;
   }
 }
 
 @media screen and (max-width: 500px) {
   .loginContainer {
-    width: 300px;
     padding: 1.8em 1.2em;
   }
 }
 
 @media screen and (max-width: 400px) {
   .loginContainer {
-    width: 300px;
     padding: 1.8em 1.2em;
   }
 
