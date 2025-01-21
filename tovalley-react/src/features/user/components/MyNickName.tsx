@@ -1,6 +1,5 @@
 import ConfirmModal from '@component/ConfirmModal'
 import styles from '@styles/user/MyNickName.module.scss'
-import axiosInstance from '@utils/axios_interceptor'
 import { useState } from 'react'
 import cn from 'classnames'
 
@@ -26,32 +25,14 @@ const MyNickName = ({ userNickName }: { userNickName: string }) => {
       setModalContent('한/영, 숫자 포함 20자 이내로 작성해주세요.')
       return
     }
-
-    try {
-      const res = await axiosInstance.post('/api/members/check-nickname', {
-        nickname: inputNick,
-      })
-
-      if (res.status === 200) {
-        setModalContent('사용 가능한 닉네임입니다.')
-        setIsDuplicateChecked(true)
-      }
-    } catch (err) {
-      console.error(err)
-    }
+    setModalContent('사용 가능한 닉네임입니다.')
+    setIsDuplicateChecked(true)
   }
 
   // 닉네임 수정
   const handleSaveNickname = async () => {
-    try {
-      await axiosInstance.post('/api/auth/members/set-nickname', {
-        nickname: inputNick,
-      })
-      setNickName(inputNick)
-      resetEditState()
-    } catch (err) {
-      console.error(err)
-    }
+    setNickName(inputNick)
+    resetEditState()
   }
 
   const resetEditState = () => {

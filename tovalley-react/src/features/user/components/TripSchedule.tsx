@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { Schedule } from 'types/user'
-import axiosInstance from '@utils/axios_interceptor'
 import TripScheduleItem from './TripScheduleItem'
 import Category from './Category'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import styles from '@styles/user/TripSchedule.module.scss'
+import { preSchedule, userData } from 'dummy/user-data'
 
 const TripSchedule = ({ tripSchedules }: { tripSchedules: Schedule[] }) => {
   const [schedule, setSchedule] = useState<Schedule[] | null>(tripSchedules)
@@ -12,19 +12,9 @@ const TripSchedule = ({ tripSchedules }: { tripSchedules: Schedule[] }) => {
   const [checkedItems, setCheckedItems] = useState<Schedule[]>([])
 
   const fetchSchedules = async (type: string) => {
-    const url =
-      type === '앞으로의 일정'
-        ? '/api/auth/my-page/upcoming-schedules'
-        : '/api/auth/my-page/pre-schedules'
-
-    try {
-      const res = await axiosInstance.get(url)
-      setSchedule(
-        type === '앞으로의 일정' ? res.data.data : res.data.data.content
-      )
-    } catch (error) {
-      console.error(error)
-    }
+    setSchedule(
+      type === '앞으로의 일정' ? userData.myUpcomingTripSchedules : preSchedule
+    )
   }
 
   const checkedItemHandler = (schedule: Schedule, isChecked: boolean) => {
@@ -34,18 +24,8 @@ const TripSchedule = ({ tripSchedules }: { tripSchedules: Schedule[] }) => {
   }
 
   const handleDeleteSchedule = async () => {
-    try {
-      const params = new URLSearchParams()
-      checkedItems.forEach((item) =>
-        params.append('tripScheduleIds', `${item.tripScheduleId}`)
-      )
-
-      await axiosInstance.delete('/api/auth/trip-schedules', { params })
-
-      fetchSchedules(scheduleBtn)
-    } catch (error) {
-      console.error(error)
-    }
+    const filtered = schedule?.filter((e) => !checkedItems.includes(e))
+    setSchedule(filtered ?? [])
   }
 
   const handleClickCategory = (category: string) => {

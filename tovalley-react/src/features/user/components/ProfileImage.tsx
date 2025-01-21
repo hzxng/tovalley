@@ -1,4 +1,3 @@
-import axiosInstance from '@utils/axios_interceptor'
 import ProfileImgModal from './ProfileImgModal'
 import styles from '@styles/user/ProfileImage.module.scss'
 import { useRef, useState } from 'react'
@@ -19,12 +18,6 @@ const ProfileImage = ({ profileImg }: { profileImg: string | null }) => {
   const handleImageUpload = async (file: File) => {
     const formData = new FormData()
     formData.append('image', file)
-
-    try {
-      await axiosInstance.post('/api/auth/members/profile-image', formData)
-    } catch (err) {
-      console.error('Image upload failed:', err)
-    }
   }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -168,7 +168,7 @@ export const preSchedule = [
     tripScheduleId: 18,
     waterPlaceId: 1,
     waterPlaceName: '내평계곡',
-    waterPlaceImg: null,
+    waterPlaceImg: '/img/dummy/계곡이미지13.jpg',
     waterPlaceAddr: '강원도 삼척시 근덕면 동막리 693',
     waterPlaceRating: '3.0',
     waterPlaceReviewCnt: 3,
