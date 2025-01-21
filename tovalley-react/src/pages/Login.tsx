@@ -29,6 +29,13 @@ const Login = () => {
     }
   }, [])
 
+  useEffect(() => {
+    setTimeout(
+      () => alert('임의로 입력하세요. ex - email: user, password: 1234'),
+      100
+    )
+  }, [])
+
   const handleLogin = () => {
     const { email, password } = login
 

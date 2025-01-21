@@ -1,4 +1,3 @@
-import axiosInstance from '@utils/axios_interceptor'
 import styles from '@styles/user/ProfileImgModal.module.scss'
 import Modal from '@component/Modal'
 
@@ -15,16 +14,9 @@ const ProfileImgModal = ({
     e.preventDefault()
     if (imgRef.current) {
       imgRef.current.value = ''
-      setUserImg('')
+      setUserImg('/img/user-profile.png')
       closeModal()
     }
-
-    axiosInstance
-      .post('/api/auth/members/profile-image')
-      .then((res) => {
-        console.log(res)
-      })
-      .catch((err) => console.log(err))
   }
 
   return (

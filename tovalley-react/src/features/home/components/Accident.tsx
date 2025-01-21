@@ -22,7 +22,8 @@ const Accident = ({ accident }: { accident: AccidentCountDto }) => {
   const handleScroll = (direction: 'prev' | 'next') => {
     scrollRefs[direction].current?.scrollIntoView({
       behavior: 'smooth',
-      block: 'end',
+      block: 'nearest',
+      inline: 'center',
     })
     setIsNext(direction === 'next')
   }

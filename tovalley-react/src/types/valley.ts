@@ -26,9 +26,9 @@ export interface WaterPlaceDetails {
   detailAddress: string
   town: string
   annualVisitors: string
-  safetyMeasures: number | string
+  safetyMeasures: string
   waterPlaceSegment: number
-  dangerSegments: string
+  dangerSegments: number
   dangerSignboardsNum: number | string
   deepestDepth: number
   avgDepth: number

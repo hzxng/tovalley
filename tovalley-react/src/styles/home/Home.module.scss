@@ -22,8 +22,15 @@
   margin-bottom: 5em;
 }
 
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: 1100px) {
   .top {
     flex-direction: column;
+  }
+}
+
+@media screen and (max-width: 810px) {
+  .recentPost {
+    flex-direction: column;
+    gap: 2rem;
   }
 }

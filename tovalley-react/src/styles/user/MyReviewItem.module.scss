@@ -10,6 +10,10 @@
     font-weight: 600;
     font-size: 1rem;
     color: #333333;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
@@ -85,6 +89,30 @@
       &:nth-child(2) {
         font-weight: bold;
         margin-left: 0.5em;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .reviewRating {
+    flex-direction: column;
+    align-items: flex-start;
+
+    > span {
+      padding: 0.2em 0.4em;
+      font-size: 0.7rem;
+    }
+  }
+}
+
+@media screen and (max-width: 440px) {
+  .reviewRating {
+    > div {
+      > span {
+        &:nth-child(2) {
+          display: none;
+        }
       }
     }
   }

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import styles from '@styles/header/Header.module.scss'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { RxHamburgerMenu } from 'react-icons/rx'
 import { BiUser } from 'react-icons/bi'
 import { FiLogOut } from 'react-icons/fi'
 import { FaRegBell } from 'react-icons/fa'
@@ -21,7 +20,6 @@ const Header = () => {
   const location = useLocation()
 
   const [login, setLogin] = useState(false)
-  const [navClick, setNavClick] = useState(false)
   const [newAlarm, setNewAlarm] = useState(false)
 
   const chatView = useSelector((state: RootState) => state.view.value)
@@ -46,8 +44,8 @@ const Header = () => {
 
   const handleLogout = () => {
     dispatch(view(false))
-    localStorage.removeItem('user')
-    navigation('/')
+    localStorage.clear()
+    window.location.replace('/')
   }
 
   const handleClickAlarm = () => {
@@ -65,11 +63,6 @@ const Header = () => {
     <div className={styles.header}>
       <div className={styles.headerWrapper}>
         <div className={styles.headertop}>
-          <div className={styles.hamburger}>
-            <span onClick={() => setNavClick(!navClick)}>
-              <RxHamburgerMenu />
-            </span>
-          </div>
           <div className={styles.logo} onClick={() => navigation('/')}>
             <img
               src={process.env.PUBLIC_URL + '/img/투계곡-logo.png'}
@@ -136,7 +129,7 @@ const Header = () => {
           ))}
         </div>
       </div>
-      <div className={cn(styles.mobileNav, { [styles.clicked]: navClick })}>
+      <div className={cn(styles.mobileNav)}>
         {navList.map(({ name, url }) => (
           <span
             key={name}

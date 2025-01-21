@@ -15,18 +15,18 @@ import { newValley } from '@store/valley/valleySlice'
 const Valley = () => {
   const [valley, setValley] = useState<ValleyData | null>(null)
   const [loginModal, setLoginModal] = useState(false)
-  const [dangerSegmentsView, setDangerSegmentsView] = useState(false)
+  const [safetyMeasuresView, setSafetyMeasuresView] = useState(false)
 
   const dispatch = useDispatch()
 
-  const dangerSegmentClose = () => {
-    setDangerSegmentsView(false)
+  const setsafetyMeasuresClose = () => {
+    setSafetyMeasuresView(false)
   }
 
   useEffect(() => {
     setValley(data)
 
-    if (data.waterPlaceDetails.dangerSegments) setDangerSegmentsView(true)
+    if (data.waterPlaceDetails.safetyMeasures) setSafetyMeasuresView(true)
 
     if (!localStorage.getItem('user')) setLoginModal(true)
 
@@ -73,10 +73,10 @@ const Valley = () => {
           <ValleyReview reviewRespDto={valley.reviewRespDto} />
         </div>
       </div>
-      {dangerSegmentsView && (
+      {safetyMeasuresView && (
         <DangerSegments
-          contents={valley.waterPlaceDetails.dangerSegments}
-          handleModal={dangerSegmentClose}
+          contents={valley.waterPlaceDetails.safetyMeasures}
+          handleModal={setsafetyMeasuresClose}
         />
       )}
       {loginModal && <LoginModal />}

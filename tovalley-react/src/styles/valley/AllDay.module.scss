@@ -34,27 +34,24 @@
 }
 
 @media screen and (max-width: 950px) {
+  .container {
+    padding: 0 0.8em;
+  }
+
   .peopleCnt {
-    width: 80%;
     height: 5px;
   }
 }
 
 @media screen and (max-width: 700px) {
-  .peopleCnt {
-    width: 70%;
-  }
-}
-
-@media screen and (max-width: 550px) {
-  .cotanier {
-    padding: 0 0.8em;
+  .container {
+    padding: 0 0.6em;
   }
 }
 
 @media screen and (max-width: 450px) {
   .container {
-    padding: 0 0.6em;
+    padding: 0 0.4em;
 
     p {
       font-size: 0.8rem;

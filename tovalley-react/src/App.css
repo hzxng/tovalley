@@ -1,6 +1,8 @@
 body {
+  width: 100%;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-use-select: none;
   user-select: none;
+  margin: 0;
 }

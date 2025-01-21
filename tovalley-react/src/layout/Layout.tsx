@@ -5,7 +5,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <Header />
-      <main>{children}</main>
+      <main
+        style={{ maxWidth: '2560px', margin: '0 auto', minHeight: '100vh' }}
+      >
+        {children}
+      </main>
       <Footer />
     </>
   )
