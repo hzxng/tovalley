@@ -3,6 +3,7 @@ import RegionComponent from './RegionComponent'
 import styles from '@styles/home/Weather.module.scss'
 import { regions } from '../utils/regions'
 import { DailyNationalWeather, NationalWeather } from 'types/main'
+import { useEffect, useState } from 'react'
 
 interface ValleyMapProps {
   weatherDate: NationalWeather
@@ -17,6 +18,15 @@ const WeatherMap = ({
   regionClicked,
   setRegionClicked,
 }: ValleyMapProps) => {
+  const [renderedRegions, setRenderedRegions] = useState(0)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setRenderedRegions(regions.length)
+    }, 100)
+    return () => clearTimeout(timer)
+  }, [])
+
   return (
     <div className={styles.weatherMap}>
       <div className={styles.weatherMapContainer}>
@@ -32,18 +42,16 @@ const WeatherMap = ({
           <img src={getPublicUrl('/img/map_img.png')} alt="지도 이미지"></img>
         </picture>
 
-        {regions.map((item, index) => {
-          return (
-            <RegionComponent
-              key={item.en}
-              item={item}
-              index={index}
-              weatherDate={weatherDate}
-              regionClicked={regionClicked}
-              setRegionClicked={setRegionClicked}
-            />
-          )
-        })}
+        {regions.slice(0, renderedRegions).map((item, index) => (
+          <RegionComponent
+            key={item.en}
+            item={item}
+            index={index}
+            weatherDate={weatherDate}
+            regionClicked={regionClicked}
+            setRegionClicked={setRegionClicked}
+          />
+        ))}
       </div>
     </div>
   )
