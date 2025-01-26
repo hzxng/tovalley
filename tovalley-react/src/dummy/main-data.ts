@@ -1189,6 +1189,7 @@ export const data: MainData = {
       rating: 3.5,
       reviewCnt: 2,
       waterPlaceImageUrl: '/img/dummy/계곡이미지1.jpg',
+      waterPlaceWebpImageUrl: '/img/dummy/계곡이미지1.webp',
     },
     {
       waterPlaceId: 2,
@@ -1197,6 +1198,7 @@ export const data: MainData = {
       rating: 1.9,
       reviewCnt: 10,
       waterPlaceImageUrl: '/img/dummy/계곡이미지2.jpg',
+      waterPlaceWebpImageUrl: '/img/dummy/계곡이미지2.webp',
     },
     {
       waterPlaceId: 3,
@@ -1205,6 +1207,7 @@ export const data: MainData = {
       rating: 2.4,
       reviewCnt: 7,
       waterPlaceImageUrl: '/img/dummy/계곡이미지4.jpg',
+      waterPlaceWebpImageUrl: '/img/dummy/계곡이미지4.webp',
     },
     {
       waterPlaceId: 4,
@@ -1213,6 +1216,7 @@ export const data: MainData = {
       rating: 0,
       reviewCnt: 0,
       waterPlaceImageUrl: '/img/dummy/계곡이미지5.jpg',
+      waterPlaceWebpImageUrl: '/img/dummy/계곡이미지5.webp',
     },
     {
       waterPlaceId: 5,
@@ -1221,6 +1225,7 @@ export const data: MainData = {
       rating: 0,
       reviewCnt: 0,
       waterPlaceImageUrl: '/img/dummy/계곡이미지6.jpg',
+      waterPlaceWebpImageUrl: '/img/dummy/계곡이미지6.webp',
     },
     {
       waterPlaceId: 6,
@@ -1229,6 +1234,7 @@ export const data: MainData = {
       rating: 0,
       reviewCnt: 0,
       waterPlaceImageUrl: '/img/dummy/계곡이미지7.jpg',
+      waterPlaceWebpImageUrl: '/img/dummy/계곡이미지7.webp',
     },
     {
       waterPlaceId: 7,
@@ -1237,6 +1243,7 @@ export const data: MainData = {
       rating: 0,
       reviewCnt: 0,
       waterPlaceImageUrl: '/img/dummy/계곡이미지8.jpg',
+      waterPlaceWebpImageUrl: '/img/dummy/계곡이미지8.webp',
     },
     {
       waterPlaceId: 8,
@@ -1245,6 +1252,7 @@ export const data: MainData = {
       rating: 0,
       reviewCnt: 0,
       waterPlaceImageUrl: '/img/dummy/계곡이미지9.jpg',
+      waterPlaceWebpImageUrl: '/img/dummy/계곡이미지9.webp',
     },
   ],
   recentReviews: [

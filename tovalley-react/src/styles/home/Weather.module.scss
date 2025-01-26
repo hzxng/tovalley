@@ -77,10 +77,22 @@
   justify-content: center;
 }
 
+.skeleton {
+  width: 100%;
+  margin-top: 0.8em;
+  margin-right: 0.8em;
+  border-radius: 10px;
+  background-color: rgb(228, 228, 228);
+}
+
 .weatherMapContainer {
   position: relative;
 
-  > img {
+  source {
+    width: 400px;
+  }
+
+  img {
     width: 400px;
   }
 }
@@ -147,103 +159,86 @@
 .chuncheon {
   top: 50px;
   right: 130px;
-  position: relative;
 }
 
 .baengnyeong {
   top: 80px;
   left: 40px;
-  position: relative;
 }
 
 .seoul {
   top: 60px;
   left: 120px;
-  position: relative;
 }
 
 .gangneung {
   top: 100px;
   right: 70px;
-  position: relative;
 }
 
 .cheongju {
   top: 150px;
   right: 140px;
-  position: relative;
 }
 
 .ulleung {
   top: 160px;
   right: 0px;
-  position: relative;
 }
 
 .suwon {
   top: 150px;
   left: 110px;
-  position: relative;
 }
 
 .andong {
   top: 200px;
   right: 90px;
-  position: relative;
 }
 
 .daejeon {
   top: 210px;
   left: 160px;
-  position: relative;
 }
 
 .jeonju {
   top: 270px;
   left: 120px;
-  position: relative;
 }
 
 .daegu {
   top: 260px;
   right: 130px;
-  position: relative;
 }
 
 .ulsan {
   top: 250px;
   right: 30px;
-  position: relative;
 }
 
 .gwangju {
   top: 320px;
   left: 70px;
-  position: relative;
 }
 
 .mokpo {
   top: 370px;
   left: 20px;
-  position: relative;
 }
 
 .yeosu {
   top: 360px;
   left: 140px;
-  position: relative;
 }
 
 .busan {
   top: 330px;
   right: 60px;
-  position: relative;
 }
 
 .jeju {
   top: 410px;
   left: 80px;
-  position: relative;
 }
 
 @media screen and (max-width: 1240px) {
@@ -257,7 +252,11 @@
   }
 
   .weatherMapContainer {
-    > img {
+    source {
+      width: 370px;
+    }
+
+    img {
       width: 370px;
     }
   }
@@ -347,7 +346,11 @@
   }
 
   .weatherMapContainer {
-    > img {
+    source {
+      width: 400px;
+    }
+
+    img {
       width: 400px;
     }
   }
@@ -470,8 +473,14 @@
     padding: 1em 0.5em;
   }
 
-  .weatherMapContainer > img {
-    width: 340px;
+  .weatherMapContainer {
+    source {
+      width: 340px;
+    }
+
+    img {
+      width: 340px;
+    }
   }
 
   .regionContainer img {

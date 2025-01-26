@@ -94,11 +94,23 @@ const PopularValley = ({ place }: { place: NationalPopularWaterPlaces[] }) => {
                 {(index + 1) % popularValley.length || popularValley.length}
               </span>
               <div className={styles.valleyItemImg}>
-                <img
-                  src={process.env.PUBLIC_URL + item.waterPlaceImageUrl}
-                  alt="계곡 이미지"
-                  width="100%"
-                />
+                <picture>
+                  <source
+                    srcSet={
+                      process.env.PUBLIC_URL + item.waterPlaceWebpImageUrl
+                    }
+                    type="image/webp"
+                  ></source>
+                  <source
+                    srcSet={process.env.PUBLIC_URL + item.waterPlaceImageUrl}
+                    type="image/jpg"
+                  ></source>
+                  <img
+                    src={process.env.PUBLIC_URL + item.waterPlaceImageUrl}
+                    alt="계곡 이미지"
+                    width="100%"
+                  />
+                </picture>
               </div>
               <div className={styles.valleyInfo}>
                 <div className={styles.valleyTitle}>

@@ -64,11 +64,21 @@ const Header = () => {
       <div className={styles.headerWrapper}>
         <div className={styles.headertop}>
           <div className={styles.logo} onClick={() => navigation('/')}>
-            <img
-              src={process.env.PUBLIC_URL + '/img/투계곡-logo.png'}
-              alt="tovalley logo"
-              width="120px"
-            />
+            <picture>
+              <source
+                srcSet={process.env.PUBLIC_URL + '/img/투계곡-logo.webp'}
+                type="image/webp"
+              ></source>
+              <source
+                srcSet={process.env.PUBLIC_URL + '/img/투계곡-logo.png'}
+                type="image/png"
+              ></source>
+              <img
+                src={process.env.PUBLIC_URL + '/img/투계곡-logo.png'}
+                alt="tovalley logo"
+                width="120px"
+              />
+            </picture>
           </div>
           {login ? (
             <div className={styles.login}>

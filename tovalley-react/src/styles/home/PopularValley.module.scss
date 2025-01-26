@@ -42,7 +42,12 @@
   }
 
   > div {
-    > img {
+    source {
+      border-radius: 10px 10px 0 0;
+      height: 100%;
+    }
+
+    img {
       border-radius: 10px 10px 0 0;
       height: 100%;
     }
