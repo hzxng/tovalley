@@ -57,6 +57,7 @@ export interface NationalPopularWaterPlaces {
   waterPlaceId: number
   waterPlaceName: string
   waterPlaceImageUrl: string | null
+  waterPlaceWebpImageUrl: string
   location: string
   rating: number
   reviewCnt: number

@@ -80,7 +80,11 @@
 .weatherMapContainer {
   position: relative;
 
-  > img {
+  source {
+    width: 400px;
+  }
+
+  img {
     width: 400px;
   }
 }
@@ -257,7 +261,11 @@
   }
 
   .weatherMapContainer {
-    > img {
+    source {
+      width: 370px;
+    }
+
+    img {
       width: 370px;
     }
   }
@@ -347,7 +355,11 @@
   }
 
   .weatherMapContainer {
-    > img {
+    source {
+      width: 400px;
+    }
+
+    img {
       width: 400px;
     }
   }
@@ -470,8 +482,14 @@
     padding: 1em 0.5em;
   }
 
-  .weatherMapContainer > img {
-    width: 340px;
+  .weatherMapContainer {
+    source {
+      width: 340px;
+    }
+
+    img {
+      width: 340px;
+    }
   }
 
   .regionContainer img {
