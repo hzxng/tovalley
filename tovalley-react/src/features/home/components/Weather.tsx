@@ -1,12 +1,8 @@
 import { useEffect, useState } from 'react'
 import styles from '@styles/home/Weather.module.scss'
 import { DailyNationalWeather, NationalWeather, WeatherAlert } from 'types/main'
-import { regions } from '../utils/regions'
 import WeatherDate from './WeatherDate'
-import RegionComponent from './RegionComponent'
-import Report from './Report'
-import WeatherDetail from './WeatherDetail'
-import { getPublicUrl } from '@utils/getPublicUrl'
+import WeatherInfo from './WeatherInfo'
 
 const Weather = ({
   nationalWeather,
@@ -41,43 +37,12 @@ const Weather = ({
         weatherDate={weatherDate}
         setWeatherDate={handleWeatherDateChange}
       />
-      <div className={styles.weatherInfo}>
-        <div className={styles.weatherMap}>
-          <div className={styles.weatherMapContainer}>
-            <picture>
-              <source
-                srcSet={getPublicUrl('/img/map_img.webp')}
-                type="image/webp"
-              ></source>
-              <source
-                srcSet={getPublicUrl('/img/map_img.png')}
-                type="image/jpg"
-              ></source>
-              <img
-                src={getPublicUrl('/img/map_img.png')}
-                alt="지도 이미지"
-              ></img>
-            </picture>
-
-            {regions.map((item, index) => {
-              return (
-                <RegionComponent
-                  key={item.en}
-                  item={item}
-                  index={index}
-                  weatherDate={weatherDate}
-                  regionClicked={regionClicked}
-                  setRegionClicked={setRegionClicked}
-                />
-              )
-            })}
-          </div>
-        </div>
-        <div className={styles.weatherInfoDetail}>
-          <Report alert={alert} />
-          <WeatherDetail dailyNationalWeather={regionClicked} />
-        </div>
-      </div>
+      <WeatherInfo
+        weatherDate={weatherDate}
+        regionClicked={regionClicked}
+        setRegionClicked={setRegionClicked}
+        alert={alert}
+      />
     </div>
   )
 }

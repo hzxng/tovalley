@@ -1,12 +1,15 @@
 import styles from '@styles/home/Accident.module.scss'
 import { MdNavigateNext, MdNavigateBefore } from 'react-icons/md'
-import { useRef, useState } from 'react'
+import React, { Suspense, useRef, useState } from 'react'
 import { AccidentCountDto } from 'types/main'
 import { province } from '../utils/regions'
-import AccidentTable from '@component/AccidentTable'
-import AccidentChart from './AccidentChart'
+// import AccidentTable from '@component/AccidentTable'
+// import AccidentChart from './AccidentChart'
 import cn from 'classnames'
 import { Axios } from '@utils/axios_interceptor'
+
+const AccidentChart = React.lazy(() => import('./AccidentChart'))
+const AccidentTable = React.lazy(() => import('@component/AccidentTable'))
 
 const Accident = ({ accident }: { accident: AccidentCountDto }) => {
   const [regionAccident, setRegionAccident] =
@@ -88,10 +91,14 @@ const Accident = ({ accident }: { accident: AccidentCountDto }) => {
           )}
         </div>
       </div>
-      <div className={styles.lineGraph}>
-        <AccidentChart accidentCnt={regionAccident.accidentCountPerMonth} />
-      </div>
-      <AccidentTable accident={accident} />
+      <Suspense fallback={<div className={styles.grpahSkeleton} />}>
+        <div className={styles.lineGraph}>
+          <AccidentChart accidentCnt={regionAccident.accidentCountPerMonth} />
+        </div>
+      </Suspense>
+      <Suspense fallback={<div className={styles.skeleton} />}>
+        <AccidentTable accident={regionAccident} />
+      </Suspense>
     </div>
   )
 }
